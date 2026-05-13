@@ -1,0 +1,25 @@
+{
+  "kind": "ArtifactExportRequest",
+  "export_kind": "review-pack",
+  "variant_id": "douyin-main",
+  "source_state_path": "./project-state.json",
+  "target_root": "./exports/review-pack",
+  "include": [
+    "transcript",
+    "asset-manifest",
+    "editorial-brief",
+    "scene-board",
+    "proof-pack",
+    "spoken-script",
+    "slides",
+    "beat-map",
+    "art-direction",
+    "visual-language-kit",
+    "lookdev-gate",
+    "effect-brief",
+    "scene-direction",
+    "vibemotion-candidate-plan",
+    "candidate-manifest",
+    "candidate-review-notes"
+  ]
+}

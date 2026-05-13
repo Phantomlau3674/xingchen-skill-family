@@ -1,0 +1,30 @@
+{
+  "preset_id": "tech-dark",
+  "display_name": "科技深色",
+  "colors": {
+    "stage": "#0a0a0f",
+    "ink": "#e8e6e0",
+    "ink_dim": "#a0a09a",
+    "accent": "#4a9eff",
+    "danger": "#ff4a6e",
+    "surface": "#14141c"
+  },
+  "typography": {
+    "display": "Space Grotesk",
+    "body": "Inter",
+    "body_cjk": "Noto Sans SC",
+    "mono": "JetBrains Mono"
+  },
+  "motion_bias": {
+    "entrance_ms": 300,
+    "stagger_ms": 60,
+    "energy": "high"
+  },
+  "texture": {
+    "grain": true,
+    "scanline": false,
+    "noise_opacity": 0.04
+  },
+  "layout_bias": "briefing",
+  "transition_default": "push"
+}

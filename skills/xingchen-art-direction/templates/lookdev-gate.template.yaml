@@ -1,0 +1,222 @@
+version: 2
+meta:
+  name: default-board-and-proof-gate
+  target_resolution: 1920x1080
+  fps: 30
+  result_artifact: lookdev-gate-result.json
+  contract_notes:
+    - blocking_rules and advisory_rules must be machine-checkable
+    - aesthetic_rules are review-only until a detector contract exists
+
+blocking_rules:
+  - rule_id: evidence_coverage
+    applies_to: proof-heavy scenes
+    metric: evidence_coverage_ratio
+    operator: ">="
+    threshold: 0.60
+    on_fail: block
+    failure_message: "Proof-heavy scenes must keep literal evidence at 60%+ of frame area."
+
+  - rule_id: hero_proof_recommendation
+    applies_to: primary proof scene
+    metric: evidence_coverage_ratio
+    operator: ">="
+    threshold: 0.70
+    on_fail: warn
+    failure_message: "Hero proof scenes should reach 70%+ coverage unless art-direction says otherwise."
+
+  - rule_id: proof_legibility
+    applies_to: proof-heavy scenes
+    metric: minimum_legible_font_px
+    operator: ">="
+    threshold: 24
+    on_fail: block
+    failure_message: "Proof text must remain readable at target resolution."
+
+  - rule_id: max_static_run
+    applies_to: every scene
+    metric: max_static_run_frames
+    operator: "<="
+    threshold: 45
+    on_fail: block
+    failure_message: "No scene may stay visually static for more than 1.5 seconds."
+
+  - rule_id: motion_density
+    applies_to: every scene
+    metric: motion_event_classes_per_scene
+    operator: ">="
+    threshold: 3
+    on_fail: block
+    failure_message: "Each scene needs entry, sustain, and boundary or exit motion."
+
+  - rule_id: whitelist_only
+    applies_to: every scene
+    metric: whitelist_violations
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "All chrome components must come from visual-language-kit.json."
+
+  - rule_id: subtitle_proof_overlap
+    applies_to: proof-heavy scenes
+    metric: subtitle_overlap_ratio
+    operator: "<="
+    threshold: 0.10
+    on_fail: block
+    failure_message: "Subtitles may not cover critical proof pixels."
+
+  - rule_id: proof_aspect_integrity
+    applies_to: literal proof or UI scenes
+    metric: non_uniform_scale_ratio
+    operator: "<="
+    threshold: 0.02
+    on_fail: block
+    failure_message: "Literal proof and UI plates may not be visibly stretched or squashed."
+
+  - rule_id: proof_crop_integrity
+    applies_to: pixel-readable proof scenes
+    metric: proof_crop_loss_ratio
+    operator: "<="
+    threshold: 0.15
+    on_fail: block
+    failure_message: "Crop may not remove the noun, result, or action that makes the proof truthful."
+
+  - rule_id: anchor_safe_area
+    applies_to: every scene
+    metric: dominant_anchor_safe_area_violations
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Dominant anchor must stay inside the approved safe area unless the scene explicitly marks edge-break intent."
+
+  - rule_id: forbidden_pattern_hits
+    applies_to: every scene
+    metric: forbidden_pattern_hits
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Lookdev preview triggered at least one machine-detectable forbidden pattern."
+
+advisory_rules:
+  - rule_id: palette_drift
+    metric: out_of_palette_usage_count
+    operator: "=="
+    threshold: 0
+    on_fail: warn
+    failure_message: "Scene uses colors outside palette_lock."
+
+  - rule_id: oversized_support_text
+    metric: narration_echo_bubble_char_count
+    operator: "<="
+    threshold: 8
+    on_fail: warn
+    failure_message: "Support bubbles longer than 8 characters often collapse into narration echo."
+
+aesthetic_rules:
+  evaluator_mode: review_only_until_detector_exists
+  overall_status_if_any_unresolved: manual_review_required
+  overall_status_if_any_failed: manual_review_required
+  silent_pass: false
+  checks:
+    - rule_id: taste_thesis_alignment
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.taste_thesis
+      required_review_inputs:
+        - opening_slice
+        - hero_frame
+        - one_middle_scene
+      on_unresolved: manual_review_required
+      failure_message: "Scenes must support the approved taste thesis."
+
+    - rule_id: selected_aesthetic_mode_alignment
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.selected_aesthetic_mode
+      required_review_inputs:
+        - motion_slice
+        - benchmark_notes
+      on_unresolved: manual_review_required
+      failure_message: "Scenes must support the approved aesthetic mode or be flagged as intentional deviation."
+
+    - rule_id: benchmark_canon_alignment
+      applies_to: hero scenes and opening frames
+      rule_class: review_only
+      source: visual.visual_policy.benchmark_canon
+      required_review_inputs:
+        - benchmark_reference_sheet
+        - opening_slice
+      on_unresolved: manual_review_required
+      failure_message: "If the benchmark canon cannot be checked automatically, route to human review."
+
+    - rule_id: anti_cheapness_review
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.anti_cheapness
+      machine_subset_metric: forbidden_pattern_hits
+      required_review_inputs:
+        - preview_slice
+        - audio_preview_when_available
+      on_unresolved: manual_review_required
+      failure_message: "Do not ship cheap-pattern hits that are not covered by the machine blacklist."
+
+    - rule_id: hero_frame_law
+      applies_to: opening and hero frames
+      rule_class: review_only
+      source: visual.visual_policy.hero_frame_laws
+      required_review_inputs:
+        - hero_frame
+        - hero_scene_id
+      on_unresolved: manual_review_required
+      failure_message: "Opening frames must read as intended hero frames."
+
+    - rule_id: energy_curve
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.energy_curve
+      required_review_inputs:
+        - opening_slice
+        - middle_slice
+        - closing_slice
+      on_unresolved: manual_review_required
+      failure_message: "If cadence or tension cannot be checked automatically, require manual review."
+
+    - rule_id: color_script_alignment
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.color_script_policy
+      required_review_inputs:
+        - representative_frames
+      on_unresolved: manual_review_required
+      failure_message: "If the color script cannot be defended automatically, require human review."
+
+    - rule_id: style_consistency
+      applies_to: every scene
+      rule_class: review_only
+      source: visual.visual_policy.style_consistency_policy
+      required_review_inputs:
+        - opening_slice
+        - middle_slice
+        - closing_slice
+      on_unresolved: manual_review_required
+      failure_message: "The piece must keep a coherent visual voice."
+
+    - rule_id: voice_authenticity
+      applies_to: audio-on variants
+      rule_class: review_only
+      source: visual.visual_policy.voice_policy
+      required_review_inputs:
+        - narrated_preview
+        - pronunciation_watchlist
+      on_unresolved: manual_review_required
+      failure_message: "Voice quality, pronunciation, and breath behavior require human review until a detector exists."
+
+    - rule_id: music_mix_alignment
+      applies_to: audio-on variants with music
+      rule_class: review_only
+      source: visual.visual_policy.audio_policy
+      required_review_inputs:
+        - narrated_preview
+        - music_preview
+      on_unresolved: manual_review_required
+      failure_message: "Music and mix posture require human review until a detector exists."

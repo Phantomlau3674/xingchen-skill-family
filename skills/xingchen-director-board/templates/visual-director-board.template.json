@@ -1,0 +1,147 @@
+{
+  "status": "completed",
+  "board_md_path": "visual-director-board.md",
+  "board_json_path": "visual-director-board.json",
+  "global_director_thesis": "",
+  "aesthetic_system": {
+    "visual_promise": "",
+    "evidence_posture": "",
+    "energy_arc": "",
+    "anti_cheapness_posture": ""
+  },
+  "brainstorming_contract": {
+    "skill_ref": "superpowers/brainstorming",
+    "required_for": [
+      "scene_boards.frame_design",
+      "scene_boards.knowledge_action",
+      "scene_edge_boards.flow"
+    ],
+    "output_rule": "Every scene and scene edge must record options considered, selected direction, and anti-PPT reasoning before Visual Lock."
+  },
+  "scene_boards": [
+    {
+      "scene_id": "scene-01",
+      "scene_job": "hook",
+      "source_layer": {
+        "source_unit_ids": ["source-unit-01"],
+        "what_material_says": "",
+        "must_preserve": "",
+        "can_transform": "",
+        "evidence_role": "hero"
+      },
+      "arrangement_layer": {
+        "narration_refs": ["script.spoken_script.blocks[0]"],
+        "voice_timing": "",
+        "beat_before_keyword": "",
+        "scene_duration_sec": 4,
+        "transition_in": "",
+        "transition_out": ""
+      },
+      "brainstorming_layer": {
+        "skill_ref": "superpowers/brainstorming",
+        "scene_question": "",
+        "knowledge_action": "prove",
+        "options_considered": [
+          "option-a",
+          "option-b",
+          "option-c"
+        ],
+        "selected_direction": "",
+        "why_selected": "",
+        "continuity_handles": [
+          {
+            "handle_id": "handle-scene-01-keyword",
+            "handle_origin": "concept",
+            "handle_kind": "keyword",
+            "meaning": "",
+            "visual_form": "",
+            "usable_as": ["out_anchor", "scene_motif"],
+            "must_remain_recognizable": ""
+          }
+        ],
+        "anti_ppt_decision": ""
+      },
+      "aesthetic_layer": {
+        "aesthetic_role": "",
+        "color_temperature": "",
+        "density": "moderate",
+        "energy_level": 8,
+        "contrast_to_prev_scene": "",
+        "cheapness_to_avoid": []
+      },
+      "frame_layer": {
+        "main_frame_design": "",
+        "dominant_anchor": "",
+        "layout_pattern": "",
+        "camera_path": "",
+        "depth_plan": "",
+        "proof_regions": [],
+        "subtitle_safe_region": ""
+      },
+      "detail_layer": {
+        "lighting": "",
+        "material_surface": "",
+        "typography_role": "",
+        "motion_verbs": [],
+        "micro_interactions": [],
+        "failure_risks": []
+      },
+      "component_layer": {
+        "primary_component": "",
+        "supporting_components": [],
+        "component_props_brief": "",
+        "fallback_component": "",
+        "kit_extension_needed": false
+      },
+      "subtitle_layer": {
+        "subtitle_mode": "bottom_bar",
+        "subtitle_position": "",
+        "keyword_highlights": [],
+        "must_not_cover": [],
+        "relationship_to_voice": ""
+      },
+      "tech_stack_layer": {
+        "primary_stack": "remotion",
+        "integration_mode": "",
+        "why_this_stack": "",
+        "rejected_stacks": [],
+        "preview_required": ""
+      },
+      "lookdev_acceptance": {
+        "still_frame_check": "",
+        "motion_check": "",
+        "proof_readability_check": "",
+        "aesthetic_check": ""
+      }
+    }
+  ],
+  "scene_edge_boards": [
+    {
+      "edge_id": "edge-scene-01-to-scene-02",
+      "from_scene_id": "scene-01",
+      "to_scene_id": "scene-02",
+      "skill_ref": "superpowers/brainstorming",
+      "bridge_question": "",
+      "options_considered": [
+        "keyword relay",
+        "proof region relay",
+        "scale shift"
+      ],
+      "selected_bridge": "",
+      "narrative_bridge": "",
+      "continuity_handle_kind": "keyword",
+      "out_handle": "",
+      "in_handle": "",
+      "transition_method": "keyword_relay",
+      "cut_moment": "",
+      "duration_frames": 8,
+      "anti_ppt_risk": "",
+      "lookdev_acceptance": ""
+    }
+  ],
+  "component_registry_plan": [],
+  "subtitle_system": {},
+  "tech_stack_policy": {},
+  "lookdev_acceptance": [],
+  "unresolved_questions": []
+}

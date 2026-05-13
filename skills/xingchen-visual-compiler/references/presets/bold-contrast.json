@@ -1,0 +1,30 @@
+{
+  "preset_id": "bold-contrast",
+  "display_name": "高对比撞色",
+  "colors": {
+    "stage": "#000000",
+    "ink": "#ffffff",
+    "ink_dim": "#c5c5c5",
+    "accent": "#ff3b30",
+    "danger": "#ffd60a",
+    "surface": "#111111"
+  },
+  "typography": {
+    "display": "Space Grotesk",
+    "body": "Inter",
+    "body_cjk": "Noto Sans SC",
+    "mono": "JetBrains Mono"
+  },
+  "motion_bias": {
+    "entrance_ms": 280,
+    "stagger_ms": 50,
+    "energy": "high"
+  },
+  "texture": {
+    "grain": false,
+    "scanline": false,
+    "noise_opacity": 0.0
+  },
+  "layout_bias": "manifesto",
+  "transition_default": "camera-push"
+}

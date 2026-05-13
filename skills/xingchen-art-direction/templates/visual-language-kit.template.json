@@ -1,0 +1,143 @@
+{
+  "kit_id": "0417-skill-run-template",
+  "origin_mode": "project-original-example",
+  "meta_concept": "这条视频本身，就是一次 skill 运行。",
+  "chrome_family": "skill-run",
+  "anti_reference": [
+    {
+      "path": "C:\\Users\\liuzh\\Videos\\douyin\\0417\\out\\output-16x9.mp4",
+      "reason": "SaaS keynote 卡片风把论点做成了装饰版式，而不是运行中的证据。"
+    }
+  ],
+  "palette_lock": {
+    "bg_void": "#0A0B0E",
+    "bg_panel": "#12141A",
+    "bg_raised": "#1A1D25",
+    "stroke": "#2A2F3C",
+    "text_primary": "#ECEFF4",
+    "text_mute": "#8B93A7",
+    "text_dim": "#4A5066",
+    "accent_warm": "#F5A524",
+    "accent_cool": "#7DD3FC",
+    "accent_good": "#4ADE80",
+    "accent_bad": "#F87171"
+  },
+  "typography_lock": {
+    "display_font": "Alibaba PuHuiTi 3.0 95 Ultra Bold",
+    "body_font": "Alibaba PuHuiTi 3.0 55 Medium",
+    "mono_font": "JetBrains Mono",
+    "tracking": {
+      "headline": 0,
+      "mono_label": 0.5
+    }
+  },
+  "motion_lexicon": [
+    "typewrite",
+    "blink",
+    "progress-fill",
+    "diff-scroll",
+    "counter-jump",
+    "zoom-punch",
+    "scan-box",
+    "whip-pan"
+  ],
+  "chrome_components": [
+    {
+      "name": "TerminalFrame",
+      "kind": "frame",
+      "family": "skill-run",
+      "symbolic_role": "把工作现场固定成主叙事容器",
+      "allowed_scene_jobs": [
+        "announce",
+        "explain",
+        "prove"
+      ],
+      "notes": "Derived from DouyinSkillTheme/chrome/TerminalFrame.tsx"
+    },
+    {
+      "name": "SkillBadge",
+      "kind": "badge",
+      "family": "skill-run",
+      "symbolic_role": "把 skill 名称变成具名动作，而不是抽象标签",
+      "allowed_scene_jobs": [
+        "announce",
+        "release"
+      ],
+      "notes": "Derived from DouyinSkillTheme/chrome/SkillBadge.tsx"
+    },
+    {
+      "name": "ProgressBar",
+      "kind": "meter",
+      "family": "skill-run",
+      "symbolic_role": "用真实进度承担因果，不做装饰扫光",
+      "allowed_scene_jobs": [
+        "explain",
+        "prove"
+      ],
+      "notes": "Derived from DouyinSkillTheme/chrome/ProgressBar.tsx"
+    },
+    {
+      "name": "TypeWriter",
+      "kind": "text-motion",
+      "family": "skill-run",
+      "symbolic_role": "把命令与口播同步为执行动作",
+      "allowed_scene_jobs": [
+        "announce",
+        "contrast"
+      ],
+      "notes": "Derived from DouyinSkillTheme/chrome/TypeWriter.tsx"
+    },
+    {
+      "name": "ZoomPunch",
+      "kind": "emphasis-motion",
+      "family": "skill-run",
+      "symbolic_role": "让证据或关键字有执行落点，而不是空泛 bounce",
+      "allowed_scene_jobs": [
+        "prove",
+        "announce",
+        "contrast"
+      ],
+      "notes": "Derived from DouyinSkillTheme/chrome/ZoomPunch.tsx"
+    },
+    {
+      "name": "PathReference",
+      "kind": "inline-token",
+      "family": "skill-run",
+      "symbolic_role": "把文件与位置本身变成证据",
+      "allowed_scene_jobs": [
+        "prove",
+        "explain"
+      ],
+      "notes": "Project-original token locked by art-direction"
+    },
+    {
+      "name": "DiffLine",
+      "kind": "inline-token",
+      "family": "skill-run",
+      "symbolic_role": "把增删变化变成观众可感知的因果",
+      "allowed_scene_jobs": [
+        "prove",
+        "contrast"
+      ],
+      "notes": "Project-original token locked by art-direction"
+    }
+  ],
+  "forbidden_components": [
+    "EnglishStatusChip",
+    "PseudoDashboardCard",
+    "NarrationEchoBubble",
+    "GradientBlobDecor",
+    "CenteredBulletList"
+  ],
+  "extension_protocol": {
+    "request_file": "kit-extension-request.md",
+    "required_fields": [
+      "component_name",
+      "purpose",
+      "chrome_family",
+      "why_existing_components_fail",
+      "impact_on_forbidden_list"
+    ],
+    "default_action": "block-and-return-to-art-direction"
+  }
+}

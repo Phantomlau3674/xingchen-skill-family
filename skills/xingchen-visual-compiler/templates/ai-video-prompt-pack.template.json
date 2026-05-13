@@ -1,0 +1,31 @@
+{
+  "pack_path": "ai-video-prompt-pack.md",
+  "provider_target": "seedance",
+  "default_aspect_ratio": "9:16",
+  "default_duration_sec": 3,
+  "requests": [
+    {
+      "request_id": "",
+      "scene_ids": [],
+      "option_type": "recommended",
+      "provider": "seedance",
+      "provider_model_hint": "",
+      "technical_route": "text_to_video",
+      "prompt_pack_path": "ai-video-prompt-pack.md",
+      "prompt_path": "",
+      "prompt_text": "",
+      "negative_prompt": "readable claim text, proof, evidence, UI, logos, faces, numbers, subtitles",
+      "duration_sec": 3,
+      "aspect_ratio": "9:16",
+      "reference_asset_paths": [],
+      "output_expectation": "One 9:16 mp4 or mov file, no baked subtitles, no readable text, suitable as a muted Remotion video_plate.",
+      "status": "drafted",
+      "state_trace_refs": [],
+      "proof_exclusion_policy": "No proof, no evidence, no readable claims, and no subtitles; Remotion owns proof overlays and captions.",
+      "remotion_integration_plan": "Use only as a muted video_plate under Remotion-controlled proof overlays, subtitles, and final timing.",
+      "handoff_instructions": "User manually generates this on the chosen platform, downloads the file, returns or places it in the project, then Codex registers render.ai_video_candidates.",
+      "expected_candidate_id": "",
+      "notes": ""
+    }
+  ]
+}

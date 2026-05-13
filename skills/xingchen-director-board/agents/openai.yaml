@@ -1,0 +1,9 @@
+name: xingchen-director-board
+description: Director-board stage for Xingchen visual-direction work.
+entrypoint: SKILL.md
+inputs:
+  - project-state.json
+outputs:
+  - visual-director-board.md
+  - visual-director-board.json
+  - project-state.json.visual.director_board

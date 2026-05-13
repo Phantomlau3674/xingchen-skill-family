@@ -1,0 +1,498 @@
+{
+  "kind": "XingchenNextProjectState",
+  "version": "1.1.0",
+  "metadata": {
+    "project_id": "sample-knowledge-opinion",
+    "title": "Sample knowledge-opinion video",
+    "content_lane": "knowledge-opinion",
+    "default_language": "zh-CN",
+    "quality_mode": "hero_quality_first",
+    "default_platform": "douyin",
+    "active_stage": "ingest",
+    "created_at": "2026-04-19T00:00:00+08:00",
+    "updated_at": "2026-04-19T00:00:00+08:00"
+  },
+  "workflow": {
+    "stage_history": [
+      {
+        "stage": "ingest",
+        "status": "active"
+      }
+    ],
+    "approvals": [
+      {
+        "checkpoint": "Topic Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "2026-04-19T00:00:00+08:00",
+        "updated_at": "2026-04-19T00:00:00+08:00"
+      },
+      {
+        "checkpoint": "Script Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "2026-04-19T00:00:00+08:00",
+        "updated_at": "2026-04-19T00:00:00+08:00"
+      },
+      {
+        "checkpoint": "StoryMother Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "2026-04-19T00:00:00+08:00",
+        "updated_at": "2026-04-19T00:00:00+08:00"
+      },
+      {
+        "checkpoint": "Visual Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "2026-04-19T00:00:00+08:00",
+        "updated_at": "2026-04-19T00:00:00+08:00"
+      },
+      {
+        "checkpoint": "Lookdev Approval",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "2026-04-19T00:00:00+08:00",
+        "updated_at": "2026-04-19T00:00:00+08:00"
+      }
+    ],
+    "blocked": false,
+    "blocking_reason": ""
+  },
+  "sources": {
+    "source_pack": {
+      "core_thesis": "",
+      "audience": "",
+      "goal": "",
+      "links": [],
+      "screenshots": [],
+      "screen_recordings": [],
+      "notes": [],
+      "draft_recordings": [],
+      "existing_assets": [],
+      "constraints": []
+    },
+    "transcript": {
+      "segments": []
+    },
+    "recording_correction": {
+      "status": "pending",
+      "source_audio_refs": [],
+      "cleaned_audio_paths": [],
+      "transcript_path": "",
+      "cleanup_report_path": "",
+      "correction_actions": [],
+      "quality_checks": [],
+      "manual_review_notes": ""
+    },
+    "asset_manifest": [],
+    "status": "collecting"
+  },
+  "proof": {
+    "claims": [],
+    "evidence_items": [],
+    "proof_status": "pending"
+  },
+  "script": {
+    "topic_lock": {
+      "status": "pending",
+      "reason": ""
+    },
+    "script_lock": {
+      "status": "pending",
+      "reason": ""
+    },
+    "spoken_script": {
+      "version": 1,
+      "language": "zh-CN",
+      "blocks": []
+    },
+    "slides": [],
+    "beat_map": {
+      "scenes": []
+    },
+    "status": "pending"
+  },
+  "visual": {
+    "visual_lock": {
+      "status": "pending",
+      "reason": ""
+    },
+    "visual_policy": {
+      "meta_concept": "",
+      "taste_thesis": "",
+      "selected_aesthetic_mode": "",
+      "aesthetic_modes": [],
+      "benchmark_canon": [],
+      "reference_set": [],
+      "editing_priority_stack": [],
+      "continuity_policy": {
+        "time_flow": "",
+        "space_flow": "",
+        "cut_readability": "",
+        "intentional_break_policy": ""
+      },
+      "mise_en_scene_policy": {
+        "staging": "",
+        "blocking": "",
+        "foreground_background": "",
+        "lighting_motivation": "",
+        "retouching_discipline": "",
+        "color_abstraction_policy": ""
+      },
+      "color_script_policy": {
+        "opening_anchor_hex": [],
+        "middle_anchor_hex": [],
+        "closing_anchor_hex": [],
+        "temperature_arc": "",
+        "value_arc": "",
+        "drift_tolerance_delta_e": 0
+      },
+      "audio_policy": {
+        "music_function": "",
+        "sfx_discipline": "",
+        "mix_floor_lufs": -22,
+        "mix_ceiling_lufs": -14,
+        "silence_policy": "",
+        "ducking_policy": ""
+      },
+      "voice_policy": {
+        "voice_route": "",
+        "prosody_target": "",
+        "breath_policy": "",
+        "pronunciation_watchlist": [],
+        "authenticity_guardrail": "",
+        "clone_disclosure_mode": ""
+      },
+      "anti_cheapness": [],
+      "hero_frame_scene_id": "",
+      "hero_frame_laws": [],
+      "energy_curve": {
+        "opening": "",
+        "middle": "",
+        "closing": ""
+      },
+      "style_consistency_policy": {
+        "voice": "",
+        "palette": "",
+        "lighting": "",
+        "type": "",
+        "allowed_variation": "",
+        "disallowed_drift": ""
+      },
+      "short_form_policy": {
+        "hook_seconds": 3,
+        "aspect_ratio": "9:16",
+        "audio_on": true,
+        "show_tell_alignment": "",
+        "authenticity": ""
+      },
+      "manual_review_policy": {
+        "unsupported_aesthetic_rules": "manual_review_required",
+        "required_human_signoff": [
+          "StoryMother Lock",
+          "Visual Lock",
+          "Lookdev Approval"
+        ],
+        "notes": ""
+      },
+      "anti_reference": [],
+      "forbidden_list": [],
+      "allowed_chrome": [],
+      "palette_lock": {},
+      "typography_lock": {},
+      "motion_rhythm": {},
+      "evidence_rule": {
+        "proof_scene_min_coverage_ratio": 0.6,
+        "hero_proof_recommended_ratio": 0.7,
+        "min_legible_font_px_at_target_resolution": 24,
+        "subtitle_overlap_max_ratio": 0.1,
+        "singular_image_required": true
+      },
+      "vibemotion_candidate_policy": {
+        "mode": "generate_review_video_candidates",
+        "default_discussion": "per_scene_options",
+        "default_options": [
+          "recommended",
+          "bold",
+          "safe"
+        ],
+        "default_selection_rule": "use_recommended_when_user_does_not_select",
+        "not_a_template_library": true,
+        "candidate_origin_required": true,
+        "state_trace_refs_required": true
+      },
+      "hyperframes_scene_policy": {
+        "mode": "generate_html_scene_candidates",
+        "default_discussion": "per_scene_html_motion_options",
+        "default_options": [
+          "recommended",
+          "bold",
+          "safe"
+        ],
+        "allowed_jobs": [
+          "html_native_explainer",
+          "dom_svg_motion",
+          "gsap_or_anime_timeline",
+          "lottie_plate",
+          "lightweight_three_canvas_plate",
+          "visual_editor_friendly_scene"
+        ],
+        "forbidden_jobs": [
+          "full_video_assembly",
+          "subtitle",
+          "voice_or_audio_assembly",
+          "literal_proof_geometry",
+          "screen_recording_reinterpretation",
+          "spark_world_asset_substitution",
+          "generic_background"
+        ],
+        "promotion_rule": "approved_candidate_must_promote_to_html_canvas_or_remotion",
+        "not_final_video_controller": true,
+        "not_a_template_library": true,
+        "generated_per_story_mother": true,
+        "candidate_origin_required": true,
+        "state_trace_refs_required": true
+      },
+      "vfx_director_pass": {
+        "required": true,
+        "scene_decisions": [],
+        "spark_use_policy": {
+          "allowed_jobs": [
+            "true_3dgs_asset_world",
+            "streaming_rad_world",
+            "procedural_splat_world",
+            "hybrid_spark_three_world",
+            "spark_effect_world_plate"
+          ],
+          "job_route_mapping": {
+            "true_3dgs_asset_world": "Real 3DGS or 3D model world asset loaded from approved .spz, .ply, .splat, .ksplat, .sog, .zip, or equivalent asset source.",
+            "streaming_rad_world": "LOD or streaming spatial world using .rad, paged ExtSplats, foveation, or equivalent world traversal budget.",
+            "procedural_splat_world": "Procedural Spark world asset created through constructSplats or equivalent splat-world generation; not a true 3DGS asset claim.",
+            "hybrid_spark_three_world": "Spark plus Three.js staging for a spatial world plate with mesh, material, offscreen capture, or camera-path support.",
+            "spark_effect_world_plate": "Dynamic splat effects, dyno modifiers, SDF lighting/edit layers, portals, deformation, material, light, or volume only when attached to a justified Spark world asset or spatial plate."
+          },
+          "spark_asset_need_required": true,
+          "required_justification": "Spark use must record spark_asset_need and justify a real 3D model, real 3DGS asset, streaming RAD world, procedural splat world, hybrid Spark+Three world plate, spatial traversal, or material/light/volume/effect need as world-asset rendering.",
+          "forbidden_jobs": [
+            "literal_proof",
+            "ui_screenshot",
+            "number_inspection",
+            "generic_background",
+            "generic_transition",
+            "generic_proof",
+            "subtitle",
+            "voice_or_audio_assembly"
+          ],
+          "forbidden_rule": "Spark cannot be selected for generic background, generic transition, proof, UI, subtitle, voice, audio assembly, or full-project fallback work.",
+          "truth_rule": "renderer_family is intent; route_status and actual_renderer_family record execution truth"
+        },
+        "vibemotion_candidate_pass": {
+          "role": "scene_option_menu_and_review_video_generation",
+          "requires_script_binding": true,
+          "candidate_outputs_required_for_lookdev": true
+        },
+        "hyperframes_candidate_pass": {
+          "role": "ai_first_html_canvas_scene_option_generation",
+          "requires_script_binding": true,
+          "candidate_outputs_required_for_lookdev": true,
+          "promotion_required_before_render": true
+        },
+        "proof_scene_guardrail": "Proof scenes stay proof-safe unless upstream explicitly approves a separate world-plate transition."
+      }
+    },
+    "lookdev_gate": {
+      "path": "",
+      "status": "pending",
+      "approval_checkpoint": "Lookdev Approval",
+      "aesthetic_checks": [],
+      "unsupported_policy": {
+        "status": "manual_review_required",
+        "silent_pass": false
+      }
+    },
+    "hook_design": {
+      "hook_pattern": "",
+      "hook_promise": "",
+      "hook_energy_level": 0,
+      "hook_thumbnail_viable": false,
+      "hook_feed_contrast_note": "",
+      "rejected_patterns": []
+    },
+    "energy_map": {
+      "shape": "",
+      "peak_scenes": [],
+      "rest_scenes": [],
+      "density_budget": 0,
+      "rewatch_candidate_scenes": [],
+      "screenshot_candidate_scenes": []
+    },
+    "contrast_map": {
+      "monotony_test_result": "",
+      "variety_checkpoint_score": 0,
+      "scale_drama_scenes": [],
+      "layout_pattern_sequence": []
+    },
+    "director_board": {
+      "status": "pending",
+      "board_md_path": "",
+      "board_json_path": "",
+      "global_director_thesis": "",
+      "aesthetic_system": {},
+      "brainstorming_contract": {
+        "skill_ref": "superpowers/brainstorming",
+        "required_for": [
+          "scene_boards.frame_design",
+          "scene_boards.knowledge_action",
+          "scene_edge_boards.flow"
+        ],
+        "output_rule": "Every scene and scene edge must record options considered, selected direction, and anti-PPT reasoning before Visual Lock."
+      },
+      "scene_boards": [],
+      "scene_edge_boards": [],
+      "component_registry_plan": [],
+      "subtitle_system": {},
+      "tech_stack_policy": {},
+      "lookdev_acceptance": [],
+      "unresolved_questions": []
+    },
+    "material_director_pass": {
+      "status": "pending",
+      "director_summary": "",
+      "source_unit_readings": [],
+      "recording_rhythm_reading": {
+        "source_audio_ref": "",
+        "segments": []
+      },
+      "scene_binding_plan": [],
+      "tech_stack_plan": [],
+      "unresolved_questions": []
+    },
+    "recording_visual_brief": {
+      "source_audio_ref": "",
+      "voice_energy_curve": [],
+      "pause_map": [],
+      "emphasis_beats": [],
+      "visual_opportunity_beats": [],
+      "route_hints": []
+    },
+    "screen_recording_brief": {
+      "clips": []
+    },
+    "source_material_plan": [],
+    "hero_frame_scene_id": "",
+    "scene_decisions": [],
+    "color_story": {
+      "act1_palette": [],
+      "act2_variations": [],
+      "act3_resolution": []
+    },
+    "best_creator_self_test": {
+      "hook_stop": false,
+      "hero_identifiable": false,
+      "energy_at_2x": false,
+      "screenshot_worthy": false,
+      "order_guessable": false
+    },
+    "artifacts": {
+      "art_direction_path": "",
+      "aesthetic_grounding_path": "",
+      "visual_language_kit_path": "",
+      "lookdev_gate_path": ""
+    },
+    "status": "pending"
+  },
+  "mother": {
+    "story_mother_lock": {
+      "status": "pending",
+      "reason": ""
+    },
+    "story_mother": {
+      "mother_id": "mother-main",
+      "thesis": "",
+      "audience_promise": "",
+      "scene_order": [],
+      "scene_cards": [],
+      "proof_binding": [],
+      "narration_spine": [],
+      "visual_intent": ""
+    },
+    "status": "pending"
+  },
+  "variants": [
+    {
+      "variant_id": "douyin-main",
+      "mother_id": "mother-main",
+      "platform": "douyin",
+      "aspect": "9:16",
+      "hook": "",
+      "pacing_density": "high",
+      "subtitle_policy": {
+        "mode": "supportive",
+        "avoid_anchor_overlap": true
+      },
+      "title_options": [],
+      "cover_brief": "",
+      "scene_adjustments": [],
+      "status": "pending"
+    }
+  ],
+  "render": {
+    "route": {
+      "default_mode": "code_primary",
+      "hero_shot_mode": "gen_insert",
+      "mixed_scene_requires_explicit_opt_in": true
+    },
+    "spark_route_policy": {
+      "route_status_values": [
+        "true_3dgs_asset",
+        "streaming_rad_world",
+        "procedural_splat_world",
+        "hybrid_spark_three",
+        "fallback_preview",
+        "blocked_missing_asset",
+        "approved_fallback_final"
+      ],
+      "actual_renderer_family_values": [
+        "spark_3dgs",
+        "spark_procedural_splat",
+        "spark_hybrid_three",
+        "html_canvas_world_plate_fallback"
+      ],
+      "truth_rule": "Procedural Spark plates cannot be marked true_3dgs_asset."
+    },
+    "vibemotion_candidates": [],
+    "hyperframes_candidates": [],
+    "ai_video_prompt_requests": [],
+    "ai_video_candidates": [],
+    "plugin_adapter_runs": [],
+    "scene_motion_specs": [],
+    "jobs": [],
+    "status": "pending"
+  },
+  "publish": {
+    "records": [],
+    "status": "pending"
+  },
+  "review": {
+    "performance_reviews": [],
+    "lookdev_gate_results": [],
+    "status": "pending"
+  },
+  "exports": {
+    "review_pack": null,
+    "render_pack": null,
+    "publish_pack": null,
+    "legacy_pack": null
+  }
+}

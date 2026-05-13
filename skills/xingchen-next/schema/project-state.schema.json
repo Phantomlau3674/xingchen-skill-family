@@ -1,0 +1,1350 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://xingchen.dev/schema/project-state.schema.json",
+  "title": "XingchenNextProjectState",
+  "type": "object",
+  "required": [
+    "kind",
+    "version",
+    "metadata",
+    "workflow",
+    "sources",
+    "proof",
+    "script",
+    "visual",
+    "mother",
+    "variants",
+    "render",
+    "publish",
+    "review",
+    "exports"
+  ],
+  "properties": {
+    "kind": { "const": "XingchenNextProjectState" },
+    "version": { "type": "string" },
+    "metadata": {
+      "type": "object",
+      "required": ["project_id", "title", "active_stage", "created_at", "updated_at"],
+      "properties": {
+        "project_id": { "type": "string", "minLength": 1 },
+        "title": { "type": "string", "minLength": 1 },
+        "content_lane": { "type": "string" },
+        "default_language": { "type": "string" },
+        "quality_mode": { "type": "string" },
+        "default_platform": { "type": "string" },
+        "active_stage": {
+          "enum": [
+            "ingest",
+            "research/proof",
+            "script",
+            "story-mother",
+            "visual-direction",
+            "platform-adapt",
+            "lookdev",
+            "render",
+            "publish",
+            "review"
+          ]
+        },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["approvals"],
+      "properties": {
+        "stage_history": { "type": "array" },
+        "approvals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["checkpoint", "status"],
+            "properties": {
+              "checkpoint": {
+                "enum": [
+                  "Topic Lock",
+                  "Script Lock",
+                  "StoryMother Lock",
+                  "Visual Lock",
+                  "Lookdev Approval"
+                ]
+              },
+              "status": {
+                "enum": ["pending", "approved", "rejected", "superseded", "manual_review_required"]
+              },
+              "reviewer": { "type": ["string", "null"] },
+              "reason": { "type": "string" },
+              "blocked_fields": { "type": "array" },
+              "created_at": { "type": "string" },
+              "updated_at": { "type": "string" }
+            }
+          }
+        },
+        "blocked": { "type": "boolean" },
+        "blocking_reason": { "type": "string" }
+      }
+    },
+    "sources": {
+      "type": "object",
+      "properties": {
+        "source_pack": {
+          "type": "object",
+          "properties": {
+            "core_thesis": { "type": "string" },
+            "audience": { "type": "string" },
+            "goal": { "type": "string" },
+            "links": { "type": "array" },
+            "screenshots": { "type": "array" },
+            "screen_recordings": { "type": "array" },
+            "notes": { "type": "array" },
+            "draft_recordings": { "type": "array" },
+            "existing_assets": { "type": "array" },
+            "constraints": { "type": "array" }
+          }
+        },
+        "transcript": {
+          "type": "object",
+          "properties": {
+            "segments": { "type": "array" }
+          }
+        },
+        "recording_correction": {
+          "type": "object",
+          "required": [
+            "status",
+            "source_audio_refs",
+            "cleaned_audio_paths",
+            "transcript_path",
+            "cleanup_report_path",
+            "correction_actions",
+            "quality_checks",
+            "manual_review_notes"
+          ],
+          "properties": {
+            "status": {
+              "enum": ["pending", "completed", "manual_review_required", "blocked"]
+            },
+            "source_audio_refs": { "type": "array", "items": { "type": "string" } },
+            "cleaned_audio_paths": { "type": "array", "items": { "type": "string" } },
+            "transcript_path": { "type": "string" },
+            "cleanup_report_path": { "type": "string" },
+            "correction_actions": { "type": "array", "items": { "type": "string" } },
+            "quality_checks": { "type": "array", "items": { "type": "string" } },
+            "manual_review_notes": { "type": "string" }
+          }
+        },
+        "asset_manifest": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "asset_id": { "type": "string" },
+              "file_path": { "type": "string" },
+              "asset_type": {
+                "enum": [
+                  "screenshot",
+                  "screen_recording",
+                  "audio_recording",
+                  "image",
+                  "document",
+                  "video",
+                  "html",
+                  "data",
+                  "other"
+                ]
+              },
+              "summary": { "type": "string" },
+              "topic_tags": { "type": "array", "items": { "type": "string" } },
+              "proof_candidate": { "type": "boolean" },
+              "dedupe_group": { "type": "string" },
+              "review_status": {
+                "enum": ["pending", "reviewed", "approved", "rejected", "needs_redaction", "blocked"]
+              }
+            }
+          }
+        },
+        "status": { "type": "string" }
+      }
+    },
+    "proof": {
+      "type": "object",
+      "properties": {
+        "claims": { "type": "array" },
+        "evidence_items": { "type": "array" },
+        "proof_status": { "type": "string" }
+      }
+    },
+    "script": {
+      "type": "object",
+      "properties": {
+        "topic_lock": { "type": "object" },
+        "script_lock": { "type": "object" },
+        "spoken_script": { "type": "object" },
+        "slides": { "type": "array" },
+        "beat_map": { "type": "object" },
+        "status": { "type": "string" }
+      }
+    },
+    "visual": {
+      "type": "object",
+      "required": [
+        "visual_lock",
+        "visual_policy",
+        "director_board",
+        "material_director_pass",
+        "lookdev_gate",
+        "artifacts",
+        "status"
+      ],
+      "properties": {
+        "visual_lock": { "type": "object" },
+        "hero_frame_scene_id": { "type": "string" },
+        "hook_design": {
+          "type": "object",
+          "properties": {
+            "hook_pattern": { "type": "string" },
+            "hook_promise": { "type": "string" },
+            "hook_energy_level": { "type": "number", "minimum": 0, "maximum": 10 },
+            "hook_thumbnail_viable": { "type": "boolean" },
+            "hook_feed_contrast_note": { "type": "string" },
+            "rejected_patterns": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "energy_map": {
+          "type": "object",
+          "properties": {
+            "shape": { "type": "string" },
+            "peak_scenes": { "type": "array", "items": { "type": "string" } },
+            "rest_scenes": { "type": "array", "items": { "type": "string" } },
+            "density_budget": { "type": "number" },
+            "rewatch_candidate_scenes": { "type": "array", "items": { "type": "string" } },
+            "screenshot_candidate_scenes": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "contrast_map": {
+          "type": "object",
+          "properties": {
+            "monotony_test_result": { "type": "string" },
+            "variety_checkpoint_score": { "type": "number", "minimum": 0, "maximum": 6 },
+            "scale_drama_scenes": { "type": "array", "items": { "type": "string" } },
+            "layout_pattern_sequence": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "director_board": {
+          "type": "object",
+          "required": [
+            "status",
+            "board_md_path",
+            "board_json_path",
+            "global_director_thesis",
+            "aesthetic_system",
+            "brainstorming_contract",
+            "scene_boards",
+            "scene_edge_boards",
+            "component_registry_plan",
+            "subtitle_system",
+            "tech_stack_policy",
+            "lookdev_acceptance",
+            "unresolved_questions"
+          ],
+          "properties": {
+            "status": {
+              "enum": ["pending", "completed", "blocked", "manual_review_required"]
+            },
+            "board_md_path": { "type": "string" },
+            "board_json_path": { "type": "string" },
+            "global_director_thesis": { "type": "string" },
+            "aesthetic_system": { "type": "object" },
+            "brainstorming_contract": {
+              "type": "object",
+              "required": ["skill_ref", "required_for", "output_rule"],
+              "properties": {
+                "skill_ref": { "type": "string" },
+                "required_for": { "type": "array", "items": { "type": "string" } },
+                "output_rule": { "type": "string" }
+              }
+            },
+            "scene_boards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "scene_id",
+                  "scene_job",
+                  "source_layer",
+                  "arrangement_layer",
+                  "brainstorming_layer",
+                  "aesthetic_layer",
+                  "frame_layer",
+                  "detail_layer",
+                  "component_layer",
+                  "subtitle_layer",
+                  "tech_stack_layer",
+                  "lookdev_acceptance"
+                ],
+                "properties": {
+                  "scene_id": { "type": "string" },
+                  "scene_job": { "enum": ["hook", "context", "proof", "build", "peak", "rest", "payoff", "close"] },
+                  "source_layer": {
+                    "type": "object",
+                    "required": [
+                      "source_unit_ids",
+                      "what_material_says",
+                      "must_preserve",
+                      "can_transform",
+                      "evidence_role"
+                    ],
+                    "properties": {
+                      "source_unit_ids": { "type": "array", "items": { "type": "string" } },
+                      "what_material_says": { "type": "string" },
+                      "must_preserve": { "type": "string" },
+                      "can_transform": { "type": "string" },
+                      "evidence_role": { "enum": ["hero", "supporting", "background", "none"] }
+                    }
+                  },
+                  "arrangement_layer": {
+                    "type": "object",
+                    "required": [
+                      "narration_refs",
+                      "voice_timing",
+                      "beat_before_keyword",
+                      "scene_duration_sec",
+                      "transition_in",
+                      "transition_out"
+                    ],
+                    "properties": {
+                      "narration_refs": { "type": "array", "items": { "type": "string" } },
+                      "voice_timing": { "type": "string" },
+                      "beat_before_keyword": { "type": "string" },
+                      "scene_duration_sec": { "type": "number", "minimum": 0 },
+                      "transition_in": { "type": "string" },
+                      "transition_out": { "type": "string" }
+                    }
+                  },
+                  "brainstorming_layer": {
+                    "type": "object",
+                    "required": [
+                      "skill_ref",
+                      "scene_question",
+                      "knowledge_action",
+                      "options_considered",
+                      "selected_direction",
+                      "why_selected",
+                      "continuity_handles",
+                      "anti_ppt_decision"
+                    ],
+                    "properties": {
+                      "skill_ref": { "type": "string" },
+                      "scene_question": { "type": "string" },
+                      "knowledge_action": {
+                        "enum": ["define", "compare", "decompose", "prove", "invert", "compress", "expand", "summarize", "bridge", "hook"]
+                      },
+                      "options_considered": { "type": "array", "items": { "type": "string" } },
+                      "selected_direction": { "type": "string" },
+                      "why_selected": { "type": "string" },
+                      "continuity_handles": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["handle_id", "handle_origin", "handle_kind", "meaning", "visual_form", "usable_as", "must_remain_recognizable"],
+                          "properties": {
+                            "handle_id": { "type": "string" },
+                            "handle_origin": {
+                              "enum": ["source_material", "designed_graphic", "concept", "subtitle", "data", "voice_beat"]
+                            },
+                            "handle_kind": {
+                              "enum": ["keyword", "number", "shape", "line", "frame", "arrow", "color", "motion", "layout", "proof_region"]
+                            },
+                            "meaning": { "type": "string" },
+                            "visual_form": { "type": "string" },
+                            "usable_as": { "type": "array", "items": { "type": "string" } },
+                            "must_remain_recognizable": { "type": "string" }
+                          }
+                        }
+                      },
+                      "anti_ppt_decision": { "type": "string" }
+                    }
+                  },
+                  "aesthetic_layer": {
+                    "type": "object",
+                    "required": [
+                      "aesthetic_role",
+                      "color_temperature",
+                      "density",
+                      "energy_level",
+                      "contrast_to_prev_scene",
+                      "cheapness_to_avoid"
+                    ],
+                    "properties": {
+                      "aesthetic_role": { "type": "string" },
+                      "color_temperature": { "type": "string" },
+                      "density": { "enum": ["minimal", "moderate", "dense"] },
+                      "energy_level": { "type": "number", "minimum": 1, "maximum": 10 },
+                      "contrast_to_prev_scene": { "type": "string" },
+                      "cheapness_to_avoid": { "type": "array", "items": { "type": "string" } }
+                    }
+                  },
+                  "frame_layer": {
+                    "type": "object",
+                    "required": [
+                      "main_frame_design",
+                      "dominant_anchor",
+                      "layout_pattern",
+                      "camera_path",
+                      "depth_plan",
+                      "proof_regions",
+                      "subtitle_safe_region"
+                    ],
+                    "properties": {
+                      "main_frame_design": { "type": "string" },
+                      "dominant_anchor": { "type": "string" },
+                      "layout_pattern": { "type": "string" },
+                      "camera_path": { "type": "string" },
+                      "depth_plan": { "type": "string" },
+                      "proof_regions": { "type": "array", "items": { "type": "string" } },
+                      "subtitle_safe_region": { "type": "string" }
+                    }
+                  },
+                  "detail_layer": {
+                    "type": "object",
+                    "required": [
+                      "lighting",
+                      "material_surface",
+                      "typography_role",
+                      "motion_verbs",
+                      "micro_interactions",
+                      "failure_risks"
+                    ],
+                    "properties": {
+                      "lighting": { "type": "string" },
+                      "material_surface": { "type": "string" },
+                      "typography_role": { "type": "string" },
+                      "motion_verbs": { "type": "array", "items": { "type": "string" } },
+                      "micro_interactions": { "type": "array", "items": { "type": "string" } },
+                      "failure_risks": { "type": "array", "items": { "type": "string" } }
+                    }
+                  },
+                  "component_layer": {
+                    "type": "object",
+                    "required": [
+                      "primary_component",
+                      "supporting_components",
+                      "component_props_brief",
+                      "fallback_component",
+                      "kit_extension_needed"
+                    ],
+                    "properties": {
+                      "primary_component": { "type": "string" },
+                      "supporting_components": { "type": "array", "items": { "type": "string" } },
+                      "component_props_brief": { "type": "string" },
+                      "fallback_component": { "type": "string" },
+                      "kit_extension_needed": { "type": "boolean" }
+                    }
+                  },
+                  "subtitle_layer": {
+                    "type": "object",
+                    "required": [
+                      "subtitle_mode",
+                      "subtitle_position",
+                      "keyword_highlights",
+                      "must_not_cover",
+                      "relationship_to_voice"
+                    ],
+                    "properties": {
+                      "subtitle_mode": { "enum": ["bottom_bar", "floating_caption", "keyword_only", "none"] },
+                      "subtitle_position": { "type": "string" },
+                      "keyword_highlights": { "type": "array", "items": { "type": "string" } },
+                      "must_not_cover": { "type": "array", "items": { "type": "string" } },
+                      "relationship_to_voice": { "type": "string" }
+                    }
+                  },
+                  "tech_stack_layer": {
+                    "type": "object",
+                    "required": [
+                      "primary_stack",
+                      "integration_mode",
+                      "why_this_stack",
+                      "rejected_stacks",
+                      "preview_required"
+                    ],
+                    "properties": {
+                      "primary_stack": { "enum": ["remotion", "html_3d", "hyperframes", "spark", "vibemotion", "source_media", "gen_insert"] },
+                      "integration_mode": { "type": "string" },
+                      "why_this_stack": { "type": "string" },
+                      "rejected_stacks": {
+                        "type": "array",
+                        "items": { "enum": ["remotion", "html_3d", "hyperframes", "spark", "vibemotion", "source_media", "gen_insert"] }
+                      },
+                      "preview_required": { "type": "string" }
+                    }
+                  },
+                  "lookdev_acceptance": {
+                    "type": "object",
+                    "required": [
+                      "still_frame_check",
+                      "motion_check",
+                      "proof_readability_check",
+                      "aesthetic_check"
+                    ],
+                    "properties": {
+                      "still_frame_check": { "type": "string" },
+                      "motion_check": { "type": "string" },
+                      "proof_readability_check": { "type": "string" },
+                      "aesthetic_check": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "scene_edge_boards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "edge_id",
+                  "from_scene_id",
+                  "to_scene_id",
+                  "skill_ref",
+                  "bridge_question",
+                  "options_considered",
+                  "selected_bridge",
+                  "narrative_bridge",
+                  "continuity_handle_kind",
+                  "out_handle",
+                  "in_handle",
+                  "transition_method",
+                  "cut_moment",
+                  "duration_frames",
+                  "anti_ppt_risk",
+                  "lookdev_acceptance"
+                ],
+                "properties": {
+                  "edge_id": { "type": "string" },
+                  "from_scene_id": { "type": "string" },
+                  "to_scene_id": { "type": "string" },
+                  "skill_ref": { "type": "string" },
+                  "bridge_question": { "type": "string" },
+                  "options_considered": { "type": "array", "items": { "type": "string" } },
+                  "selected_bridge": { "type": "string" },
+                  "narrative_bridge": { "type": "string" },
+                  "continuity_handle_kind": {
+                    "enum": ["keyword", "number", "shape", "line", "frame", "arrow", "color", "motion", "layout", "proof_region", "question_answer", "scale_shift"]
+                  },
+                  "out_handle": { "type": "string" },
+                  "in_handle": { "type": "string" },
+                  "transition_method": {
+                    "enum": ["keyword_relay", "proof_region_relay", "diagram_morph", "scale_shift", "axis_handoff", "question_answer_cut", "color_logic_cut", "subtitle_to_visual", "hard_cut", "breath_cut"]
+                  },
+                  "cut_moment": { "type": "string" },
+                  "duration_frames": { "type": "number", "minimum": 0 },
+                  "anti_ppt_risk": { "type": "string" },
+                  "lookdev_acceptance": { "type": "string" }
+                }
+              }
+            },
+            "component_registry_plan": { "type": "array" },
+            "subtitle_system": { "type": "object" },
+            "tech_stack_policy": { "type": "object" },
+            "lookdev_acceptance": { "type": "array" },
+            "unresolved_questions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "material_director_pass": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": ["pending", "completed", "blocked", "manual_review_required"]
+            },
+            "director_summary": { "type": "string" },
+            "source_unit_readings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "unit_id": { "type": "string" },
+                  "source_ref": { "type": "string" },
+                  "source_kind": { "type": "string" },
+                  "expressed_meaning": { "type": "string" },
+                  "claim_or_feeling": { "type": "string" },
+                  "must_preserve": { "type": "string" },
+                  "visual_potential": { "type": "string" },
+                  "use_decision": {
+                    "enum": [
+                      "hero_proof",
+                      "supporting_proof",
+                      "context",
+                      "texture",
+                      "reference_only",
+                      "unused"
+                    ]
+                  }
+                }
+              }
+            },
+            "recording_rhythm_reading": {
+              "type": "object",
+              "properties": {
+                "source_audio_ref": { "type": "string" },
+                "segments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "segment_ref": { "type": "string" },
+                      "time_range": { "type": "string" },
+                      "voice_energy_level": { "type": "number", "minimum": 1, "maximum": 10 },
+                      "pause_or_emphasis": { "type": "string" },
+                      "spoken_intent": { "type": "string" },
+                      "visual_response": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            },
+            "scene_binding_plan": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "scene_id": { "type": "string" },
+                  "source_unit_ids": { "type": "array", "items": { "type": "string" } },
+                  "narration_refs": { "type": "array", "items": { "type": "string" } },
+                  "material_role": { "type": "string" },
+                  "picture_design": { "type": "string" },
+                  "timing_design": { "type": "string" },
+                  "source_treatment": { "type": "string" },
+                  "subtitle_avoidance": { "type": "string" },
+                  "transition_logic": { "type": "string" }
+                }
+              }
+            },
+            "tech_stack_plan": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "scene_id": { "type": "string" },
+                  "primary_stack": {
+                    "enum": ["remotion", "html_3d", "source_media", "hyperframes", "vibemotion", "spark", "gen_insert"]
+                  },
+                  "supporting_stacks": {
+                    "type": "array",
+                    "items": {
+                      "enum": ["remotion", "html_3d", "source_media", "hyperframes", "vibemotion", "spark", "gen_insert"]
+                    }
+                  },
+                  "rejected_stacks": {
+                    "type": "array",
+                    "items": {
+                      "enum": ["remotion", "html_3d", "source_media", "hyperframes", "vibemotion", "spark", "gen_insert"]
+                    }
+                  },
+                  "why_this_stack": { "type": "string" }
+                }
+              }
+            },
+            "unresolved_questions": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "recording_visual_brief": {
+          "type": "object",
+          "properties": {
+            "source_audio_ref": { "type": "string" },
+            "voice_energy_curve": { "type": "array" },
+            "pause_map": { "type": "array" },
+            "emphasis_beats": { "type": "array" },
+            "visual_opportunity_beats": { "type": "array" },
+            "route_hints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "scene_id",
+                  "voice_signal",
+                  "visual_job",
+                  "execution_runtime",
+                  "motion_source",
+                  "integration_mode",
+                  "promotion_target_renderer_family",
+                  "reason"
+                ],
+                "properties": {
+                  "scene_id": { "type": "string" },
+                  "voice_signal": { "type": "string" },
+                  "visual_job": { "type": "string" },
+                  "execution_runtime": {
+                    "enum": ["remotion", "spark_browser_canvas", "html_browser_capture", "source_media"]
+                  },
+                  "motion_source": {
+                    "enum": ["native_remotion", "vibemotion_skill", "hyperframes_runtime", "spark_runtime", "bespoke_code", "existing_media"]
+                  },
+                  "integration_mode": {
+                    "enum": [
+                      "live_component",
+                      "copied_component",
+                      "rewritten_component",
+                      "captured_html_plate",
+                      "transparent_asset_layer",
+                      "video_plate",
+                      "browser_canvas_plate"
+                    ]
+                  },
+                  "candidate_skill": { "type": "string" },
+                  "promotion_target_renderer_family": {
+                    "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+                  },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "screen_recording_brief": {
+          "type": "object",
+          "properties": {
+            "clips": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "clip_id",
+                  "media_path",
+                  "time_range",
+                  "route_type",
+                  "visual_job",
+                  "proof_role",
+                  "privacy_review",
+                  "legibility_check",
+                  "crop_strategy",
+                  "remotion_treatment",
+                  "execution_runtime",
+                  "motion_source",
+                  "integration_mode",
+                  "promotion_target_renderer_family",
+                  "reason"
+                ],
+                "properties": {
+                  "clip_id": { "type": "string", "minLength": 1 },
+                  "media_path": { "type": "string", "minLength": 1 },
+                  "time_range": {
+                    "type": "object",
+                    "properties": {
+                      "start": { "type": "number", "minimum": 0 },
+                      "end": { "type": "number", "minimum": 0 }
+                    }
+                  },
+                  "route_type": { "enum": ["evidence_clip", "source_media_plate"] },
+                  "visual_job": { "type": "string" },
+                  "proof_role": { "enum": ["hero", "supporting", "context", "none"] },
+                  "privacy_review": { "enum": ["not_needed", "passed", "needs_redaction", "blocked"] },
+                  "legibility_check": { "enum": ["passed", "needs_zoom", "needs_rebuild", "blocked"] },
+                  "crop_strategy": { "type": "string" },
+                  "remotion_treatment": { "type": "string" },
+                  "execution_runtime": {
+                    "enum": ["remotion", "spark_browser_canvas", "html_browser_capture", "source_media"]
+                  },
+                  "motion_source": {
+                    "enum": ["native_remotion", "vibemotion_skill", "hyperframes_runtime", "spark_runtime", "bespoke_code", "existing_media"]
+                  },
+                  "integration_mode": {
+                    "enum": [
+                      "live_component",
+                      "copied_component",
+                      "rewritten_component",
+                      "captured_html_plate",
+                      "transparent_asset_layer",
+                      "video_plate",
+                      "browser_canvas_plate"
+                    ]
+                  },
+                  "promotion_target_renderer_family": {
+                    "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+                  },
+                  "reason": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "source_material_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["scene_id", "usage_role", "treatment"],
+            "properties": {
+              "scene_id": { "type": "string", "minLength": 1 },
+              "asset_ids": { "type": "array", "items": { "type": "string" } },
+              "screen_recording_clip_ids": { "type": "array", "items": { "type": "string" } },
+              "usage_role": { "enum": ["hero_proof", "supporting_proof", "context", "texture", "reference_only", "unused"] },
+              "treatment": { "type": "string", "minLength": 1 },
+              "director_reason": { "type": "string" }
+            }
+          }
+        },
+        "scene_decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scene_id": { "type": "string" },
+              "job": { "enum": ["hook", "context", "proof", "build", "peak", "rest", "payoff", "close"] },
+              "energy_level": { "type": "number", "minimum": 1, "maximum": 10 },
+              "layout_pattern": { "type": "string" },
+              "color_temperature_direction": { "type": "string" },
+              "is_scale_moment": { "type": "boolean" },
+              "evidence_role": { "enum": ["hero", "supporting", "background", "none"] },
+              "motion_character": { "enum": ["snappy", "smooth", "slow", "held"] },
+              "density": { "enum": ["minimal", "moderate", "dense"] },
+              "est_duration_sec": { "type": "number", "minimum": 0 }
+            }
+          }
+        },
+        "color_story": {
+          "type": "object",
+          "properties": {
+            "act1_palette": { "type": "array", "items": { "type": "string" } },
+            "act2_variations": { "type": "array", "items": { "type": "string" } },
+            "act3_resolution": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "best_creator_self_test": {
+          "type": "object",
+          "properties": {
+            "hook_stop": { "type": "boolean" },
+            "hero_identifiable": { "type": "boolean" },
+            "energy_at_2x": { "type": "boolean" },
+            "screenshot_worthy": { "type": "boolean" },
+            "order_guessable": { "type": "boolean" }
+          }
+        },
+        "visual_policy": { "type": "object" },
+        "lookdev_gate": { "type": "object" },
+        "artifacts": { "type": "object" },
+        "status": { "type": "string" }
+      }
+    },
+    "mother": {
+      "type": "object",
+      "properties": {
+        "story_mother_lock": { "type": "object" },
+        "story_mother": { "type": "object" },
+        "status": { "type": "string" }
+      }
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["variant_id", "mother_id", "platform"],
+        "properties": {
+          "variant_id": { "type": "string", "minLength": 1 },
+          "mother_id": { "type": "string", "minLength": 1 },
+          "platform": { "type": "string" },
+          "aspect": { "type": "string" },
+          "hook": { "type": "string" },
+          "pacing_density": { "type": "string" },
+          "subtitle_policy": { "type": "object" },
+          "title_options": { "type": "array" },
+          "cover_brief": { "type": "string" },
+          "scene_adjustments": { "type": "array" },
+          "status": { "type": "string" }
+        }
+      }
+    },
+    "render": {
+      "type": "object",
+      "required": [
+        "route",
+        "vibemotion_candidates",
+        "hyperframes_candidates",
+        "ai_video_prompt_requests",
+        "ai_video_candidates",
+        "plugin_adapter_runs",
+        "scene_motion_specs",
+        "jobs",
+        "status"
+      ],
+      "properties": {
+        "route": {
+          "type": "object",
+          "properties": {
+            "default_mode": { "enum": ["code_primary", "gen_insert", "mixed_scene"] },
+            "hero_shot_mode": { "enum": ["code_primary", "gen_insert", "mixed_scene"] },
+            "mixed_scene_requires_explicit_opt_in": { "type": "boolean" }
+          }
+        },
+        "scene_motion_specs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["scene_id", "director_board_scene_id", "render_mode", "renderer_family", "dominant_anchor"],
+            "properties": {
+              "scene_id": { "type": "string", "minLength": 1 },
+              "director_board_scene_id": { "type": "string" },
+              "director_board_ref": { "type": "string" },
+              "render_mode": { "enum": ["code_primary", "gen_insert", "mixed_scene"] },
+              "renderer_family": {
+                "enum": [
+                  "remotion_component",
+                  "html_scene",
+                  "canvas_scene",
+                  "vibemotion_candidate",
+                  "spark_3dgs"
+                ]
+              },
+              "actual_renderer_family": {
+                "enum": [
+                  "remotion_component",
+                  "html_scene",
+                  "canvas_scene",
+                  "vibemotion_candidate",
+                  "spark_3dgs",
+                  "spark_procedural_splat",
+                  "spark_hybrid_three",
+                  "html_canvas_world_plate_fallback"
+                ]
+              },
+              "route_status": {
+                "enum": [
+                  "true_3dgs_asset",
+                  "streaming_rad_world",
+                  "procedural_splat_world",
+                  "hybrid_spark_three",
+                  "fallback_preview",
+                  "blocked_missing_asset",
+                  "approved_fallback_final"
+                ]
+              },
+              "execution_runtime": {
+                "enum": ["remotion", "spark_browser_canvas", "html_browser_capture", "source_media"]
+              },
+              "motion_source": {
+                "enum": ["native_remotion", "vibemotion_skill", "hyperframes_runtime", "ai_video_generation", "spark_runtime", "bespoke_code", "existing_media"]
+              },
+              "integration_mode": {
+                "enum": [
+                  "live_component",
+                  "copied_component",
+                  "rewritten_component",
+                  "captured_html_plate",
+                  "transparent_asset_layer",
+                  "video_plate",
+                  "browser_canvas_plate"
+                ]
+              },
+              "candidate_skill": { "type": "string" },
+              "vibemotion_candidate_ids": { "type": "array", "items": { "type": "string" } },
+              "hyperframes_candidate_ids": { "type": "array", "items": { "type": "string" } },
+              "ai_video_prompt_request_ids": { "type": "array", "items": { "type": "string" } },
+              "ai_video_candidate_ids": { "type": "array", "items": { "type": "string" } },
+              "source_html_path": { "type": "string" },
+              "hyperframes_promotion_notes": { "type": "string" },
+              "promotion_target_renderer_family": {
+                "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+              },
+              "screen_recording_clip_ids": { "type": "array", "items": { "type": "string" } },
+              "dominant_anchor": { "type": "string" },
+              "frame_strategy": { "type": "string" },
+              "distortion_policy": { "type": "string" },
+              "brainstorming_trace": {
+                "type": "object",
+                "properties": {
+                  "skill_ref": { "type": "string" },
+                  "scene_question": { "type": "string" },
+                  "selected_direction": { "type": "string" },
+                  "why_selected": { "type": "string" }
+                }
+              },
+              "continuity_handles_used": { "type": "array", "items": { "type": "string" } },
+              "anti_ppt_decision": { "type": "string" },
+              "edge_in_trace": {
+                "type": "object",
+                "properties": {
+                  "edge_id": { "type": "string" },
+                  "selected_bridge": { "type": "string" },
+                  "transition_method": { "type": "string" },
+                  "in_handle": { "type": "string" }
+                }
+              },
+              "edge_out_trace": {
+                "type": "object",
+                "properties": {
+                  "edge_id": { "type": "string" },
+                  "selected_bridge": { "type": "string" },
+                  "transition_method": { "type": "string" },
+                  "out_handle": { "type": "string" }
+                }
+              },
+              "transition_primitives": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "edge_id": { "type": "string" },
+                    "method": { "type": "string" },
+                    "primitive": { "type": "string" },
+                    "duration_frames": { "type": "number" }
+                  }
+                }
+              },
+              "spark_asset_route": { "type": "object" },
+              "spark_effect_route": { "type": "object" },
+              "world_asset": {
+                "type": "object",
+                "properties": {
+                  "asset_id": { "type": "string" },
+                  "asset_kind": { "type": "string" },
+                  "source_kind": { "type": "string" },
+                  "format": { "type": "string" },
+                  "path_or_url": { "type": "string" },
+                  "status": { "type": "string" }
+                }
+              },
+              "spark_runtime_profile": { "type": "object" }
+            }
+          }
+        },
+        "vibemotion_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "candidate_id",
+              "scene_ids",
+              "option_type",
+              "generator_skill",
+              "technical_route",
+              "output_path",
+              "output_kind",
+              "review_status",
+              "motion_source",
+              "candidate_origin",
+              "state_trace_refs"
+            ],
+            "properties": {
+              "candidate_id": { "type": "string", "minLength": 1 },
+              "scene_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "option_type": { "enum": ["recommended", "bold", "safe"] },
+              "generator_skill": { "type": "string" },
+              "technical_route": {
+                "enum": ["vibemotion_video", "vibemotion_html", "remotion_component", "spark_plate_plus_remotion"]
+              },
+              "output_path": { "type": "string", "minLength": 1 },
+              "output_kind": { "enum": ["mp4", "mov", "html", "component", "transparent_asset"] },
+              "review_status": { "enum": ["pending", "approved", "rejected", "needs_revision"] },
+              "motion_source": {
+                "enum": ["native_remotion", "vibemotion_skill", "hyperframes_runtime", "ai_video_generation", "spark_runtime", "bespoke_code", "existing_media"]
+              },
+              "integration_mode": {
+                "enum": [
+                  "live_component",
+                  "copied_component",
+                  "rewritten_component",
+                  "captured_html_plate",
+                  "transparent_asset_layer",
+                  "video_plate",
+                  "browser_canvas_plate"
+                ]
+              },
+              "promotion_target_renderer_family": {
+                "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+              },
+              "candidate_origin": {
+                "enum": ["generated_from_current_state", "primitive_reference_adapted_to_current_state"]
+              },
+              "state_trace_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "selected_by_user": { "type": "boolean" },
+              "promotion_rule": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "hyperframes_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "candidate_id",
+              "scene_ids",
+              "option_type",
+              "generator",
+              "technical_route",
+              "source_path",
+              "output_path",
+              "output_kind",
+              "review_status",
+              "motion_source",
+              "candidate_origin",
+              "state_trace_refs"
+            ],
+            "properties": {
+              "candidate_id": { "type": "string", "minLength": 1 },
+              "scene_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "option_type": { "enum": ["recommended", "bold", "safe"] },
+              "generator": { "type": "string" },
+              "technical_route": {
+                "enum": [
+                  "hyperframes_html",
+                  "hyperframes_canvas",
+                  "hyperframes_lottie",
+                  "hyperframes_three",
+                  "hyperframes_asset"
+                ]
+              },
+              "source_path": { "type": "string" },
+              "output_path": { "type": "string", "minLength": 1 },
+              "output_kind": { "enum": ["mp4", "mov", "html", "component", "transparent_asset"] },
+              "review_status": { "enum": ["pending", "approved", "rejected", "needs_revision"] },
+              "motion_source": {
+                "enum": ["native_remotion", "vibemotion_skill", "hyperframes_runtime", "ai_video_generation", "spark_runtime", "bespoke_code", "existing_media"]
+              },
+              "integration_mode": {
+                "enum": [
+                  "live_component",
+                  "copied_component",
+                  "rewritten_component",
+                  "captured_html_plate",
+                  "transparent_asset_layer",
+                  "video_plate",
+                  "browser_canvas_plate"
+                ]
+              },
+              "promotion_target_renderer_family": {
+                "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+              },
+              "candidate_origin": {
+                "enum": ["generated_from_current_state", "primitive_reference_adapted_to_current_state"]
+              },
+              "state_trace_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "selected_by_user": { "type": "boolean" },
+              "promotion_rule": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "ai_video_prompt_requests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "request_id",
+              "scene_ids",
+              "option_type",
+              "provider",
+              "provider_model_hint",
+              "technical_route",
+              "prompt_pack_path",
+              "prompt_path",
+              "prompt_text",
+              "negative_prompt",
+              "output_expectation",
+              "status",
+              "state_trace_refs",
+              "proof_exclusion_policy",
+              "remotion_integration_plan",
+              "handoff_instructions"
+            ],
+            "properties": {
+              "request_id": { "type": "string", "minLength": 1 },
+              "scene_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "option_type": { "enum": ["recommended", "bold", "safe"] },
+              "provider": { "enum": ["seedance", "runway", "pika", "kling", "luma", "other_ai_video"] },
+              "provider_model_hint": { "type": "string" },
+              "technical_route": {
+                "enum": ["text_to_video", "image_to_video", "video_to_video", "reference_guided_video"]
+              },
+              "prompt_pack_path": { "type": "string" },
+              "prompt_path": { "type": "string" },
+              "prompt_text": { "type": "string" },
+              "negative_prompt": { "type": "string" },
+              "duration_sec": { "type": "number" },
+              "aspect_ratio": { "type": "string" },
+              "reference_asset_paths": { "type": "array", "items": { "type": "string" } },
+              "output_expectation": { "type": "string" },
+              "status": { "enum": ["drafted", "handed_to_user", "generated", "cancelled", "blocked"] },
+              "state_trace_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "proof_exclusion_policy": { "type": "string" },
+              "remotion_integration_plan": { "type": "string" },
+              "handoff_instructions": { "type": "string" },
+              "expected_candidate_id": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "ai_video_candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "candidate_id",
+              "scene_ids",
+              "option_type",
+              "provider",
+              "provider_model",
+              "technical_route",
+              "prompt_path",
+              "prompt_text",
+              "negative_prompt",
+              "output_path",
+              "output_kind",
+              "review_status",
+              "motion_source",
+              "candidate_origin",
+              "state_trace_refs",
+              "proof_exclusion_policy",
+              "remotion_integration_plan",
+              "safety_review"
+            ],
+            "properties": {
+              "candidate_id": { "type": "string", "minLength": 1 },
+              "prompt_request_id": { "type": "string" },
+              "scene_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "option_type": { "enum": ["recommended", "bold", "safe"] },
+              "provider": { "enum": ["seedance", "runway", "pika", "kling", "luma", "other_ai_video"] },
+              "provider_model": { "type": "string" },
+              "technical_route": {
+                "enum": ["text_to_video", "image_to_video", "video_to_video", "reference_guided_video"]
+              },
+              "prompt_path": { "type": "string" },
+              "prompt_text": { "type": "string" },
+              "negative_prompt": { "type": "string" },
+              "duration_sec": { "type": "number" },
+              "aspect_ratio": { "type": "string" },
+              "output_path": { "type": "string", "minLength": 1 },
+              "output_kind": { "enum": ["mp4", "mov", "webm", "image_sequence"] },
+              "review_status": { "enum": ["pending", "approved", "rejected", "needs_revision"] },
+              "motion_source": { "enum": ["ai_video_generation"] },
+              "candidate_origin": {
+                "enum": ["generated_from_current_state", "reference_guided_from_current_state"]
+              },
+              "state_trace_refs": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+              "proof_exclusion_policy": { "type": "string" },
+              "remotion_integration_plan": { "type": "string" },
+              "safety_review": {
+                "type": "object",
+                "required": [
+                  "no_false_evidence",
+                  "no_readable_claim_text",
+                  "no_brand_or_ip_issue",
+                  "no_face_or_identity_risk",
+                  "notes"
+                ],
+                "properties": {
+                  "no_false_evidence": { "type": "boolean" },
+                  "no_readable_claim_text": { "type": "boolean" },
+                  "no_brand_or_ip_issue": { "type": "boolean" },
+                  "no_face_or_identity_risk": { "type": "boolean" },
+                  "notes": { "type": "string" }
+                }
+              },
+              "integration_mode": { "enum": ["video_plate"] },
+              "promotion_target_renderer_family": { "enum": ["remotion_component"] },
+              "selected_by_user": { "type": "boolean" },
+              "promotion_rule": { "type": "string" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "plugin_adapter_runs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "run_id",
+              "adapter_kind",
+              "adapter_id",
+              "skill_name",
+              "scene_ids",
+              "input_state_refs",
+              "output_paths",
+              "state_writebacks",
+              "status",
+              "candidate_ids",
+              "promotion_target_renderer_family",
+              "lookdev_evidence_required",
+              "notes"
+            ],
+            "properties": {
+              "run_id": { "type": "string", "minLength": 1 },
+              "adapter_kind": {
+                "enum": ["codex_plugin", "local_cli", "local_skill", "manual_implementation", "external_api"]
+              },
+              "adapter_id": { "type": "string", "minLength": 1 },
+              "plugin_id": {
+                "enum": ["hyperframes@openai-curated", "remotion@openai-curated"]
+              },
+              "skill_name": {
+                "enum": [
+                  "HyperFrames by HeyGen:hyperframes",
+                  "HyperFrames by HeyGen:hyperframes-cli",
+                  "HyperFrames by HeyGen:hyperframes-registry",
+                  "HyperFrames by HeyGen:gsap",
+                  "HyperFrames by HeyGen:website-to-hyperframes",
+                  "Remotion:remotion",
+                  "hyperframes-cli",
+                  "hyperframes-local-skill",
+                  "remotion-render-adapter",
+                  "manual-hyperframes-implementation",
+                  "manual-remotion-implementation",
+                  "seedance-api",
+                  "manual-ai-video-api"
+                ]
+              },
+              "scene_ids": { "type": "array", "items": { "type": "string" } },
+              "input_state_refs": { "type": "array", "items": { "type": "string" } },
+              "output_paths": { "type": "array", "items": { "type": "string" } },
+              "state_writebacks": { "type": "array", "items": { "type": "string" } },
+              "status": {
+                "enum": ["planned", "generated", "previewed", "promoted", "rejected", "blocked"]
+              },
+              "candidate_ids": { "type": "array", "items": { "type": "string" } },
+              "promotion_target_renderer_family": {
+                "enum": ["remotion_component", "html_scene", "canvas_scene", "spark_3dgs"]
+              },
+              "lookdev_evidence_required": { "type": "boolean" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "jobs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "job_id": { "type": "string" },
+              "variant_id": { "type": "string" },
+              "status": { "type": "string" },
+              "lookdev_evaluation_id": { "type": "string" },
+              "lookdev_status": { "type": "string" },
+              "state_path": { "type": "string" },
+              "video_project_path": { "type": "string" },
+              "render_plan_path": { "type": "string" },
+              "output_path": { "type": "string" },
+              "silent_video_path": { "type": "string" },
+              "final_output_path": { "type": "string" },
+              "assembly_log_path": { "type": "string" }
+            }
+          }
+        },
+        "status": { "type": "string" }
+      }
+    },
+    "publish": {
+      "type": "object",
+      "properties": {
+        "records": { "type": "array" },
+        "status": { "type": "string" }
+      }
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "performance_reviews": { "type": "array" },
+        "lookdev_gate_results": { "type": "array" },
+        "status": { "type": "string" }
+      }
+    },
+    "exports": { "type": "object" }
+  }
+}

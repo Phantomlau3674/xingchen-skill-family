@@ -1,0 +1,30 @@
+{
+  "preset_id": "editorial-warm",
+  "display_name": "暖色杂志",
+  "colors": {
+    "stage": "#f3eee6",
+    "ink": "#171411",
+    "ink_dim": "#6e6258",
+    "accent": "#b24331",
+    "danger": "#b91c1c",
+    "surface": "#fbf6ef"
+  },
+  "typography": {
+    "display": "Noto Serif SC",
+    "body": "Inter",
+    "body_cjk": "Noto Sans SC",
+    "mono": "JetBrains Mono"
+  },
+  "motion_bias": {
+    "entrance_ms": 420,
+    "stagger_ms": 70,
+    "energy": "medium"
+  },
+  "texture": {
+    "grain": true,
+    "scanline": false,
+    "noise_opacity": 0.06
+  },
+  "layout_bias": "manifesto",
+  "transition_default": "mask-wipe"
+}

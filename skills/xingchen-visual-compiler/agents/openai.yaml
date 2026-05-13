@@ -1,0 +1,3 @@
+interface:
+  display_name: "Xingchen Visual Compiler"
+  short_description: "Compile approved story-mother scenes into state-backed motion specs and anti-template export views."

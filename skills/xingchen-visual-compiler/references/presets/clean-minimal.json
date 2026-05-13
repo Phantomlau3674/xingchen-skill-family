@@ -1,0 +1,30 @@
+{
+  "preset_id": "clean-minimal",
+  "display_name": "浅色极简",
+  "colors": {
+    "stage": "#faf9f7",
+    "ink": "#1a1a1a",
+    "ink_dim": "#70757f",
+    "accent": "#2563eb",
+    "danger": "#dc2626",
+    "surface": "#ffffff"
+  },
+  "typography": {
+    "display": "Noto Serif SC",
+    "body": "Inter",
+    "body_cjk": "Noto Sans SC",
+    "mono": "JetBrains Mono"
+  },
+  "motion_bias": {
+    "entrance_ms": 500,
+    "stagger_ms": 90,
+    "energy": "low"
+  },
+  "texture": {
+    "grain": false,
+    "scanline": false,
+    "noise_opacity": 0.0
+  },
+  "layout_bias": "briefing",
+  "transition_default": "fade"
+}

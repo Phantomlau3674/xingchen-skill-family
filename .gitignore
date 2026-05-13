@@ -1,0 +1,21 @@
+# OS/editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local runtimes and package caches
+node_modules/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+
+# Compiled/intermediate files
+*.pyc
+*.pyo
+*.log
+*.tmp
+
+# Local packaging output
+dist/
+.packaging-stage/
