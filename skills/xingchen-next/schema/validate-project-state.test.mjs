@@ -8,7 +8,21 @@ import {fileURLToPath} from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const skillRoot = path.resolve(here, "..");
 const validatorPath = path.join(here, "validate-project-state.mjs");
+const invariantManifestPath = path.join(
+  skillRoot,
+  "references",
+  "invariants.extended.json",
+);
 const templatePath = path.join(skillRoot, "templates", "project-state.template.json");
+
+{
+  const manifest = JSON.parse(fs.readFileSync(invariantManifestPath, "utf8"));
+  const validatorSource = fs.readFileSync(validatorPath, "utf8");
+  assert.equal(manifest.mode, "extended");
+  assert.equal(manifest.blocking_ids.length, 59);
+  assert.equal(new Set(manifest.blocking_ids).size, manifest.blocking_ids.length);
+  assert.doesNotMatch(validatorSource, /invariants\.lean/);
+}
 
 function cloneTemplate() {
   return JSON.parse(fs.readFileSync(templatePath, "utf8"));
@@ -37,11 +51,50 @@ function approveThroughRender(state) {
   }
 }
 
+function audienceFixture(overrides = {}) {
+  return {
+    summary: "Domain-aware viewers who need a source-led explanation.",
+    tier: "domain_aware",
+    content_lane: "domain_review",
+    creator_profile: "knowledge creator",
+    spoken_knowledge_video: false,
+    tier_inferred_by: "validator-test-fixture",
+    tier_inference_evidence: ["Fixture source says the audience can follow domain terms with proof support."],
+    tier_user_confirmed: true,
+    tier_user_confirmed_at: "2026-05-03T00:00:00+08:00",
+    tier_locked_at: "2026-05-03T00:00:00+08:00",
+    self_check_persona: "busy professional viewer",
+    technical_literacy: "Can follow domain terms when proof is visible.",
+    insider_chrome_allowed: true,
+    vocabulary_level: {
+      allowed_jargon_terms: ["proof", "renderer", "Remotion"],
+      max_jargon_density_per_minute: 6,
+    },
+    ...overrides,
+  };
+}
+
+function setLayCuriousAudience(state, overrides = {}) {
+  state.sources.source_pack.audience = audienceFixture({
+    summary: "Lay curious viewers need the idea translated into concrete visual actions.",
+    tier: "lay_curious",
+    content_lane: "source_led_explainer",
+    tier_inference_evidence: ["Narration uses public-facing phrasing and asks viewers to follow an unfamiliar idea."],
+    self_check_persona: "smart non-specialist friend",
+    insider_chrome_allowed: false,
+    vocabulary_level: {
+      allowed_jargon_terms: ["AI", "proof"],
+      max_jargon_density_per_minute: 3,
+    },
+    ...overrides,
+  });
+}
+
 function makeVisualReady(state, sceneIds = ["scene-motion"]) {
   const [heroSceneId] = sceneIds;
   state.sources.source_pack = {
     core_thesis: "A single piece of evidence changes the user's conclusion.",
-    audience: "knowledge-video viewers",
+    audience: audienceFixture(),
     goal: "turn source material into a complete directed video",
     links: [],
     screenshots: [],
@@ -205,6 +258,109 @@ function makeVisualReady(state, sceneIds = ["scene-motion"]) {
       skill_ref: "superpowers/brainstorming",
       required_for: ["scene_boards.picture", "scene_edge_boards.flow"],
       output_rule: "Each scene and adjacent scene edge records question, options, selected direction, and anti-PPT decision before renderer choice.",
+      visual_collaboration: {
+        source_ref: "visual-collaboration-contract.md",
+        status: "agent_proposed",
+        recording_or_beat_basis: "Fixture uses script beat_map timing and narration_spine because no live recording is attached.",
+        options_presented: [
+          "Make the proof source dominate the frame before the narrated keyword lands.",
+          "Use a structured motion diagram that rebuilds the proof relationship without fake UI.",
+        ],
+        selected_option: "Make the proof source dominate the frame before the narrated keyword lands.",
+        rejected_options: ["Generic dark-tech card stack."],
+        user_feedback: "",
+        agent_assumptions: ["Validator fixture has no live user discussion."],
+        short_video_constraints: ["0.3-second feed stop", "9:16 proof-safe composition", "subtitle safe region"],
+        lessons_applied: ["Avoid generic card/chip stacks from prior PPT-like failures."],
+        unresolved_visual_concerns: [],
+      },
+      github_design_intake: {
+        source_ref: "github-design-skill-intake.md",
+        fact_check: {
+          status: "not_needed",
+          verified_items: ["No unstable named product/version claim in fixture."],
+          not_needed_reason: "Fixture uses local source proof notes rather than a current external product.",
+        },
+        core_assets: {
+          available: ["source proof note"],
+          missing: [],
+          placeholder_policy: "Missing proof assets block the scene; non-proof texture can use labeled placeholders.",
+        },
+        design_system: "Proof-first Remotion tokens: inspectable source plate, restrained accents, deterministic subtitle/proof safe zones.",
+        direction_choice: {
+          selected: "source-led proof composition",
+          killed_alternatives: ["generic premium dark tech", "template dashboard card stack"],
+        },
+        anti_slop_bar: ["no purple gradient hero", "no decorative orbs", "no fake SVG product", "no glass card stack"],
+        verification_route: "Lookdev L3 motion slice plus component grep for source/proof imports and safe-zone checks.",
+        five_dimension_review_plan: {
+          philosophy_consistency: "source-led proof thesis visible in every scene",
+          visual_hierarchy: "proof/source anchor reads before decorative motion",
+          detail_execution: "spacing, subtitle safe regions, and callout alignment clean",
+          functionality: "scene supports spoken proof and platform constraints",
+          innovation: "one earned motion idea beyond template competence",
+        },
+      },
+      resource_preflight: {
+        visual_resource_research_path: "visual-resource-research.md",
+        visual_resource_research_json_path: "visual-resource-research.json",
+        source_reality: {
+          real_assets_available: ["source proof note"],
+          must_preserve_pixels: ["proof wording and source relationship"],
+          can_generate_or_rebuild: ["non-proof callout geometry and motion handles"],
+          missing_assets: [],
+          honest_placeholder_policy: "Missing real proof assets block the scene; non-proof texture may use labeled placeholders.",
+        },
+        design_system_memory: "Tokens, rules, and rationale are locked for proof-first Remotion composition before scene implementation.",
+        library_candidate_matrix: [
+          {
+            candidate: "remotion",
+            category: "remotion",
+            source_url: "https://www.remotion.dev/docs/",
+            use_for: "deterministic proof timing, subtitles, and callout composition",
+            do_not_use_for: "inventing scene purpose",
+            license_or_provenance_note: "project dependency",
+            project_fit_score: 9,
+            selected: true,
+            reason: "The piece needs exact source/proof timing and deterministic render control.",
+          },
+          {
+            candidate: "generic SVG product silhouette",
+            category: "svg_graphics",
+            source_url: "",
+            use_for: "not selected",
+            do_not_use_for: "fake physical objects or proof UI",
+            license_or_provenance_note: "not applicable",
+            project_fit_score: 1,
+            selected: false,
+            reason: "Would recreate the PPT/fake-object failure mode.",
+          },
+        ],
+        selected_routes: {
+          design_system_memory: "proof-first Remotion visual system",
+          global_asset_candidates: [],
+          project_usage_manifest_path: "not_needed_no_reusable_global_assets_selected",
+          stock_footage_candidates: [],
+          icon_family: "not_needed",
+          svg_graphics: ["proof callout geometry"],
+          remotion_packages: ["remotion"],
+          imagegen_models_or_skills: [],
+          real_asset_sources: ["source proof note"],
+        },
+        prompt_pack_paths: [],
+        rejected_defaults: ["generic gradient hero", "fake dashboard", "SVG fake product"],
+        lookdev_audit_hooks: ["verify Remotion proof timing", "verify source proof readability", "verify no fake UI proof"],
+        global_asset_registry_checked: true,
+        global_asset_candidate_ids: [],
+        project_usage_manifest_path: "not_needed_no_reusable_global_assets_selected",
+        stock_footage_scout_path: "not_needed_no_stock_footage_selected",
+        stock_footage_candidates: [],
+      },
+      visual_discovery_session: {
+        required_scene_ids: sceneIds,
+        user_discussion_status: "agent_proposed",
+        assumptions: ["Validator fixture proposes scene constituents without a live user discussion."],
+      },
     },
     scene_boards: sceneIds.map((sceneId, index) => ({
       scene_id: sceneId,
@@ -249,6 +405,20 @@ function makeVisualReady(state, sceneIds = ["scene-motion"]) {
             must_remain_recognizable: "Keep the word, highlight color, and callout relationship visible across the cut.",
           },
         ],
+        visual_discovery_session: {
+          scene_id: sceneId,
+          session_required: true,
+          user_discussion_status: "agent_proposed",
+          picture_constituents: ["source proof plate", "Remotion callout geometry", "subtitle-safe lower lane"],
+          dominant_visual_object: `proof plane for ${sceneId}`,
+          asset_source_decision: "remotion_native",
+          global_asset_candidate_ids: [],
+          new_asset_needed: false,
+          camera_reveal: "The push-in reveals the proof region before the narrated keyword lands.",
+          continuity_handle: `handle-${sceneId}-keyword`,
+          anti_ppt_commitment: "The frame is built from proof focus and camera reveal, not centered cards or status chips.",
+          open_question_for_user: "",
+        },
         anti_ppt_decision: "The scene changes scale, timing, and proof-region focus instead of swapping one centered card for another.",
       },
       aesthetic_layer: {
@@ -441,6 +611,153 @@ function setRemotionSceneSpecs(state, sceneIds) {
   attachDirectorTraces(state);
 }
 
+function addConcreteExecutionPlans(state) {
+  for (const sceneBoard of state.visual.director_board.scene_boards) {
+    sceneBoard.brainstorming_layer.analogy_pass = {
+      required_by_tier: true,
+      concept_being_explained: "abstract tool workflow",
+      lay_analogy: "A route is drawn through constraints rather than a fake prop being displayed.",
+      analogy_carrier_visual: "route rail, constraint frame, and proof push-in",
+      domain_term_used_in_voice: false,
+      domain_term_appears_on_screen: false,
+      self_check_persona_pass: "A lay viewer can follow the route before reading labels.",
+      jargon_safety_net: "Concept is built visually before any label appears.",
+      concrete_execution_plan: {
+        asset_kind: "remotion_dataviz",
+        generation_skill_route: "remotion_native",
+        generation_prompt: "not_needed_programmatic",
+        generation_negative_prompt: "",
+        style_reference: "spoken knowledge motion grammar",
+        expected_output_paths: [],
+        enumerated_concepts: ["route constraint"],
+        additional_asset_specs: [],
+        concept_object_plan: "Draw a constrained route rail, snap a proof frame into place, then push into the cited proof region.",
+        motion_primitives: ["RouteDraw", "BlockSnap", "ProofPushIn"],
+        generated_prop_decision: "rejected_for_explainer_clarity",
+        quality_reason: "",
+        lookdev_risk: "A generated prop would read as a cheap object instead of an argument structure.",
+        fallback_to_programmatic_structure: "Use SVG route lines, proof crop, and scan highlight.",
+        remotion_layout_plan: "Use SVG paths for the rail, a spring-snapped proof frame, and a camera push into the proof plate.",
+        camera_intent: "push_in",
+        camera_motion_reveals: "The route explains why the proof becomes inspectable.",
+        camera_scale_change: 0.35,
+        camera_translate_px: 0,
+        fallback_plan: "If path animation is unavailable, use staggered Sequence blocks and a proof scan window.",
+        asset_realized: true,
+        asset_realized_paths: [],
+      },
+    };
+  }
+}
+
+function enableSpokenKnowledgeMotion(state) {
+  state.visual.visual_policy.spoken_knowledge_motion_policy = {
+    selected: true,
+    why: "voice-led knowledge explainer; abstract concepts need staged construction",
+    asset_policy: "real proof plus Remotion-native concept objects; generated props are opt-in",
+    motion_primitives: ["RouteDraw", "BlockSnap", "ProofPushIn"],
+    lookdev_risks: ["static cards", "cheap generated props"],
+  };
+  addConcreteExecutionPlans(state);
+}
+
+const voxRemotionLookdevRuleIds = [
+  "scene_contract_check",
+  "world_continuity_check",
+  "layer_stack_check",
+  "remotion_proof_ownership_check",
+  "bitmap_text_ocr_check",
+  "mobile_downsample_check",
+  "safe_zone_overlap_check",
+  "foreground_dominance_check",
+  "red_marker_semantics_check",
+  "beat_sync_check",
+  "motion_density_check",
+  "final_hold_frame_check",
+  "prop_control_smoke_test",
+  "proof_source_trace_check",
+];
+
+function enableVoxRemotionStyle(state) {
+  state.visual.visual_policy.visual_style_influence = {
+    source: "vox_remotion_visual_style",
+    selected_traits: [
+      "shared paper/grid world",
+      "foreground proof carriers",
+      "Remotion-owned captions and proof overlays",
+    ],
+    xingchen_adaptation: "Keeps the creator's proof-first Xingchen voice and mobile readability instead of copying the reference video.",
+    avoid_copying: ["source creator identity", "exact source scenes", "title card", "political example"],
+  };
+  state.visual.visual_policy.editorial_world_system = {
+    background_id: "paper_grid_world_v1",
+    grid_size: "low-contrast shared alignment grid",
+    grain_noise: "subtle print grain",
+    palette_lock: ["paper", "charcoal", "red accent"],
+    typography_lock: "Remotion-owned Chinese labels and subtitles",
+    halftone_cutout_policy: "supporting context only",
+    red_offset_marker_policy: "emphasis, tension, path, warning, or separation only",
+    remotion_proof_ownership: "all text, data, labels, subtitles, and audited claims are code-owned",
+    safe_area_mask: "proof, subtitle, marker, and cutout safe zones do not overlap",
+  };
+}
+
+function attachVoxRemotionSceneTraces(state) {
+  for (const spec of state.render.scene_motion_specs) {
+    spec.visual_style_trace = {
+      source: "vox_remotion_visual_style",
+      selected_traits: state.visual.visual_policy.visual_style_influence.selected_traits,
+      adaptation_note: state.visual.visual_policy.visual_style_influence.xingchen_adaptation,
+    };
+    spec.scene_contract_trace = {
+      world_base: "paper_grid_world_v1",
+      mid_cutouts: ["source cutout layer", "halftone context layer"],
+      foreground_proof_carrier: `foreground proof plane for ${spec.scene_id}`,
+      remotion_overlay: "Chinese labels, numbers, subtitles, and claim overlays are code-owned",
+      voiceover_beat: "proof reveal lands within the narrated keyword window",
+      safe_zones: ["subtitle lower lane", "foreground proof carrier", "red marker lane"],
+      proof_source_trace: ["proof.evidence_items[0]", "sources.asset_manifest.source-note-main"],
+    };
+    spec.prop_controls = {
+      x: true,
+      y: true,
+      scale: true,
+      crop: true,
+      opacity: true,
+      marker: true,
+      halftone: true,
+      grid: true,
+    };
+    spec.lookdev_style_checks = [...voxRemotionLookdevRuleIds];
+  }
+}
+
+function addPassedLookdevGateResults(state) {
+  const ruleIds = [
+    "concrete_asset_realization_check",
+    "remotion_animation_depth_check",
+    "asset_specs_completeness_check",
+    "render_pack_text_grep",
+    "tsx_source_text_grep",
+    "onscreen_text_cite_audit",
+    "visual_vocabulary_diversity_scan",
+  ];
+  if (state.visual?.visual_policy?.visual_style_influence?.source === "vox_remotion_visual_style") {
+    ruleIds.push(...voxRemotionLookdevRuleIds);
+  }
+  state.review.lookdev_gate_results = [
+    {
+      gate_id: "lay-audience-lookdev-audit",
+      status: "passed",
+      rule_results: ruleIds.map((ruleId) => ({
+        rule_id: ruleId,
+        status: "passed",
+        evidence: `Fixture evidence for ${ruleId}`,
+      })),
+    },
+  ];
+}
+
 function addHyperframesPluginRun(state, {
   runId = "plugin-hyperframes-main",
   candidateId = "candidate-hyperframes-main",
@@ -622,6 +939,68 @@ function addAIVideoAdapterRun(state, {
   });
 }
 
+function addMarbleAdapterRun(state, {
+  runId = "adapter-marble-world-main",
+  sceneIds = ["scene-world"],
+  adapterKind = "external_api",
+  adapterId = "world-labs-api",
+  skillName = "world-labs-api",
+  status = "generated",
+  outputPaths = ["C:/xingchen-spark/assets/spark-worlds/_incoming/marble-world-001/world.spz"],
+  stateWritebacks = ["render.scene_motion_specs", "render.plugin_adapter_runs"],
+} = {}) {
+  state.render.plugin_adapter_runs.push({
+    run_id: runId,
+    adapter_kind: adapterKind,
+    adapter_id: adapterId,
+    skill_name: skillName,
+    scene_ids: sceneIds,
+    input_state_refs: [
+      "visual.director_board.scene_boards",
+      "visual.director_board.scene_edge_boards",
+      "render.scene_motion_specs",
+    ],
+    output_paths: outputPaths,
+    state_writebacks: stateWritebacks,
+    status,
+    candidate_ids: [],
+    promotion_target_renderer_family: "spark_3dgs",
+    lookdev_evidence_required: true,
+    notes: "World Labs Marble world asset generated from the locked director board and registered for SparkRoutePreview.",
+  });
+}
+
+function addVisualPreprocessAdapterRun(state, {
+  runId = "adapter-visual-preprocess-main",
+  assetIds = ["vp-scene-motion-depth"],
+  sceneIds = ["scene-motion"],
+  adapterKind = "local_cli",
+  adapterId = "visual-preprocess-lane",
+  skillName = "visual-preprocess-lane",
+  status = "generated",
+  outputPaths = ["assets/scene-motion/depth.npy", "assets/scene-motion/depth_vis.png"],
+  stateWritebacks = ["render.visual_preprocess_assets", "render.scene_motion_specs"],
+} = {}) {
+  state.render.plugin_adapter_runs.push({
+    run_id: runId,
+    adapter_kind: adapterKind,
+    adapter_id: adapterId,
+    skill_name: skillName,
+    scene_ids: sceneIds,
+    input_state_refs: [
+      "visual.director_board.scene_boards",
+      "render.scene_motion_specs",
+    ],
+    output_paths: outputPaths,
+    state_writebacks: stateWritebacks,
+    status,
+    candidate_ids: assetIds,
+    promotion_target_renderer_family: "remotion_component",
+    lookdev_evidence_required: true,
+    notes: "Local visual preprocessing produced depth/mask/upscale assets for Remotion-controlled 2.5D composition.",
+  });
+}
+
 function makeAIVideoReadyState(sceneId = "scene-ai-video") {
   const state = cloneTemplate();
   setStage(state, "render");
@@ -715,6 +1094,60 @@ function expectFail(name, state, needle) {
 
 {
   const state = cloneTemplate();
+  setStage(state, "platform-adapt");
+  setApproval(state, "Topic Lock", "approved");
+  setApproval(state, "Script Lock", "approved");
+  setApproval(state, "StoryMother Lock", "approved");
+  setApproval(state, "Visual Lock", "approved");
+  makeVisualReady(state);
+  state.visual.director_board.brainstorming_contract.visual_collaboration.status = "not_needed";
+
+  expectFail("Visual collaboration cannot be bypassed with not_needed", state, /not_needed/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "platform-adapt");
+  setApproval(state, "Topic Lock", "approved");
+  setApproval(state, "Script Lock", "approved");
+  setApproval(state, "StoryMother Lock", "approved");
+  setApproval(state, "Visual Lock", "approved");
+  makeVisualReady(state);
+  state.visual.director_board.brainstorming_contract.visual_collaboration.agent_assumptions = [];
+
+  expectFail("Agent-proposed visual collaboration records assumptions", state, /agent_assumptions must be non-empty/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "platform-adapt");
+  setApproval(state, "Topic Lock", "approved");
+  setApproval(state, "Script Lock", "approved");
+  setApproval(state, "StoryMother Lock", "approved");
+  setApproval(state, "Visual Lock", "approved");
+  makeVisualReady(state);
+  state.visual.director_board.brainstorming_contract.visual_collaboration.status = "discussed";
+  state.visual.director_board.brainstorming_contract.visual_collaboration.user_feedback = "";
+
+  expectFail("Discussed visual collaboration records user feedback", state, /user_feedback is required/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "platform-adapt");
+  setApproval(state, "Topic Lock", "approved");
+  setApproval(state, "Script Lock", "approved");
+  setApproval(state, "StoryMother Lock", "approved");
+  setApproval(state, "Visual Lock", "approved");
+  makeVisualReady(state);
+  state.visual.director_board.brainstorming_contract.visual_collaboration.status = "manual_review_required";
+  state.visual.director_board.brainstorming_contract.visual_collaboration.unresolved_visual_concerns = [];
+
+  expectFail("Manual-review visual collaboration records unresolved concerns", state, /unresolved_visual_concerns must be non-empty/);
+}
+
+{
+  const state = cloneTemplate();
   setStage(state, "script");
 
   expectFail("Topic Lock is required before script stage", state, /INV-TOPIC-LOCK-FIRST/);
@@ -724,8 +1157,27 @@ function expectFail(name, state, needle) {
   const state = cloneTemplate();
   setStage(state, "research/proof");
   state.sources.source_pack = {
+    core_thesis: "The project has enough source material to plan from.",
+    audience: "legacy audience string",
+    goal: "create a directed video from source material",
+    links: [],
+    screenshots: [],
+    screen_recordings: [],
+    notes: ["source note"],
+    draft_recordings: [],
+    existing_assets: [],
+    constraints: [],
+  };
+
+  expectFail("Audience tier must be structured before proof work", state, /INV-AUDIENCE-TIER-LOCKED/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "research/proof");
+  state.sources.source_pack = {
     core_thesis: "The screenshot proves the point.",
-    audience: "knowledge-video viewers",
+    audience: audienceFixture(),
     goal: "create a directed video from real source material",
     links: [],
     screenshots: [{asset_id: "screenshot-claim", path: "inputs/claim.png"}],
@@ -806,6 +1258,189 @@ function expectFail(name, state, needle) {
   state.visual.director_board.scene_boards[0].brainstorming_layer.scene_question = "";
 
   expectFail("Visual Lock requires per-scene brainstorming before picture design", state, /INV-BRAINSTORMING-BEFORE-PICTURE/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableSpokenKnowledgeMotion(state);
+
+  expectPass("Spoken knowledge motion grammar can pass with Remotion-native concept structure", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.visual.director_board.brainstorming_contract.visual_style_influence = {
+    source: "vox_remotion_visual_style",
+  };
+
+  expectFail("Vox visual influence cannot use brainstorming_contract as trigger path", state, /visual_style_influence must live at visual\.visual_policy\.visual_style_influence/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableVoxRemotionStyle(state);
+  attachVoxRemotionSceneTraces(state);
+
+  expectPass("Vox Remotion style can pass Visual Lock with canonical policy and full scene traces", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableVoxRemotionStyle(state);
+  attachVoxRemotionSceneTraces(state);
+  state.render.scene_motion_specs[0].lookdev_style_checks = state.render.scene_motion_specs[0].lookdev_style_checks
+    .filter((ruleId) => ruleId !== "proof_source_trace_check");
+
+  expectFail("Vox scene specs require the full style lookdev rule set", state, /lookdev_style_checks missing proof_source_trace_check/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableSpokenKnowledgeMotion(state);
+  delete state.visual.director_board.scene_boards[0].brainstorming_layer.analogy_pass.concrete_execution_plan.concept_object_plan;
+
+  expectFail("Spoken knowledge motion grammar requires concept object plans", state, /INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableSpokenKnowledgeMotion(state);
+  const plan = state.visual.director_board.scene_boards[0].brainstorming_layer.analogy_pass.concrete_execution_plan;
+  plan.generated_prop_decision = "selected_with_quality_reason";
+  plan.quality_reason = "";
+
+  expectFail("Selected generated props require quality reasons under spoken knowledge grammar", state, /quality_reason/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  setLayCuriousAudience(state);
+
+  expectFail("Lay audience Visual Lock requires concrete analogy execution plans", state, /INV-CONCRETE-EXECUTION-PLAN-REQUIRED/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.sources.source_pack.audience = audienceFixture({
+    content_lane: "spoken_knowledge",
+    spoken_knowledge_video: true,
+    summary: "A voice-led AI explainer for a Douyin knowledge creator.",
+  });
+  addConcreteExecutionPlans(state);
+
+  expectFail("Spoken knowledge projects must explicitly select the motion grammar policy", state, /spoken_knowledge_motion_policy\.selected/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  delete state.visual.director_board.brainstorming_contract.resource_preflight;
+
+  expectFail("Visual Lock requires visual resource preflight evidence", state, /INV-VISUAL-RESOURCE-PREFLIGHT/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  delete state.visual.director_board.brainstorming_contract.github_design_intake;
+
+  expectFail("Visual Lock requires GitHub design intake evidence", state, /INV-GITHUB-DESIGN-INTAKE|github_design_intake/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.visual.director_board.brainstorming_contract.resource_preflight.global_asset_registry_checked = false;
+
+  expectFail("Visual Lock requires global asset registry checks", state, /INV-GLOBAL-ASSET-REGISTRY/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  delete state.visual.director_board.scene_boards[0].brainstorming_layer.visual_discovery_session;
+
+  expectFail("Visual Lock requires Visual Discovery Session for proof scenes", state, /INV-VISUAL-DISCOVERY-SESSION/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.visual.director_board.brainstorming_contract.resource_preflight.stock_footage_candidates = [
+    {
+      asset_id: "stock-clip-001",
+      source_name: "Pexels",
+      source_url: "https://www.pexels.com/video/example",
+      license_url: "https://www.pexels.com/license/",
+      commercial_use_status: "allowed_with_attribution",
+      attribution_required: true,
+      attribution_text: "",
+      people_or_model_release_risk: "none",
+      trademark_or_brand_risk: "none",
+      property_or_landmark_risk: "none",
+    },
+  ];
+
+  expectFail("Stock footage requiring attribution must record attribution text", state, /attribution_text/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.visual.director_board.brainstorming_contract.resource_preflight.selected_routes.imagegen_models_or_skills = ["imagegen"];
+  state.visual.director_board.brainstorming_contract.resource_preflight.prompt_pack_paths = [];
+
+  expectFail("Generated image routes require prompt pack paths", state, /prompt_pack_paths/);
 }
 
 {
@@ -969,6 +1604,8 @@ function expectFail(name, state, needle) {
       review_status: "pending",
       motion_source: "hyperframes_runtime",
       candidate_origin: "generated_from_current_state",
+      gsap_usage: "used",
+      gsap_timeline_notes: "GSAP timeline staggers the HTML nodes in the scene's explanation order.",
       state_trace_refs: [
         "mother.story_mother.scene_cards.scene-motion",
         "visual.director_board.scene_boards.scene-motion",
@@ -987,6 +1624,48 @@ function expectFail(name, state, needle) {
   });
 
   expectPass("Claude Code compatible local CLI HyperFrames adapter run is valid", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "lookdev");
+  setApproval(state, "Topic Lock", "approved");
+  setApproval(state, "Script Lock", "approved");
+  setApproval(state, "StoryMother Lock", "approved");
+  setApproval(state, "Visual Lock", "approved");
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.render.hyperframes_candidates = [
+    {
+      candidate_id: "candidate-missing-gsap-trace",
+      scene_ids: ["scene-motion"],
+      option_type: "recommended",
+      generator: "hyperframes-cli",
+      technical_route: "hyperframes_html",
+      source_path: "hyperframes/missing-gsap/index.html",
+      output_path: "renders/missing-gsap.html",
+      output_kind: "html",
+      review_status: "pending",
+      motion_source: "hyperframes_runtime",
+      candidate_origin: "generated_from_current_state",
+      state_trace_refs: [
+        "mother.story_mother.scene_cards.scene-motion",
+        "visual.director_board.scene_boards.scene-motion",
+        "render.scene_motion_specs.scene-motion",
+      ],
+    },
+  ];
+  addHyperframesPluginRun(state, {
+    candidateId: "candidate-missing-gsap-trace",
+    adapterKind: "local_cli",
+    adapterId: "hyperframes-cli",
+    skillName: "hyperframes-cli",
+    status: "generated",
+    outputPaths: ["hyperframes/missing-gsap/index.html", "renders/missing-gsap.html"],
+    stateWritebacks: ["render.hyperframes_candidates"],
+  });
+
+  expectFail("HyperFrames HTML candidates must record GSAP usage or skip reason", state, /INV-GSAP-HYPERFRAMES-TRACE/);
 }
 
 {
@@ -1192,6 +1871,70 @@ function expectFail(name, state, needle) {
 
 {
   const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setLayCuriousAudience(state);
+  addConcreteExecutionPlans(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+
+  expectFail("Lay audience render requires non-empty lookdev audit results", state, /lookdev_gate_results/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setLayCuriousAudience(state);
+  addConcreteExecutionPlans(state);
+  addPassedLookdevGateResults(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  setApproval(state, "Lookdev Approval", "manual_review_required");
+
+  expectFail("Lay audience render cannot bypass lookdev with manual review", state, /manual_review_required cannot bypass/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setLayCuriousAudience(state);
+  addConcreteExecutionPlans(state);
+  addPassedLookdevGateResults(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+
+  expectPass("Lay audience render can pass after concrete plans and lookdev audits", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableVoxRemotionStyle(state);
+  attachVoxRemotionSceneTraces(state);
+
+  expectFail("Vox Remotion render requires style-specific lookdev rule results", state, /style rules before render/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  enableVoxRemotionStyle(state);
+  attachVoxRemotionSceneTraces(state);
+  addPassedLookdevGateResults(state);
+
+  expectPass("Vox Remotion render can pass with complete style-specific lookdev results", state);
+}
+
+{
+  const state = cloneTemplate();
   setStage(state, "visual-direction");
   setApproval(state, "Topic Lock", "approved");
   setApproval(state, "Script Lock", "approved");
@@ -1362,6 +2105,8 @@ function expectFail(name, state, needle) {
       review_status: "approved",
       motion_source: "hyperframes_runtime",
       candidate_origin: "generated_from_current_state",
+      gsap_usage: "used",
+      gsap_timeline_notes: "GSAP timeline reveals the token conveyor in narration order.",
       state_trace_refs: [
         "mother.story_mother.scene_cards.scene-motion",
         "visual.visual_policy.hyperframes_scene_policy",
@@ -1398,6 +2143,8 @@ function expectFail(name, state, needle) {
       review_status: "pending",
       motion_source: "hyperframes_runtime",
       candidate_origin: "fixed_template",
+      gsap_usage: "used",
+      gsap_timeline_notes: "Fixture keeps GSAP present so this case fails on candidate_origin.",
       state_trace_refs: ["render.scene_motion_specs.scene-html"],
     },
   ];
@@ -1423,6 +2170,8 @@ function expectFail(name, state, needle) {
       review_status: "approved",
       motion_source: "hyperframes_runtime",
       candidate_origin: "generated_from_current_state",
+      gsap_usage: "used",
+      gsap_timeline_notes: "GSAP timeline reveals attention nodes and connector paths by semantic group.",
       state_trace_refs: [
         "mother.story_mother.scene_cards.scene-html",
         "visual.visual_policy.hyperframes_scene_policy",
@@ -1447,6 +2196,8 @@ function expectFail(name, state, needle) {
       hyperframes_candidate_ids: ["candidate-attention-web"],
       source_html_path: "hyperframes/attention-web/index.html",
       promotion_target_renderer_family: "html_scene",
+      gsap_usage: "used",
+      gsap_timeline_notes: "Promoted HTML plate preserves the GSAP semantic reveal order.",
       dominant_anchor: "attention web explains model focus",
     },
   ];
@@ -1477,6 +2228,8 @@ function expectFail(name, state, needle) {
       motion_source: "hyperframes_runtime",
       integration_mode: "captured_html_plate",
       promotion_target_renderer_family: "html_scene",
+      gsap_usage: "used",
+      gsap_timeline_notes: "Fixture keeps GSAP trace present so this case fails on runtime.",
       dominant_anchor: "HTML scene with wrong runtime",
     },
   ];
@@ -1513,9 +2266,62 @@ function expectFail(name, state, needle) {
 
 {
   const state = makeAIVideoReadyState("scene-ai-video");
+  state.render.ai_video_prompt_requests[0].provider = "other_ai_video";
+  state.render.ai_video_prompt_requests[0].provider_model_hint = "local_comfyui_wan22_ti2v_5b";
+  state.render.ai_video_prompt_requests[0].technical_route = "image_to_video";
+  state.render.ai_video_prompt_requests[0].handoff_instructions = "Run comfyui-wan-video locally against the approved input image and register the returned mp4.";
+  state.render.ai_video_candidates[0].provider = "other_ai_video";
+  state.render.ai_video_candidates[0].provider_model = "local_comfyui_wan22_ti2v_5b";
+  state.render.ai_video_candidates[0].technical_route = "image_to_video";
+  state.render.ai_video_candidates[0].output_path = "C:/comfyui/output/video/wan22_scene_ai_video_00001_.mp4";
+  state.render.plugin_adapter_runs[0].adapter_kind = "local_skill";
+  state.render.plugin_adapter_runs[0].adapter_id = "comfyui-wan22-ti2v";
+  state.render.plugin_adapter_runs[0].skill_name = "comfyui-wan-video";
+  state.render.plugin_adapter_runs[0].output_paths = ["C:/comfyui/output/video/wan22_scene_ai_video_00001_.mp4"];
+
+  expectPass("Local ComfyUI Wan2.2 AI video plate is valid as a Remotion-controlled video_plate", state);
+}
+
+{
+  const state = makeAIVideoReadyState("scene-ai-video");
+  state.render.ai_video_prompt_requests[0].provider = "veo_video_generation";
+  state.render.ai_video_prompt_requests[0].provider_model_hint = "configured_veo_model_id";
+  state.render.ai_video_prompt_requests[0].technical_route = "image_to_video";
+  state.render.ai_video_prompt_requests[0].prompt_pack_path = "veo-video-request.md";
+  state.render.ai_video_prompt_requests[0].prompt_path = "veo-video-requests/scene-ai-video.md";
+  state.render.ai_video_prompt_requests[0].handoff_instructions = "User manually generates this on the configured Veo platform/model, downloads the mp4, returns it to the project, then Codex registers render.ai_video_candidates.";
+  state.render.ai_video_candidates[0].provider = "veo_video_generation";
+  state.render.ai_video_candidates[0].provider_model = "configured_veo_model_id";
+  state.render.ai_video_candidates[0].technical_route = "image_to_video";
+  state.render.ai_video_candidates[0].candidate_origin = "reference_guided_from_current_state";
+  state.render.plugin_adapter_runs[0].adapter_kind = "external_api";
+  state.render.plugin_adapter_runs[0].adapter_id = "veo-video-api";
+  state.render.plugin_adapter_runs[0].skill_name = "veo-video-api";
+
+  expectPass("Veo-style AI video plate is valid as a configured Remotion-controlled video_plate lane", state);
+}
+
+{
+  const state = makeAIVideoReadyState("scene-ai-video");
   state.visual.director_board.scene_boards[0].source_layer.evidence_role = "hero";
 
   expectFail("AI video gen_insert cannot carry hero proof", state, /INV-AI-VIDEO-GEN-INSERT/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "platform-adapt");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  state.visual.visual_policy.creator_signature_policy = {
+    brand_memory_used: true,
+    selected_family_from_brand_memory: "creator-avatar-family-brand",
+    adaptation_reason: "",
+    anti_template_constraint: "Use as a signature memory only, not as a fixed opener/outro template.",
+  };
+
+  expectFail("Creator avatar brand memory requires an adaptation reason", state, /INV-CREATOR-SIGNATURE-ADAPTATION/);
 }
 
 {
@@ -1537,6 +2343,97 @@ function expectFail(name, state, needle) {
   state.render.plugin_adapter_runs = [];
 
   expectFail("AI video candidates require adapter trace", state, /render\.ai_video_candidates candidate_id "candidate-seedance-concept-plate" must be linked/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state, ["scene-motion"]);
+  state.render.scene_motion_specs = [
+    {
+      scene_id: "scene-motion",
+      director_board_scene_id: "scene-motion",
+      render_mode: "code_primary",
+      renderer_family: "remotion_component",
+      execution_runtime: "remotion",
+      motion_source: "native_remotion",
+      integration_mode: "live_component",
+      dominant_anchor: "source plate upgraded with depth and camera motion",
+    },
+  ];
+  state.render.visual_preprocess_assets = [
+    {
+      asset_id: "vp-scene-motion-depth",
+      scene_id: "scene-motion",
+      source_asset_ref: "sources.asset_manifest.source-note-main",
+      asset_kind: "depth_map",
+      generator: "depth_anything_v2_small",
+      backend: "pytorch_rocm",
+      output_paths: ["assets/scene-motion/depth.npy", "assets/scene-motion/depth_vis.png"],
+      status: "generated",
+      state_trace_refs: [
+        "visual.director_board.scene_boards.scene-motion",
+        "render.scene_motion_specs.scene-motion",
+      ],
+      remotion_usage: "Use the depth map for 2.5D parallax camera movement behind Remotion proof and subtitle layers.",
+      proof_policy: "Preprocessing does not alter proof; Remotion owns proof overlays, subtitles, and factual labels.",
+      quality_checks: {
+        nonblank: true,
+        no_proof_rewrite: true,
+      },
+      adapter_run_id: "adapter-visual-preprocess-main",
+    },
+  ];
+  addVisualPreprocessAdapterRun(state);
+  attachDirectorTraces(state);
+
+  expectPass("Visual preprocess depth assets can be traced into Remotion 2.5D use", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state, ["scene-motion"]);
+  state.render.scene_motion_specs = [
+    {
+      scene_id: "scene-motion",
+      director_board_scene_id: "scene-motion",
+      render_mode: "code_primary",
+      renderer_family: "remotion_component",
+      execution_runtime: "remotion",
+      motion_source: "native_remotion",
+      integration_mode: "live_component",
+      dominant_anchor: "source plate upgraded with mask and subtitle safety",
+    },
+  ];
+  state.render.visual_preprocess_assets = [
+    {
+      asset_id: "vp-scene-motion-mask",
+      scene_id: "scene-motion",
+      source_asset_ref: "sources.asset_manifest.source-note-main",
+      asset_kind: "foreground_mask",
+      generator: "mobile_sam",
+      backend: "pytorch_rocm",
+      output_paths: ["assets/scene-motion/mask_fg.png"],
+      status: "generated",
+      state_trace_refs: [
+        "visual.director_board.scene_boards.scene-motion",
+        "render.scene_motion_specs.scene-motion",
+      ],
+      remotion_usage: "Use as a foreground mask for subtitle safe-zone avoidance.",
+      proof_policy: "Use the mask to improve style.",
+      adapter_run_id: "adapter-visual-preprocess-main",
+    },
+  ];
+  addVisualPreprocessAdapterRun(state, {
+    assetIds: ["vp-scene-motion-mask"],
+    outputPaths: ["assets/scene-motion/mask_fg.png"],
+  });
+  attachDirectorTraces(state);
+
+  expectFail("Visual preprocess assets must say they do not rewrite proof", state, /proof_policy must state that preprocessing does not rewrite proof/);
 }
 
 {
@@ -1576,6 +2473,109 @@ function expectFail(name, state, needle) {
   attachDirectorTraces(state);
 
   expectPass("Spark procedural splat world keeps Spark browser canvas runtime", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state, ["scene-world"]);
+  state.render.scene_motion_specs = [
+    {
+      scene_id: "scene-world",
+      director_board_scene_id: "scene-world",
+      render_mode: "code_primary",
+      renderer_family: "spark_3dgs",
+      actual_renderer_family: "spark_3dgs",
+      route_status: "true_3dgs_asset",
+      execution_runtime: "spark_browser_canvas",
+      motion_source: "spark_runtime",
+      integration_mode: "browser_canvas_plate",
+      dominant_anchor: "Marble-generated concept archive world",
+      spark_asset_need: "A real exported Marble splat world is needed for a high-value spatial transition.",
+      spark_asset_route: {
+        route: "true_3dgs_asset",
+        loader: "SplatMesh",
+        requires_approved_real_asset: true,
+        manifest_path: "C:/xingchen-spark/assets/spark-worlds/manifests/manifest.json",
+      },
+      spark_runtime_profile: {
+        paged: false,
+        target_fps: 30,
+      },
+      world_asset: {
+        asset_id: "marble-world-001",
+        asset_kind: "real_3dgs",
+        source_kind: "marble",
+        format: "spz",
+        path_or_url: "C:/xingchen-spark/assets/spark-worlds/approved/marble-world-001/world.spz",
+        library_manifest: "C:/xingchen-spark/assets/spark-worlds/manifests/manifest.json",
+        status: "approved",
+        marble_world_id: "world_001",
+        marble_model: "marble-1.1",
+        provenance: {
+          origin: "World Labs Marble",
+          created_at: "2026-05-16",
+        },
+        license: {
+          usage: "project_generated",
+        },
+        preview_evidence: {
+          video_path: "previews/spark-route-preview.mp4",
+          verified_at: "2026-05-16",
+        },
+      },
+    },
+  ];
+  addMarbleAdapterRun(state);
+  attachDirectorTraces(state);
+
+  expectPass("Marble SPZ intake can promote a true Spark 3DGS world asset with adapter trace", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "render");
+  approveThroughRender(state);
+  makeVisualReady(state, ["scene-world"]);
+  state.render.scene_motion_specs = [
+    {
+      scene_id: "scene-world",
+      director_board_scene_id: "scene-world",
+      render_mode: "code_primary",
+      renderer_family: "spark_3dgs",
+      actual_renderer_family: "spark_3dgs",
+      route_status: "true_3dgs_asset",
+      execution_runtime: "spark_browser_canvas",
+      motion_source: "spark_runtime",
+      integration_mode: "browser_canvas_plate",
+      dominant_anchor: "Marble GLB mistakenly marked as 3DGS",
+      spark_asset_route: {
+        route: "true_3dgs_asset",
+        loader: "SplatMesh",
+        requires_approved_real_asset: true,
+      },
+      spark_runtime_profile: {
+        paged: false,
+        target_fps: 30,
+      },
+      world_asset: {
+        asset_id: "marble-world-glb",
+        asset_kind: "mesh",
+        source_kind: "marble",
+        format: "glb",
+        path_or_url: "C:/xingchen-spark/assets/spark-worlds/approved/marble-world-glb/world.glb",
+        library_manifest: "C:/xingchen-spark/assets/spark-worlds/manifests/manifest.json",
+        status: "approved",
+      },
+    },
+  ];
+  addMarbleAdapterRun(state, {
+    outputPaths: ["C:/xingchen-spark/assets/spark-worlds/_incoming/marble-world-glb/world.glb"],
+  });
+  attachDirectorTraces(state);
+
+  expectFail("Marble GLB mesh export cannot masquerade as true Spark 3DGS", state, /Marble GLB mesh exports must use route_status "hybrid_spark_three"/);
 }
 
 {
@@ -1883,6 +2883,88 @@ function expectFail(name, state, needle) {
   ];
 
   expectPass("Screen recordings can be evidence clips or source media plates", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "knowledge-writeback");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  attachDirectorTraces(state);
+  state.review.knowledge_writeback = {
+    status: "completed",
+    candidate_count: 1,
+    accepted_writes: [
+      {
+        title: "Proof-plane camera reveal pattern",
+        target: "04 Wiki/视频创作/案例",
+        why_reusable: "It keeps source proof readable while avoiding a PPT card.",
+        source_project_evidence: "0516 visual director board fixture",
+        write_path: "C:/stevenmind/stevenmind/04 Wiki/视频创作/案例/proof-plane-camera-reveal.md",
+      },
+    ],
+    rejected_candidates: [],
+    vault_paths: ["C:/stevenmind/stevenmind/04 Wiki/视频创作/案例/proof-plane-camera-reveal.md"],
+    skill_reference_paths: [],
+    asset_registry_updates: [],
+  };
+
+  expectPass("Knowledge writeback stage can pass with accepted writes", state);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "knowledge-writeback");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  attachDirectorTraces(state);
+
+  expectFail("Knowledge writeback stage requires explicit writeback decision", state, /INV-KNOWLEDGE-WRITEBACK/);
+}
+
+{
+  const state = cloneTemplate();
+  setStage(state, "knowledge-writeback");
+  approveThroughRender(state);
+  makeVisualReady(state);
+  setRemotionSceneSpecs(state, ["scene-motion"]);
+  attachDirectorTraces(state);
+  state.review.knowledge_writeback = {
+    status: "not_needed",
+    candidate_count: 0,
+    accepted_writes: [],
+    rejected_candidates: [],
+    vault_paths: [],
+    skill_reference_paths: [],
+    asset_registry_updates: [],
+    not_needed_reason: "No reusable visual, technical, or style lesson emerged from this fixture.",
+  };
+
+  expectPass("Knowledge writeback can be explicitly marked not needed", state);
+}
+
+{
+  const state = cloneTemplate();
+  state.mode = "lean";
+  expectFail(
+    "Extended validator rejects Lean mode",
+    state,
+    /Extended validator accepts mode="extended" or absent legacy mode/,
+  );
+}
+
+{
+  const state = cloneTemplate();
+  state.workflow.approvals[state.workflow.approvals.length - 1] = {
+    ...state.workflow.approvals[0],
+  };
+  expectFail(
+    "Extended validator rejects duplicate approval checkpoints",
+    state,
+    /must contain exactly one checkpoint: Topic Lock/,
+  );
 }
 
 console.log("validate-project-state tests passed");

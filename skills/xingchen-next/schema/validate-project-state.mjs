@@ -1,8 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import {fileURLToPath} from "node:url";
+import {loadInvariantManifest} from "./load-invariant-manifest.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+const invariantManifest = loadInvariantManifest(here, "extended");
 const statePath = process.argv[2] ?? path.resolve(process.cwd(), "project-state.json");
 
 if (!fs.existsSync(statePath)) {
@@ -56,6 +58,264 @@ function textIncludesAny(value, needles) {
   if (!hasText(value)) return false;
   const text = value.toLowerCase();
   return needles.some((needle) => text.includes(needle.toLowerCase()));
+}
+
+function isActiveGeneratedRouteValue(value) {
+  if (!hasText(value)) return false;
+  const text = value.trim().toLowerCase();
+  if (text === "not_needed" || text === "none" || text === "n/a") return false;
+  return [
+    "imagegen",
+    "imagegen_2d",
+    "gen_insert",
+    "ai_video",
+    "generated video",
+    "generated image",
+    "seedance",
+    "veo",
+    "veo_video_generation",
+    "flux",
+    "dall-e",
+    "gpt-image",
+    "comfyui",
+  ].some((needle) => text.includes(needle));
+}
+
+function resourcePreflightUsesGeneratedRoute(resourcePreflight) {
+  const selectedRoutes = resourcePreflight?.selected_routes ?? {};
+  const routeValues = [
+    ...asArray(selectedRoutes.imagegen_models_or_skills),
+    ...asArray(selectedRoutes.ai_video_models_or_skills),
+    ...asArray(selectedRoutes.generated_video_models_or_skills),
+  ];
+  if (routeValues.some(isActiveGeneratedRouteValue)) return true;
+
+  return asArray(resourcePreflight?.library_candidate_matrix).some((candidate) => {
+    if (!candidate?.selected) return false;
+    return isActiveGeneratedRouteValue(candidate.category) || isActiveGeneratedRouteValue(candidate.candidate);
+  });
+}
+
+const spokenGeneratedPropDecisions = [
+  "not_needed",
+  "selected_with_quality_reason",
+  "rejected_for_explainer_clarity",
+];
+
+const allowedAudienceTiers = ["lay_scrolling", "lay_curious", "domain_aware", "insider"];
+const layAudienceTiers = ["lay_scrolling", "lay_curious"];
+const spokenKnowledgeContentLanes = [
+  "spoken_knowledge",
+  "ai_explainer",
+  "recording_first_educational",
+  "knowledge_explainer",
+];
+const requiredLayLookdevRuleIds = [
+  "concrete_asset_realization_check",
+  "remotion_animation_depth_check",
+  "asset_specs_completeness_check",
+  "render_pack_text_grep",
+  "tsx_source_text_grep",
+  "onscreen_text_cite_audit",
+  "visual_vocabulary_diversity_scan",
+];
+const voxRemotionLookdevRuleIds = [
+  "scene_contract_check",
+  "world_continuity_check",
+  "layer_stack_check",
+  "remotion_proof_ownership_check",
+  "bitmap_text_ocr_check",
+  "mobile_downsample_check",
+  "safe_zone_overlap_check",
+  "foreground_dominance_check",
+  "red_marker_semantics_check",
+  "beat_sync_check",
+  "motion_density_check",
+  "final_hold_frame_check",
+  "prop_control_smoke_test",
+  "proof_source_trace_check",
+];
+const forbiddenVoxRendererFamilies = ["vox_renderer", "vox_remotion", "editorial_collage_renderer"];
+const blockingLookdevStatuses = ["pending", "not_evaluated", "failed", "blocked", "missing"];
+
+function getSpokenKnowledgeMotionPolicy() {
+  return state.visual?.visual_policy?.spoken_knowledge_motion_policy ?? {};
+}
+
+function getCreatorSignaturePolicy() {
+  return state.visual?.visual_policy?.creator_signature_policy ?? {};
+}
+
+function getVisualStyleInfluence() {
+  return state.visual?.visual_policy?.visual_style_influence ?? {};
+}
+
+function isVoxRemotionVisualStyleSelected() {
+  return getVisualStyleInfluence()?.source === "vox_remotion_visual_style";
+}
+
+function isSpokenKnowledgeMotionSelected() {
+  return getSpokenKnowledgeMotionPolicy()?.selected === true;
+}
+
+function getAudience() {
+  return sourcePack.audience ?? {};
+}
+
+function getAudienceTier() {
+  return hasObject(getAudience()) ? getAudience().tier : undefined;
+}
+
+function isLayAudienceTier() {
+  return layAudienceTiers.includes(getAudienceTier());
+}
+
+function isSpokenKnowledgeProject() {
+  const audience = getAudience();
+  if (!hasObject(audience)) return false;
+  if (audience.spoken_knowledge_video === true) return true;
+  if (spokenKnowledgeContentLanes.includes(audience.content_lane)) return true;
+
+  const signalText = joinedText(
+    audience.summary,
+    audience.creator_profile,
+    audience.content_lane,
+    sourcePack.core_thesis,
+    sourcePack.goal,
+    sourcePack.notes,
+    state.visual?.recording_visual_brief?.summary,
+    state.mother?.story_mother?.audience_promise
+  );
+  return textIncludesAny(signalText, [
+    "口播",
+    "知识博主",
+    "spoken knowledge",
+    "ai explainer",
+    "recording-first educational",
+    "recording first educational",
+    "human-recorded educational",
+  ]);
+}
+
+function assertAudienceTierLocked() {
+  const audience = getAudience();
+  assert(
+    hasObject(audience),
+    "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience must be an object with tier, inference evidence, and user confirmation"
+  );
+  if (!hasObject(audience)) return;
+
+  assert(hasText(audience.summary), "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.summary is required");
+  assert(hasText(audience.tier), "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.tier is required");
+  checkEnum("sources.source_pack.audience.tier", audience.tier, allowedAudienceTiers);
+  assert(
+    hasNonEmptyTextArray(audience.tier_inference_evidence),
+    "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.tier_inference_evidence must cite source or recording evidence"
+  );
+  assert(hasText(audience.tier_inferred_by), "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.tier_inferred_by is required");
+  assert(
+    audience.tier_user_confirmed === true,
+    "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.tier_user_confirmed must be true before research/proof"
+  );
+  assert(hasText(audience.tier_locked_at), "INV-AUDIENCE-TIER-LOCKED: sources.source_pack.audience.tier_locked_at is required");
+
+  if (isLayAudienceTier()) {
+    const vocab = audience.vocabulary_level ?? {};
+    assert(
+      typeof audience.insider_chrome_allowed === "boolean",
+      "INV-AUDIENCE-TIER-LOCKED: lay audience requires audience.insider_chrome_allowed boolean"
+    );
+    assert(
+      Array.isArray(vocab.allowed_jargon_terms),
+      "INV-AUDIENCE-TIER-LOCKED: lay audience requires audience.vocabulary_level.allowed_jargon_terms array"
+    );
+    assert(
+      typeof vocab.max_jargon_density_per_minute === "number" && vocab.max_jargon_density_per_minute >= 0,
+      "INV-AUDIENCE-TIER-LOCKED: lay audience requires audience.vocabulary_level.max_jargon_density_per_minute"
+    );
+  }
+}
+
+function validateConcreteExecutionPlan(sceneBoard, tag) {
+  if (sceneBoard.scene_job === "rest") return;
+
+  const analogy = sceneBoard.brainstorming_layer?.analogy_pass ?? {};
+  const plan = analogy.concrete_execution_plan ?? {};
+  const planTag = `${tag}.brainstorming_layer.analogy_pass.concrete_execution_plan`;
+
+  assert(
+    hasNonEmptyObject(analogy),
+    `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${tag}.brainstorming_layer.analogy_pass is required for lay audience scenes`
+  );
+  assert(
+    hasText(analogy.lay_analogy),
+    `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${tag}.brainstorming_layer.analogy_pass.lay_analogy is required for lay audience scenes`
+  );
+  assert(
+    hasNonEmptyObject(plan),
+    `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag} is required for lay audience scenes`
+  );
+  assert(hasText(plan.asset_kind), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.asset_kind is required`);
+  assert(hasText(plan.generation_skill_route), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.generation_skill_route is required`);
+  assert(hasText(plan.generation_prompt), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.generation_prompt is required`);
+  assert(hasText(plan.remotion_layout_plan), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.remotion_layout_plan is required`);
+
+  if (plan.generation_skill_route === "remotion_native") {
+    assert(hasText(plan.concept_object_plan), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.concept_object_plan is required for remotion_native`);
+    assert(hasNonEmptyTextArray(plan.motion_primitives), `INV-CONCRETE-EXECUTION-PLAN-REQUIRED: ${planTag}.motion_primitives is required for remotion_native`);
+  }
+
+  if (asArray(plan.enumerated_concepts).length > 1) {
+    assert(
+      asArray(plan.additional_asset_specs).length >= asArray(plan.enumerated_concepts).length,
+      `INV-ASSET-SPECS-COMPLETENESS: ${planTag}.additional_asset_specs must cover each enumerated concept`
+    );
+  }
+}
+
+function validateSpokenKnowledgeMotionScene(sceneBoard, tag) {
+  if (sceneBoard.scene_job === "rest") return;
+
+  const analogy = sceneBoard.brainstorming_layer?.analogy_pass ?? {};
+  const plan = analogy.concrete_execution_plan ?? {};
+  const planTag = `${tag}.brainstorming_layer.analogy_pass.concrete_execution_plan`;
+
+  assert(
+    hasNonEmptyObject(analogy),
+    `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${tag}.brainstorming_layer.analogy_pass is required for spoken knowledge scenes`
+  );
+  assert(
+    hasNonEmptyObject(plan),
+    `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag} is required for spoken knowledge scenes`
+  );
+  assert(hasText(plan.asset_kind), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.asset_kind is required`);
+  assert(hasText(plan.generation_skill_route), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.generation_skill_route is required`);
+  assert(hasText(plan.remotion_layout_plan), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.remotion_layout_plan is required`);
+  assert(hasText(plan.concept_object_plan), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.concept_object_plan is required`);
+  assert(hasNonEmptyTextArray(plan.motion_primitives), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.motion_primitives must name at least one primitive`);
+  assert(hasText(plan.generated_prop_decision), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.generated_prop_decision is required`);
+  checkEnum(`${planTag}.generated_prop_decision`, plan.generated_prop_decision, spokenGeneratedPropDecisions);
+
+  if (plan.generation_skill_route === "remotion_native") {
+    assert(
+      hasText(plan.generation_prompt),
+      `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.generation_prompt must be "not_needed_programmatic" or another explicit trace for remotion_native routes`
+    );
+  } else {
+    assert(
+      hasText(plan.generation_prompt),
+      `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.generation_prompt is required for generated asset routes`
+    );
+  }
+
+  if (plan.generated_prop_decision === "selected_with_quality_reason") {
+    assert(hasText(plan.quality_reason), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.quality_reason is required when a generated prop is selected`);
+    assert(hasText(plan.lookdev_risk), `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.lookdev_risk is required when a generated prop is selected`);
+    assert(
+      hasText(plan.fallback_to_programmatic_structure),
+      `INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: ${planTag}.fallback_to_programmatic_structure is required when a generated prop is selected`
+    );
+  }
 }
 
 function joinedText(...values) {
@@ -132,6 +392,10 @@ assertSchemaRequiredFields(schema, state, "state");
 
 assert(state.kind === "XingchenNextProjectState", `kind must be "XingchenNextProjectState", got "${state.kind}"`);
 assert(typeof state.version === "string" && state.version.length > 0, "version must be a non-empty string");
+assert(
+  state.mode === undefined || state.mode === "extended",
+  `Extended validator accepts mode="extended" or absent legacy mode, got "${state.mode}"`
+);
 
 // ---- metadata ----
 
@@ -147,6 +411,7 @@ const allowedStages = [
   "render",
   "publish",
   "review",
+  "knowledge-writeback",
 ];
 const stageRank = Object.fromEntries(allowedStages.map((s, idx) => [s, idx]));
 assert(metadata.project_id, "metadata.project_id is required");
@@ -162,20 +427,46 @@ const stageIdx = (stage && stageRank[stage] !== undefined) ? stageRank[stage] : 
 const allowedCheckpoints = ["Topic Lock", "Script Lock", "StoryMother Lock", "Visual Lock", "Lookdev Approval"];
 const allowedApprovalStatus = ["pending", "approved", "rejected", "superseded", "manual_review_required"];
 const allowedRecordingCorrectionStatus = ["pending", "completed", "manual_review_required", "blocked"];
+const allowedVisualDiscoveryStatuses = ["discussed", "agent_proposed", "manual_review_required", "not_needed"];
+const allowedVisualCollaborationStatuses = ["discussed", "agent_proposed", "manual_review_required"];
+const allowedVisualDiscoveryAssetSources = [
+  "project_source",
+  "global_asset_library",
+  "official_capture",
+  "cc0_asset",
+  "commercial_broll",
+  "imagegen",
+  "hunyuan3d",
+  "blender",
+  "remotion_native",
+  "r3f",
+  "hyperframes",
+  "manual_user_asset",
+  "mixed",
+];
+const allowedCommercialUseStatuses = ["allowed", "allowed_with_attribution", "blocked", "manual_review_required"];
 const approvals = state.workflow?.approvals ?? [];
 assert(Array.isArray(approvals), "workflow.approvals must be an array");
+assert(approvals.length === allowedCheckpoints.length, "workflow.approvals must contain exactly five checkpoints");
 
 const approvalByCheckpoint = {};
+const approvalCounts = {};
 for (const [i, approval] of approvals.entries()) {
   assert(approval.checkpoint, `workflow.approvals[${i}].checkpoint is required`);
   assert(approval.status, `workflow.approvals[${i}].status is required`);
   checkEnum(`workflow.approvals[${i}].checkpoint`, approval.checkpoint, allowedCheckpoints);
   checkEnum(`workflow.approvals[${i}].status`, approval.status, allowedApprovalStatus);
-  if (approval.checkpoint) approvalByCheckpoint[approval.checkpoint] = approval;
+  if (approval.checkpoint) {
+    approvalCounts[approval.checkpoint] = (approvalCounts[approval.checkpoint] ?? 0) + 1;
+    approvalByCheckpoint[approval.checkpoint] = approval;
+  }
 }
 
 for (const checkpoint of allowedCheckpoints) {
-  assert(approvalByCheckpoint[checkpoint], `workflow.approvals missing required checkpoint: ${checkpoint}`);
+  assert(
+    approvalCounts[checkpoint] === 1,
+    `workflow.approvals must contain exactly one checkpoint: ${checkpoint}`
+  );
 }
 
 // ---- sources: input truth for screenshots, recordings, screen recordings, notes, links ----
@@ -345,6 +636,7 @@ const allowedIntegrationModes = [
   "video_plate",
   "browser_canvas_plate",
 ];
+const allowedGsapUsage = ["used", "not_needed", "skipped_with_reason"];
 const allowedDirectorStacks = ["remotion", "html_3d", "source_media", "hyperframes", "vibemotion", "spark", "gen_insert"];
 const allowedSceneJobs = ["hook", "context", "proof", "build", "peak", "rest", "payoff", "close"];
 const allowedEvidenceRoles = ["hero", "supporting", "background", "none"];
@@ -458,6 +750,12 @@ for (const [i, plan] of sourceMaterialPlan.entries()) {
     );
   }
 }
+
+const sparkTrueAssetFormats = ["spz", "ply", "splat", "ksplat", "sog", "zip", "rad"];
+const marbleWorldAssetFormats = ["spz", "ply", "splat", "ksplat", "sog", "zip", "glb", "pano", "png"];
+const marbleSplatFormats = ["spz", "ply", "splat", "ksplat", "sog", "zip"];
+const marbleMeshFormats = ["glb"];
+const marbleFlatPreviewFormats = ["pano", "png"];
 
 const scenes = state.render?.scene_motion_specs ?? [];
 assert(Array.isArray(scenes), "render.scene_motion_specs must be an array");
@@ -589,6 +887,13 @@ for (const [i, scene] of scenes.entries()) {
         hasText(scene.source_html_path) || hasNonEmptyArray(scene.hyperframes_candidate_ids),
         `${tag}.source_html_path or hyperframes_candidate_ids is required for Hyperframes-sourced render scenes`
       );
+      checkEnum(`${tag}.gsap_usage`, scene.gsap_usage, allowedGsapUsage);
+      if (["html_scene", "canvas_scene"].includes(scene.renderer_family)) {
+        assert(
+          scene.gsap_usage,
+          `INV-GSAP-HYPERFRAMES-TRACE: ${tag}.gsap_usage is required for Hyperframes html_scene/canvas_scene render scenes`
+        );
+      }
     }
   }
 
@@ -622,13 +927,33 @@ for (const [i, scene] of scenes.entries()) {
     if (scene.route_status === "true_3dgs_asset") {
       assert(worldAsset.path_or_url, `${tag}: true_3dgs_asset requires world_asset.path_or_url`);
       assert(
+        scene.actual_renderer_family === "spark_3dgs",
+        `${tag}: true_3dgs_asset requires actual_renderer_family "spark_3dgs" (got "${scene.actual_renderer_family}")`
+      );
+      assert(
         worldAsset.format !== "procedural_packed_splats",
         `${tag}: true_3dgs_asset cannot use format "procedural_packed_splats"`
+      );
+      assert(
+        sparkTrueAssetFormats.includes(worldAsset.format),
+        `${tag}: true_3dgs_asset requires world_asset.format in [${sparkTrueAssetFormats.join(", ")}]`
+      );
+      assert(
+        worldAsset.status === "approved",
+        `${tag}: true_3dgs_asset requires world_asset.status "approved"`
       );
     }
 
     if (scene.route_status === "streaming_rad_world") {
       assert(worldAsset.format === "rad", `${tag}: streaming_rad_world requires world_asset.format "rad"`);
+      assert(
+        scene.actual_renderer_family === "spark_3dgs",
+        `${tag}: streaming_rad_world requires actual_renderer_family "spark_3dgs" (got "${scene.actual_renderer_family}")`
+      );
+      assert(
+        worldAsset.status === "approved",
+        `${tag}: streaming_rad_world requires world_asset.status "approved"`
+      );
       assert(
         scene.spark_runtime_profile?.paged === true,
         `${tag}: streaming_rad_world requires spark_runtime_profile.paged === true`
@@ -641,6 +966,53 @@ for (const [i, scene] of scenes.entries()) {
         `${tag}: route_status "hybrid_spark_three" requires actual_renderer_family "spark_hybrid_three" (got "${scene.actual_renderer_family}")`
       );
     }
+
+    if (worldAsset.source_kind === "marble") {
+      assert(worldAsset.asset_id, `${tag}: Marble world_asset requires asset_id`);
+      assert(worldAsset.path_or_url, `${tag}: Marble world_asset requires path_or_url`);
+      assert(worldAsset.status, `${tag}: Marble world_asset requires status`);
+      assert(
+        marbleWorldAssetFormats.includes(worldAsset.format),
+        `${tag}: Marble world_asset.format must be one of [${marbleWorldAssetFormats.join(", ")}]`
+      );
+      assert(
+        hasText(worldAsset.library_manifest),
+        `${tag}: Marble world_asset.library_manifest must point to the Spark world asset manifest`
+      );
+
+      if (marbleSplatFormats.includes(worldAsset.format)) {
+        assert(
+          scene.route_status === "true_3dgs_asset",
+          `${tag}: Marble splat exports must use route_status "true_3dgs_asset"`
+        );
+        assert(
+          scene.actual_renderer_family === "spark_3dgs",
+          `${tag}: Marble splat exports must use actual_renderer_family "spark_3dgs"`
+        );
+      }
+
+      if (marbleMeshFormats.includes(worldAsset.format)) {
+        assert(
+          scene.route_status === "hybrid_spark_three",
+          `${tag}: Marble GLB mesh exports must use route_status "hybrid_spark_three"`
+        );
+        assert(
+          scene.actual_renderer_family === "spark_hybrid_three",
+          `${tag}: Marble GLB mesh exports must use actual_renderer_family "spark_hybrid_three"`
+        );
+        assert(
+          worldAsset.status === "approved",
+          `${tag}: Marble GLB mesh exports require world_asset.status "approved"`
+        );
+      }
+
+      if (marbleFlatPreviewFormats.includes(worldAsset.format)) {
+        assert(
+          ["fallback_preview", "approved_fallback_final"].includes(scene.route_status),
+          `${tag}: Marble pano/png exports are preview or fallback plates, not true Spark 3DGS assets`
+        );
+      }
+    }
   }
 }
 
@@ -651,11 +1023,39 @@ const allowedTechnicalRoutes = ["vibemotion_video", "vibemotion_html", "remotion
 const allowedOutputKinds = ["mp4", "mov", "html", "component", "transparent_asset"];
 const allowedCandidateReviewStatus = ["pending", "approved", "rejected", "needs_revision"];
 const allowedCandidateOrigins = ["generated_from_current_state", "primitive_reference_adapted_to_current_state"];
-const allowedAIVideoProviders = ["seedance", "runway", "pika", "kling", "luma", "other_ai_video"];
+const allowedAIVideoProviders = ["seedance", "runway", "pika", "kling", "luma", "veo_video_generation", "other_ai_video"];
 const allowedAIVideoTechnicalRoutes = ["text_to_video", "image_to_video", "video_to_video", "reference_guided_video"];
 const allowedAIVideoOutputKinds = ["mp4", "mov", "webm", "image_sequence"];
 const allowedAIVideoCandidateOrigins = ["generated_from_current_state", "reference_guided_from_current_state"];
 const allowedAIVideoPromptStatuses = ["drafted", "handed_to_user", "generated", "cancelled", "blocked"];
+const allowedVisualPreprocessAssetKinds = [
+  "depth_map",
+  "foreground_mask",
+  "text_safe_mask",
+  "upscaled_still",
+  "repaired_still",
+  "camera_path",
+  "layered_2_5d_manifest",
+  "preprocess_manifest",
+];
+const allowedVisualPreprocessGenerators = [
+  "depth_anything_v2_small",
+  "mobile_sam",
+  "realesrgan_ncnn_vulkan",
+  "gfpgan",
+  "rife_lite",
+  "manual",
+  "local_script",
+];
+const allowedVisualPreprocessBackends = [
+  "onnxruntime_directml",
+  "pytorch_rocm",
+  "ncnn_vulkan",
+  "cpu",
+  "manual",
+  "unknown",
+];
+const allowedVisualPreprocessStatuses = ["planned", "generated", "previewed", "approved", "rejected", "blocked"];
 const allowedPluginIds = ["hyperframes@openai-curated", "remotion@openai-curated"];
 const allowedAdapterKinds = ["codex_plugin", "local_cli", "local_skill", "manual_implementation", "external_api"];
 const allowedPluginSkills = [
@@ -671,7 +1071,20 @@ const allowedPluginSkills = [
   "manual-hyperframes-implementation",
   "manual-remotion-implementation",
   "seedance-api",
+  "veo-video-api",
+  "manual-veo-video-generation",
   "manual-ai-video-api",
+  "world-labs-api",
+  "marble-web-export",
+  "manual-marble-export",
+  "visual-preprocess-lane",
+  "depth-anything-v2-small",
+  "mobilesam",
+  "realesrgan-ncnn-vulkan",
+  "gfpgan",
+  "rife-lite",
+  "local-visual-preprocess",
+  "comfyui-wan-video",
 ];
 const allowedPluginRunStatuses = ["planned", "generated", "previewed", "promoted", "rejected", "blocked"];
 const pluginRunStatusesWithOutputs = ["generated", "previewed", "promoted", "rejected"];
@@ -753,12 +1166,32 @@ for (const [i, candidate] of hyperframesCandidates.entries()) {
   checkEnum(`${tag}.integration_mode`, candidate.integration_mode, allowedIntegrationModes);
   checkEnum(`${tag}.promotion_target_renderer_family`, candidate.promotion_target_renderer_family, allowedFinalRendererFamilies);
   checkEnum(`${tag}.candidate_origin`, candidate.candidate_origin, allowedCandidateOrigins);
+  checkEnum(`${tag}.gsap_usage`, candidate.gsap_usage, allowedGsapUsage);
 
   if (candidate.motion_source !== undefined) {
     assert(
       candidate.motion_source === "hyperframes_runtime",
       `${tag}.motion_source must be "hyperframes_runtime" for Hyperframes candidates`
     );
+  }
+
+  if (["hyperframes_html", "hyperframes_canvas"].includes(candidate.technical_route)) {
+    assert(
+      candidate.gsap_usage,
+      `INV-GSAP-HYPERFRAMES-TRACE: ${tag}.gsap_usage is required for DOM/SVG/canvas Hyperframes candidates`
+    );
+    if (candidate.gsap_usage === "used") {
+      assert(
+        hasText(candidate.gsap_timeline_notes),
+        `INV-GSAP-HYPERFRAMES-TRACE: ${tag}.gsap_timeline_notes is required when GSAP is used`
+      );
+    }
+    if (candidate.gsap_usage === "skipped_with_reason") {
+      assert(
+        hasText(candidate.gsap_timeline_notes) || hasText(candidate.notes),
+        `INV-GSAP-HYPERFRAMES-TRACE: ${tag} must record why GSAP was skipped`
+      );
+    }
   }
 
   if (stageIdx >= stageRank["render"] && candidate.review_status === "approved") {
@@ -978,6 +1411,7 @@ const hyperframesCandidateIds = new Set(
 );
 const hyperframesCandidateIdsWithPluginRun = new Set();
 const aiVideoCandidateIdsWithAdapterRun = new Set();
+const visualPreprocessAssetIdsWithAdapterRun = new Set();
 const directorBoardSceneIdsForPlugins = new Set(
   asArray(state.visual?.director_board?.scene_boards).map((board) => board?.scene_id).filter(Boolean)
 );
@@ -1002,11 +1436,38 @@ for (const [i, run] of pluginAdapterRuns.entries()) {
     run.skill_name === "remotion-render-adapter" ||
     run.skill_name === "manual-remotion-implementation";
   const isAIVideoAdapter =
-    run.adapter_kind === "external_api" ||
     adapterId === "seedance-api" ||
+    adapterId === "veo-video-api" ||
+    adapterId === "manual-veo-video-generation" ||
     adapterId === "manual-ai-video-api" ||
+    adapterId === "comfyui-wan22-ti2v" ||
     run.skill_name === "seedance-api" ||
-    run.skill_name === "manual-ai-video-api";
+    run.skill_name === "veo-video-api" ||
+    run.skill_name === "manual-veo-video-generation" ||
+    run.skill_name === "manual-ai-video-api" ||
+    run.skill_name === "comfyui-wan-video";
+  const isWorldLabsAdapter =
+    adapterId === "world-labs-api" ||
+    adapterId === "marble-web-export" ||
+    adapterId === "manual-marble-export" ||
+    run.skill_name === "world-labs-api" ||
+    run.skill_name === "marble-web-export" ||
+    run.skill_name === "manual-marble-export";
+  const isVisualPreprocessAdapter =
+    adapterId === "visual-preprocess-lane" ||
+    adapterId === "depth-anything-v2-small" ||
+    adapterId === "mobilesam" ||
+    adapterId === "realesrgan-ncnn-vulkan" ||
+    adapterId === "gfpgan" ||
+    adapterId === "rife-lite" ||
+    adapterId === "local-visual-preprocess" ||
+    run.skill_name === "visual-preprocess-lane" ||
+    run.skill_name === "depth-anything-v2-small" ||
+    run.skill_name === "mobilesam" ||
+    run.skill_name === "realesrgan-ncnn-vulkan" ||
+    run.skill_name === "gfpgan" ||
+    run.skill_name === "rife-lite" ||
+    run.skill_name === "local-visual-preprocess";
   assert(run.run_id, `${tag}.run_id is required`);
   assert(run.adapter_kind, `${tag}.adapter_kind is required`);
   assert(adapterId, `${tag}.adapter_id is required`);
@@ -1071,13 +1532,22 @@ for (const [i, run] of pluginAdapterRuns.entries()) {
   }
 
   if (isAIVideoAdapter) {
+    const isLocalWanAdapter = adapterId === "comfyui-wan22-ti2v" || run.skill_name === "comfyui-wan-video";
     assert(
-      run.adapter_kind === "external_api" || run.adapter_kind === "manual_implementation",
-      `INV-AI-VIDEO-GEN-INSERT: ${tag}.adapter_kind must be "external_api" or "manual_implementation" for AI video generation`
+      isLocalWanAdapter
+        ? (run.adapter_kind === "local_skill" || run.adapter_kind === "local_cli")
+        : (run.adapter_kind === "external_api" || run.adapter_kind === "manual_implementation"),
+      isLocalWanAdapter
+        ? `INV-AI-VIDEO-GEN-INSERT: ${tag}.adapter_kind must be "local_skill" or "local_cli" for local ComfyUI Wan2.2 generation`
+        : `INV-AI-VIDEO-GEN-INSERT: ${tag}.adapter_kind must be "external_api" or "manual_implementation" for AI video generation`
     );
     assert(
-      adapterId === "seedance-api" || adapterId === "manual-ai-video-api",
-      `INV-AI-VIDEO-GEN-INSERT: ${tag}.adapter_id must be "seedance-api" or "manual-ai-video-api" for AI video generation`
+      isLocalWanAdapter ||
+        adapterId === "seedance-api" ||
+        adapterId === "veo-video-api" ||
+        adapterId === "manual-veo-video-generation" ||
+        adapterId === "manual-ai-video-api",
+      `INV-AI-VIDEO-GEN-INSERT: ${tag}.adapter_id must identify a supported AI video generation lane`
     );
     assert(
       hasNonEmptyTextArray(run.candidate_ids),
@@ -1091,6 +1561,56 @@ for (const [i, run] of pluginAdapterRuns.entries()) {
       assert(
         asArray(run.input_state_refs).some((ref) => ref.includes("visual.director_board.scene_boards")),
         `INV-AI-VIDEO-GEN-INSERT: ${tag}.input_state_refs must include visual.director_board.scene_boards for AI video generation`
+      );
+    }
+  }
+
+  if (isWorldLabsAdapter) {
+    assert(
+      run.adapter_kind === "external_api" || run.adapter_kind === "manual_implementation",
+      `INV-SPARK-NEEDS-ASSET: ${tag}.adapter_kind must be "external_api" or "manual_implementation" for World Labs/Marble world asset intake`
+    );
+    assert(
+      ["world-labs-api", "marble-web-export", "manual-marble-export"].includes(adapterId),
+      `INV-SPARK-NEEDS-ASSET: ${tag}.adapter_id must identify a World Labs/Marble intake lane`
+    );
+    assert(
+      run.promotion_target_renderer_family === "spark_3dgs",
+      `INV-SPARK-NEEDS-ASSET: ${tag}.promotion_target_renderer_family must be "spark_3dgs" for World Labs/Marble world asset intake`
+    );
+    if (run.status !== "planned" && run.status !== "blocked") {
+      assert(
+        asArray(run.state_writebacks).some((ref) => ref.includes("render.scene_motion_specs")),
+        `INV-SPARK-NEEDS-ASSET: ${tag}.state_writebacks must include render.scene_motion_specs for World Labs/Marble world asset intake`
+      );
+      assert(
+        asArray(run.input_state_refs).some((ref) => ref.includes("visual.director_board.scene_boards")),
+        `INV-SPARK-NEEDS-ASSET: ${tag}.input_state_refs must include visual.director_board.scene_boards for World Labs/Marble world asset intake`
+      );
+    }
+  }
+
+  if (isVisualPreprocessAdapter) {
+    assert(
+      run.adapter_kind === "local_cli" || run.adapter_kind === "local_skill" || run.adapter_kind === "manual_implementation",
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.adapter_kind must be "local_cli", "local_skill", or "manual_implementation" for visual preprocessing`
+    );
+    assert(
+      run.promotion_target_renderer_family === "remotion_component",
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.promotion_target_renderer_family must be "remotion_component" for visual preprocessing`
+    );
+    assert(
+      hasNonEmptyTextArray(run.candidate_ids),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.candidate_ids must link render.visual_preprocess_assets[].asset_id`
+    );
+    if (run.status !== "planned" && run.status !== "blocked") {
+      assert(
+        asArray(run.state_writebacks).some((ref) => ref.includes("render.visual_preprocess_assets")),
+        `INV-VISUAL-PREPROCESS-ASSET: ${tag}.state_writebacks must include render.visual_preprocess_assets for visual preprocessing`
+      );
+      assert(
+        asArray(run.input_state_refs).some((ref) => ref.includes("visual.director_board.scene_boards") || ref.includes("render.scene_motion_specs")),
+        `INV-VISUAL-PREPROCESS-ASSET: ${tag}.input_state_refs must include director-board or scene-motion state for visual preprocessing`
       );
     }
   }
@@ -1130,6 +1650,9 @@ for (const [i, run] of pluginAdapterRuns.entries()) {
       );
       aiVideoCandidateIdsWithAdapterRun.add(candidateId);
     }
+    if (isVisualPreprocessAdapter) {
+      visualPreprocessAssetIdsWithAdapterRun.add(candidateId);
+    }
   }
 }
 
@@ -1145,6 +1668,70 @@ for (const candidateId of aiVideoCandidateIds) {
     aiVideoCandidateIdsWithAdapterRun.has(candidateId),
     `INV-AI-VIDEO-GEN-INSERT: render.ai_video_candidates candidate_id "${candidateId}" must be linked from render.plugin_adapter_runs[].candidate_ids`
   );
+}
+
+// ---- render.visual_preprocess_assets ----
+
+const visualPreprocessAssets = state.render?.visual_preprocess_assets ?? [];
+assert(Array.isArray(visualPreprocessAssets), "render.visual_preprocess_assets must be an array");
+
+for (const [i, asset] of visualPreprocessAssets.entries()) {
+  const tag = `render.visual_preprocess_assets[${i}]`;
+  assert(asset.asset_id, `${tag}.asset_id is required`);
+  assert(asset.scene_id, `${tag}.scene_id is required`);
+  assert(asset.source_asset_ref, `${tag}.source_asset_ref is required`);
+  assert(asset.asset_kind, `${tag}.asset_kind is required`);
+  assert(asset.generator, `${tag}.generator is required`);
+  assert(asset.backend, `${tag}.backend is required`);
+  assert(hasNonEmptyTextArray(asset.output_paths), `${tag}.output_paths must be a non-empty string array`);
+  assert(asset.status, `${tag}.status is required`);
+  assert(hasNonEmptyTextArray(asset.state_trace_refs), `${tag}.state_trace_refs must be a non-empty string array`);
+  assert(asset.remotion_usage, `${tag}.remotion_usage is required`);
+  assert(asset.proof_policy, `${tag}.proof_policy is required`);
+  checkEnum(`${tag}.asset_kind`, asset.asset_kind, allowedVisualPreprocessAssetKinds);
+  checkEnum(`${tag}.generator`, asset.generator, allowedVisualPreprocessGenerators);
+  checkEnum(`${tag}.backend`, asset.backend, allowedVisualPreprocessBackends);
+  checkEnum(`${tag}.status`, asset.status, allowedVisualPreprocessStatuses);
+
+  if (storySceneIds.size > 0) {
+    assert(
+      storySceneIds.has(asset.scene_id),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.scene_id references unknown story mother scene "${asset.scene_id}"`
+    );
+  }
+
+  if (["depth_map", "camera_path", "layered_2_5d_manifest", "preprocess_manifest"].includes(asset.asset_kind)) {
+    assert(
+      textIncludesAny(asset.remotion_usage, ["2.5d", "parallax", "camera", "depth", "layer", "plane", "视差", "分层", "相机", "景深"]),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.remotion_usage must explain the 2.5D/depth/camera use`
+    );
+  }
+
+  if (["foreground_mask", "text_safe_mask"].includes(asset.asset_kind)) {
+    assert(
+      textIncludesAny(asset.remotion_usage, ["mask", "foreground", "safe", "subtitle", "occlusion", "遮罩", "前景", "字幕", "避让"]),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.remotion_usage must explain mask, foreground, or subtitle-safe use`
+    );
+  }
+
+  if (["upscaled_still", "repaired_still"].includes(asset.asset_kind)) {
+    assert(
+      textIncludesAny(asset.remotion_usage, ["still", "plate", "texture", "background", "source", "upscale", "repair", "超分", "修复", "底板"]),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.remotion_usage must explain still/plate/texture use`
+    );
+  }
+
+  assert(
+    textIncludesAny(asset.proof_policy, ["does not alter proof", "no proof rewrite", "remotion owns proof", "proof remains", "不改写证明", "不承载证明", "证明由 remotion"]),
+    `INV-VISUAL-PREPROCESS-ASSET: ${tag}.proof_policy must state that preprocessing does not rewrite proof`
+  );
+
+  if (asset.status !== "planned" && asset.status !== "blocked") {
+    assert(
+      visualPreprocessAssetIdsWithAdapterRun.has(asset.asset_id),
+      `INV-VISUAL-PREPROCESS-ASSET: ${tag}.asset_id "${asset.asset_id}" must be linked from render.plugin_adapter_runs[].candidate_ids`
+    );
+  }
 }
 
 // ---- visual.recording_visual_brief ----
@@ -1178,6 +1765,194 @@ function approvalReady(checkpoint, allowManualReview = false) {
   if (!a) return false;
   if (a.status === "approved") return true;
   return allowManualReview && a.status === "manual_review_required";
+}
+
+function collectLookdevRuleResults() {
+  const results = [];
+  for (const [gateIndex, gate] of asArray(state.review?.lookdev_gate_results).entries()) {
+    for (const [ruleIndex, rule] of asArray(gate?.rule_results).entries()) {
+      results.push({
+        ...rule,
+        _path: `review.lookdev_gate_results[${gateIndex}].rule_results[${ruleIndex}]`,
+      });
+    }
+  }
+  return results;
+}
+
+function assertVoxRemotionPolicyReady() {
+  const brainstormingInfluence = state.visual?.director_board?.brainstorming_contract?.visual_style_influence;
+  assert(
+    brainstormingInfluence === undefined,
+    "INV-VOX-REMOTION-STYLE-CONTRACT: visual_style_influence must live at visual.visual_policy.visual_style_influence; brainstorming_contract may only store scene reasoning or backrefs"
+  );
+
+  const influence = getVisualStyleInfluence();
+  if (!hasNonEmptyObject(influence)) return;
+
+  assert(
+    influence.source === "vox_remotion_visual_style",
+    `INV-VOX-REMOTION-STYLE-CONTRACT: visual.visual_policy.visual_style_influence.source must be vox_remotion_visual_style when present`
+  );
+
+  if (!isVoxRemotionVisualStyleSelected()) return;
+
+  assert(
+    hasMinTextArray(influence.selected_traits, 2),
+    "INV-VOX-REMOTION-STYLE-CONTRACT: visual.visual_policy.visual_style_influence.selected_traits must list the selected style traits"
+  );
+  assert(
+    hasText(influence.xingchen_adaptation),
+    "INV-VOX-REMOTION-STYLE-CONTRACT: visual.visual_policy.visual_style_influence.xingchen_adaptation is required"
+  );
+  assert(
+    hasNonEmptyTextArray(influence.avoid_copying),
+    "INV-VOX-REMOTION-STYLE-CONTRACT: visual.visual_policy.visual_style_influence.avoid_copying must list what not to copy"
+  );
+
+  const world = state.visual?.visual_policy?.editorial_world_system ?? {};
+  const worldTag = "visual.visual_policy.editorial_world_system";
+  assert(hasNonEmptyObject(world), `INV-VOX-REMOTION-STYLE-CONTRACT: ${worldTag} is required when vox_remotion_visual_style is selected`);
+  for (const key of [
+    "background_id",
+    "grid_size",
+    "grain_noise",
+    "typography_lock",
+    "halftone_cutout_policy",
+    "red_offset_marker_policy",
+    "remotion_proof_ownership",
+    "safe_area_mask",
+  ]) {
+    assert(hasText(world[key]), `INV-VOX-REMOTION-STYLE-CONTRACT: ${worldTag}.${key} is required`);
+  }
+  assert(hasNonEmptyTextArray(world.palette_lock), `INV-VOX-REMOTION-STYLE-CONTRACT: ${worldTag}.palette_lock must be a non-empty text array`);
+}
+
+function assertVoxRemotionSceneContractsReady(directorBoardBySceneId) {
+  if (!isVoxRemotionVisualStyleSelected()) return;
+
+  for (const [i, scene] of scenes.entries()) {
+    const tag = `render.scene_motion_specs[${i}]`;
+    const sceneBoard = directorBoardBySceneId[scene.scene_id];
+    if (sceneBoard?.scene_job === "rest") continue;
+
+    const rendererFamilyValues = [
+      scene.renderer_family,
+      scene.actual_renderer_family,
+      scene.promotion_target_renderer_family,
+    ].filter(hasText);
+    for (const rendererFamily of rendererFamilyValues) {
+      assert(
+        !forbiddenVoxRendererFamilies.includes(rendererFamily),
+        `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag} must not create renderer_family "${rendererFamily}"`
+      );
+    }
+
+    assert(
+      scene.visual_style_trace?.source === "vox_remotion_visual_style",
+      `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.visual_style_trace.source must be vox_remotion_visual_style`
+    );
+
+    const contract = scene.scene_contract_trace ?? {};
+    for (const key of ["world_base", "foreground_proof_carrier", "remotion_overlay", "voiceover_beat"]) {
+      assert(hasText(contract[key]), `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.scene_contract_trace.${key} is required`);
+    }
+    assert(hasNonEmptyTextArray(contract.mid_cutouts), `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.scene_contract_trace.mid_cutouts must be non-empty`);
+    assert(hasNonEmptyTextArray(contract.safe_zones), `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.scene_contract_trace.safe_zones must be non-empty`);
+    assert(hasNonEmptyTextArray(contract.proof_source_trace), `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.scene_contract_trace.proof_source_trace must cite source/evidence/state refs`);
+
+    const propControls = scene.prop_controls ?? {};
+    for (const key of ["x", "y", "scale", "crop", "opacity", "marker", "halftone", "grid"]) {
+      assert(
+        propControls[key] === true,
+        `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.prop_controls.${key} must be true`
+      );
+    }
+
+    const checkIds = new Set(asArray(scene.lookdev_style_checks).filter(hasText));
+    for (const ruleId of voxRemotionLookdevRuleIds) {
+      assert(
+        checkIds.has(ruleId),
+        `INV-VOX-REMOTION-STYLE-CONTRACT: ${tag}.lookdev_style_checks missing ${ruleId}`
+      );
+    }
+  }
+}
+
+function assertVoxLookdevGateResultsReadyForRender() {
+  if (!isVoxRemotionVisualStyleSelected()) return;
+
+  const ruleResults = collectLookdevRuleResults();
+  assert(
+    hasNonEmptyArray(ruleResults),
+    "INV-VOX-REMOTION-LOOKDEV: review.lookdev_gate_results[].rule_results must include Vox/Remotion style rules before render"
+  );
+
+  const ruleIds = new Set(ruleResults.map((rule) => rule?.rule_id).filter(Boolean));
+  for (const ruleId of voxRemotionLookdevRuleIds) {
+    assert(ruleIds.has(ruleId), `INV-VOX-REMOTION-LOOKDEV: missing Vox/Remotion lookdev rule_id=${ruleId}`);
+  }
+
+  for (const rule of ruleResults.filter((item) => voxRemotionLookdevRuleIds.includes(item?.rule_id))) {
+    assert(hasText(rule.status), `INV-VOX-REMOTION-LOOKDEV: ${rule._path}.status is required`);
+    assert(
+      !blockingLookdevStatuses.includes(rule.status),
+      `INV-VOX-REMOTION-LOOKDEV: ${rule._path} status "${rule.status}" blocks render`
+    );
+    if (rule.status === "manual_review_required") {
+      assert(
+        hasText(rule.human_override) || hasText(rule.manual_review_signature) || hasText(rule.user_signature),
+        `INV-VOX-REMOTION-LOOKDEV: ${rule._path} manual_review_required needs explicit human signature`
+      );
+    }
+  }
+}
+
+function assertLookdevGateResultsReadyForRender() {
+  if (!isLayAudienceTier()) return;
+
+  const approval = approvalByCheckpoint["Lookdev Approval"];
+  assert(
+    approval?.status === "approved",
+    "INV-LOOKDEV-BEFORE-RENDER: lay audience render requires Lookdev Approval=approved; manual_review_required cannot bypass lookdev audits"
+  );
+
+  const lookdevGateResults = asArray(state.review?.lookdev_gate_results);
+  assert(
+    hasNonEmptyArray(lookdevGateResults),
+    "INV-LOOKDEV-BEFORE-RENDER: review.lookdev_gate_results must be non-empty for lay audience render"
+  );
+
+  const ruleResults = collectLookdevRuleResults();
+  assert(
+    hasNonEmptyArray(ruleResults),
+    "INV-LOOKDEV-BEFORE-RENDER: review.lookdev_gate_results[].rule_results must contain audit rule results"
+  );
+
+  const ruleIds = new Set(ruleResults.map((rule) => rule?.rule_id).filter(Boolean));
+  for (const ruleId of requiredLayLookdevRuleIds) {
+    assert(
+      ruleIds.has(ruleId),
+      `INV-LOOKDEV-BEFORE-RENDER: missing lay audience lookdev audit rule_id=${ruleId}`
+    );
+  }
+
+  for (const rule of ruleResults) {
+    assert(hasText(rule.rule_id), `INV-LOOKDEV-BEFORE-RENDER: ${rule._path}.rule_id is required`);
+    assert(hasText(rule.status), `INV-LOOKDEV-BEFORE-RENDER: ${rule._path}.status is required`);
+    if (hasText(rule.status)) {
+      assert(
+        !blockingLookdevStatuses.includes(rule.status),
+        `INV-LOOKDEV-BEFORE-RENDER: ${rule._path} status "${rule.status}" blocks render`
+      );
+    }
+    if (rule.status === "manual_review_required") {
+      assert(
+        hasText(rule.human_override) || hasText(rule.manual_review_signature) || hasText(rule.user_signature),
+        `INV-LOOKDEV-BEFORE-RENDER: ${rule._path} manual_review_required needs explicit human signature`
+      );
+    }
+  }
 }
 
 function assertVisualQualityReady() {
@@ -1357,10 +2132,41 @@ function assertMaterialDirectorPassReady() {
 
 function assertDirectorBoardReady() {
   const board = state.visual?.director_board ?? {};
+  const spokenMotionRequired = isSpokenKnowledgeProject();
+  const spokenMotionSelected = isSpokenKnowledgeMotionSelected();
+  const spokenMotionPolicy = getSpokenKnowledgeMotionPolicy();
+  const creatorSignaturePolicy = getCreatorSignaturePolicy();
+  assertVoxRemotionPolicyReady();
   assert(
     board.status === "completed" || board.status === "manual_review_required",
     "INV-DIRECTOR-BOARD: visual.director_board.status must be completed or manual_review_required before Visual Lock"
   );
+  if (creatorSignaturePolicy.brand_memory_used === true) {
+    assert(
+      hasText(creatorSignaturePolicy.selected_family_from_brand_memory),
+      "INV-CREATOR-SIGNATURE-ADAPTATION: visual.visual_policy.creator_signature_policy.selected_family_from_brand_memory is required when brand_memory_used is true"
+    );
+    assert(
+      hasText(creatorSignaturePolicy.adaptation_reason),
+      "INV-CREATOR-SIGNATURE-ADAPTATION: visual.visual_policy.creator_signature_policy.adaptation_reason is required when brand_memory_used is true"
+    );
+    assert(
+      hasText(creatorSignaturePolicy.anti_template_constraint),
+      "INV-CREATOR-SIGNATURE-ADAPTATION: visual.visual_policy.creator_signature_policy.anti_template_constraint is required when brand_memory_used is true"
+    );
+  }
+  if (spokenMotionRequired) {
+    assert(
+      spokenMotionSelected,
+      "INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: visual.visual_policy.spoken_knowledge_motion_policy.selected must be true for spoken knowledge / AI explainer projects"
+    );
+  }
+  if (spokenMotionSelected) {
+    assert(
+      hasText(spokenMotionPolicy.why) || hasText(spokenMotionPolicy.asset_policy),
+      "INV-SPOKEN-KNOWLEDGE-MOTION-GRAMMAR: visual.visual_policy.spoken_knowledge_motion_policy must record why/asset_policy when selected"
+    );
+  }
   assert(hasText(board.board_md_path), "INV-DIRECTOR-BOARD: visual.director_board.board_md_path is required before Visual Lock");
   assert(hasText(board.board_json_path), "INV-DIRECTOR-BOARD: visual.director_board.board_json_path is required before Visual Lock");
   assert(
@@ -1384,6 +2190,158 @@ function assertDirectorBoardReady() {
     hasText(brainstormingContract.output_rule),
     "INV-BRAINSTORMING-BEFORE-PICTURE: visual.director_board.brainstorming_contract.output_rule is required"
   );
+  const visualCollaboration = brainstormingContract.visual_collaboration ?? {};
+  assert(
+    hasNonEmptyObject(visualCollaboration),
+    "INV-VISUAL-COLLABORATION: visual.director_board.brainstorming_contract.visual_collaboration is required before Visual Lock"
+  );
+  assert(
+    hasText(visualCollaboration.source_ref) && textIncludesAny(visualCollaboration.source_ref, ["visual-collaboration-contract"]),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.source_ref must reference visual-collaboration-contract.md"
+  );
+  assert(
+    hasText(visualCollaboration.status),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.status is required before Visual Lock"
+  );
+  checkEnum("visual.director_board.brainstorming_contract.visual_collaboration.status", visualCollaboration.status, allowedVisualCollaborationStatuses);
+  assert(
+    hasText(visualCollaboration.recording_or_beat_basis),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.recording_or_beat_basis must explain the recording, transcript, or beat-map basis for picture timing"
+  );
+  assert(
+    hasMinTextArray(visualCollaboration.options_presented, 2),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.options_presented must include at least two concrete visual options before Visual Lock"
+  );
+  assert(
+    hasText(visualCollaboration.selected_option),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.selected_option is required before Visual Lock"
+  );
+  assert(
+    Array.isArray(visualCollaboration.rejected_options),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.rejected_options must be an array"
+  );
+  assert(
+    Array.isArray(visualCollaboration.agent_assumptions),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.agent_assumptions must be an array"
+  );
+  assert(
+    hasMinTextArray(visualCollaboration.short_video_constraints, 3),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.short_video_constraints must record short-video constraints such as 0.3-second hook, 9:16, subtitle safety, proof legibility, or Douyin overlays"
+  );
+  assert(
+    Array.isArray(visualCollaboration.lessons_applied),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.lessons_applied must be an array"
+  );
+  assert(
+    Array.isArray(visualCollaboration.unresolved_visual_concerns),
+    "INV-VISUAL-COLLABORATION: visual_collaboration.unresolved_visual_concerns must be an array"
+  );
+  if (visualCollaboration.status === "agent_proposed") {
+    assert(
+      hasNonEmptyTextArray(visualCollaboration.agent_assumptions),
+      "INV-VISUAL-COLLABORATION: visual_collaboration.agent_assumptions must be non-empty when status=agent_proposed"
+    );
+  }
+  if (visualCollaboration.status === "discussed") {
+    assert(
+      hasText(visualCollaboration.user_feedback),
+      "INV-VISUAL-COLLABORATION: visual_collaboration.user_feedback is required when status=discussed"
+    );
+  }
+  if (visualCollaboration.status === "manual_review_required") {
+    assert(
+      hasNonEmptyTextArray(visualCollaboration.unresolved_visual_concerns),
+      "INV-VISUAL-COLLABORATION: visual_collaboration.unresolved_visual_concerns must be non-empty when status=manual_review_required"
+    );
+  }
+  const githubDesignIntake = brainstormingContract.github_design_intake ?? {};
+  assert(
+    hasNonEmptyObject(githubDesignIntake),
+    "INV-GITHUB-DESIGN-INTAKE: visual.director_board.brainstorming_contract.github_design_intake is required before Visual Lock"
+  );
+  assert(
+    hasText(githubDesignIntake.source_ref) && textIncludesAny(githubDesignIntake.source_ref, ["github-design-skill-intake"]),
+    "INV-GITHUB-DESIGN-INTAKE: github_design_intake.source_ref must reference github-design-skill-intake.md"
+  );
+  const githubDesignNotNeeded = hasText(githubDesignIntake.not_needed_reason);
+  if (!githubDesignNotNeeded) {
+    assert(
+      hasNonEmptyObject(githubDesignIntake.fact_check),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.fact_check must record verified items or not_needed status"
+    );
+    assert(
+      hasNonEmptyObject(githubDesignIntake.core_assets),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.core_assets must record real assets, missing assets, and placeholder policy"
+    );
+    assert(
+      hasText(githubDesignIntake.design_system),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.design_system must record token/rule design-system decisions"
+    );
+    assert(
+      hasNonEmptyObject(githubDesignIntake.direction_choice),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.direction_choice must record selected direction and killed alternatives"
+    );
+    assert(
+      hasNonEmptyTextArray(githubDesignIntake.anti_slop_bar),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.anti_slop_bar must name rejected generic AI design defaults"
+    );
+    assert(
+      hasText(githubDesignIntake.verification_route),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.verification_route must say how preview/browser/canvas verification will be done"
+    );
+    assert(
+      hasNonEmptyObject(githubDesignIntake.five_dimension_review_plan),
+      "INV-GITHUB-DESIGN-INTAKE: github_design_intake.five_dimension_review_plan must cover philosophy, hierarchy, detail, functionality, and innovation"
+    );
+  }
+  const resourcePreflight = brainstormingContract.resource_preflight ?? {};
+  assert(
+    hasNonEmptyObject(resourcePreflight),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: visual.director_board.brainstorming_contract.resource_preflight is required before Visual Lock"
+  );
+  assert(
+    hasText(resourcePreflight.visual_resource_research_path),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.visual_resource_research_path is required before Visual Lock"
+  );
+  assert(
+    hasText(resourcePreflight.visual_resource_research_json_path),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.visual_resource_research_json_path is required before Visual Lock"
+  );
+  assert(
+    hasNonEmptyObject(resourcePreflight.source_reality),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.source_reality must record source assets, generated/rebuilt scope, and placeholder policy"
+  );
+  assert(
+    hasText(resourcePreflight.design_system_memory),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.design_system_memory must record token/rule/rationale visual-system memory"
+  );
+  assert(
+    hasNonEmptyArray(resourcePreflight.library_candidate_matrix),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.library_candidate_matrix must include selected and rejected SVG/icon/Remotion/imagegen options"
+  );
+  assert(
+    hasNonEmptyObject(resourcePreflight.selected_routes),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.selected_routes is required before Visual Lock"
+  );
+  assert(
+    Array.isArray(resourcePreflight.prompt_pack_paths),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.prompt_pack_paths must be an array"
+  );
+  assert(
+    hasNonEmptyTextArray(resourcePreflight.rejected_defaults),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.rejected_defaults must name the visual defaults rejected before implementation"
+  );
+  assert(
+    hasNonEmptyTextArray(resourcePreflight.lookdev_audit_hooks),
+    "INV-VISUAL-RESOURCE-PREFLIGHT: resource_preflight.lookdev_audit_hooks must tell lookdev what resource/package/prompt signals to verify"
+  );
+  if (resourcePreflightUsesGeneratedRoute(resourcePreflight)) {
+    assert(
+      hasNonEmptyTextArray(resourcePreflight.prompt_pack_paths),
+      "INV-VISUAL-RESOURCE-PREFLIGHT: generated image/video routes require non-empty resource_preflight.prompt_pack_paths"
+    );
+  }
+  validateGlobalAssetRegistryPreflight(resourcePreflight);
   assert(
     hasNonEmptyArray(board.component_registry_plan),
     "INV-DIRECTOR-BOARD: visual.director_board.component_registry_plan must be non-empty before Visual Lock"
@@ -1473,6 +2431,9 @@ function assertDirectorBoardReady() {
       hasText(brainstorming.anti_ppt_decision),
       `INV-BRAINSTORMING-BEFORE-PICTURE: ${tag}.brainstorming_layer.anti_ppt_decision is required`
     );
+    if (isLayAudienceTier()) validateConcreteExecutionPlan(sceneBoard, tag);
+    if (spokenMotionSelected) validateSpokenKnowledgeMotionScene(sceneBoard, tag);
+    validateVisualDiscoverySession(sceneBoard, tag);
     const sceneHandleIds = new Set();
     for (const [handleIndex, handle] of asArray(brainstorming.continuity_handles).entries()) {
       const handleTag = `${tag}.brainstorming_layer.continuity_handles[${handleIndex}]`;
@@ -1701,7 +2662,7 @@ function assertDirectorBoardReady() {
 
 function assertSourcePackReadyForPlanning() {
   assert(hasText(sourcePack.core_thesis), "INV-SOURCE-PACK-TRACE: sources.source_pack.core_thesis is required after ingest");
-  assert(hasText(sourcePack.audience), "INV-SOURCE-PACK-TRACE: sources.source_pack.audience is required after ingest");
+  assertAudienceTierLocked();
   assert(hasText(sourcePack.goal), "INV-SOURCE-PACK-TRACE: sources.source_pack.goal is required after ingest");
   assert(
     hasSourceMaterials,
@@ -1911,6 +2872,8 @@ function assertDirectorScenePlanReady() {
     }
   }
 
+  assertVoxRemotionSceneContractsReady(directorBoardBySceneId);
+
   if (hasMediaSourceMaterials || hasScreenRecordingInput) {
     assert(
       hasNonEmptyArray(sourceMaterialPlan),
@@ -1942,6 +2905,157 @@ for (const [i, job] of renderJobs.entries()) {
 
 function assertRenderJobsReady() {
   assert(hasNonEmptyArray(renderJobs), "INV-FINAL-RENDER-JOB-TRACE: render.jobs must be non-empty before active_stage render");
+}
+
+function sceneRequiresVisualDiscovery(sceneBoard) {
+  if (!sceneBoard || sceneBoard.scene_job === "rest") return false;
+  if (["hook", "proof", "peak", "payoff", "close"].includes(sceneBoard.scene_job)) return true;
+  const action = sceneBoard.brainstorming_layer?.knowledge_action;
+  if (["define", "compare", "decompose", "prove", "invert", "bridge", "hook"].includes(action)) return true;
+  return false;
+}
+
+function validateVisualDiscoverySession(sceneBoard, tag) {
+  if (!sceneRequiresVisualDiscovery(sceneBoard)) return;
+  const discovery = sceneBoard.brainstorming_layer?.visual_discovery_session ?? {};
+  const discoveryTag = `${tag}.brainstorming_layer.visual_discovery_session`;
+
+  assert(
+    hasNonEmptyObject(discovery),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag} is required for hook/proof/abstract/transition/payoff scenes`
+  );
+  assert(
+    discovery.session_required === true,
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.session_required must be true for required scenes`
+  );
+  assert(
+    hasText(discovery.user_discussion_status),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.user_discussion_status is required`
+  );
+  checkEnum(`${discoveryTag}.user_discussion_status`, discovery.user_discussion_status, allowedVisualDiscoveryStatuses);
+  assert(
+    discovery.user_discussion_status !== "not_needed",
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.user_discussion_status cannot be not_needed for required scenes`
+  );
+  assert(
+    hasNonEmptyTextArray(discovery.picture_constituents),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.picture_constituents must list what the frame is made of`
+  );
+  assert(
+    hasText(discovery.dominant_visual_object),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.dominant_visual_object is required`
+  );
+  assert(
+    hasText(discovery.asset_source_decision),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.asset_source_decision is required`
+  );
+  checkEnum(`${discoveryTag}.asset_source_decision`, discovery.asset_source_decision, allowedVisualDiscoveryAssetSources);
+  assert(
+    Array.isArray(discovery.global_asset_candidate_ids),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.global_asset_candidate_ids must be an array`
+  );
+  assert(
+    typeof discovery.new_asset_needed === "boolean",
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.new_asset_needed must be boolean`
+  );
+  assert(
+    hasText(discovery.camera_reveal),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.camera_reveal is required`
+  );
+  assert(
+    hasText(discovery.continuity_handle),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.continuity_handle is required`
+  );
+  assert(
+    hasText(discovery.anti_ppt_commitment),
+    `INV-VISUAL-DISCOVERY-SESSION: ${discoveryTag}.anti_ppt_commitment is required`
+  );
+}
+
+function validateGlobalAssetRegistryPreflight(resourcePreflight) {
+  assert(
+    resourcePreflight.global_asset_registry_checked === true,
+    "INV-GLOBAL-ASSET-REGISTRY: resource_preflight.global_asset_registry_checked must be true before Visual Lock"
+  );
+  assert(
+    Array.isArray(resourcePreflight.global_asset_candidate_ids),
+    "INV-GLOBAL-ASSET-REGISTRY: resource_preflight.global_asset_candidate_ids must be an array"
+  );
+  assert(
+    hasText(resourcePreflight.project_usage_manifest_path),
+    "INV-GLOBAL-ASSET-REGISTRY: resource_preflight.project_usage_manifest_path must record the project usage manifest path or explicit not_needed reason"
+  );
+
+  for (const [i, candidate] of asArray(resourcePreflight.stock_footage_candidates).entries()) {
+    const tag = `resource_preflight.stock_footage_candidates[${i}]`;
+    assert(hasText(candidate.asset_id), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.asset_id is required`);
+    assert(hasText(candidate.source_name), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.source_name is required`);
+    assert(hasText(candidate.source_url), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.source_url is required`);
+    assert(hasText(candidate.license_url), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.license_url is required`);
+    assert(hasText(candidate.commercial_use_status), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.commercial_use_status is required`);
+    checkEnum(`${tag}.commercial_use_status`, candidate.commercial_use_status, allowedCommercialUseStatuses);
+    assert(
+      candidate.commercial_use_status !== "blocked",
+      `INV-GLOBAL-ASSET-REGISTRY: ${tag}.commercial_use_status cannot be blocked for selected stock footage`
+    );
+    assert(
+      typeof candidate.attribution_required === "boolean",
+      `INV-GLOBAL-ASSET-REGISTRY: ${tag}.attribution_required must be boolean`
+    );
+    if (candidate.commercial_use_status === "allowed_with_attribution" || candidate.attribution_required === true) {
+      assert(
+        hasText(candidate.attribution_text),
+        `INV-GLOBAL-ASSET-REGISTRY: ${tag}.attribution_text is required when attribution is required`
+      );
+    }
+    for (const riskKey of ["people_or_model_release_risk", "trademark_or_brand_risk", "property_or_landmark_risk"]) {
+      assert(hasText(candidate[riskKey]), `INV-GLOBAL-ASSET-REGISTRY: ${tag}.${riskKey} is required`);
+      assert(
+        candidate[riskKey] !== "manual_review_required",
+        `INV-GLOBAL-ASSET-REGISTRY: ${tag}.${riskKey} must be resolved before Visual Lock`
+      );
+    }
+  }
+}
+
+function assertKnowledgeWritebackReady() {
+  const writeback = state.review?.knowledge_writeback ?? {};
+  assert(
+    hasNonEmptyObject(writeback),
+    "INV-KNOWLEDGE-WRITEBACK: review.knowledge_writeback is required at knowledge-writeback stage"
+  );
+  assert(hasText(writeback.status), "INV-KNOWLEDGE-WRITEBACK: review.knowledge_writeback.status is required");
+  checkEnum("review.knowledge_writeback.status", writeback.status, ["completed", "manual_review_required", "not_needed"]);
+
+  if (writeback.status === "not_needed") {
+    assert(
+      hasText(writeback.not_needed_reason),
+      "INV-KNOWLEDGE-WRITEBACK: review.knowledge_writeback.not_needed_reason is required when status=not_needed"
+    );
+    return;
+  }
+
+  const accepted = asArray(writeback.accepted_writes);
+  const rejected = asArray(writeback.rejected_candidates);
+  assert(
+    accepted.length + rejected.length > 0,
+    "INV-KNOWLEDGE-WRITEBACK: accepted_writes or rejected_candidates must explain every writeback candidate"
+  );
+  assert(
+    typeof writeback.candidate_count === "number" && writeback.candidate_count >= accepted.length + rejected.length,
+    "INV-KNOWLEDGE-WRITEBACK: candidate_count must cover accepted and rejected candidates"
+  );
+  for (const [i, item] of accepted.entries()) {
+    const tag = `review.knowledge_writeback.accepted_writes[${i}]`;
+    assert(hasText(item.title), `INV-KNOWLEDGE-WRITEBACK: ${tag}.title is required`);
+    assert(hasText(item.target), `INV-KNOWLEDGE-WRITEBACK: ${tag}.target is required`);
+    assert(hasText(item.write_path), `INV-KNOWLEDGE-WRITEBACK: ${tag}.write_path is required`);
+  }
+  for (const [i, item] of rejected.entries()) {
+    const tag = `review.knowledge_writeback.rejected_candidates[${i}]`;
+    assert(hasText(item.title), `INV-KNOWLEDGE-WRITEBACK: ${tag}.title is required`);
+    assert(hasText(item.reason), `INV-KNOWLEDGE-WRITEBACK: ${tag}.reason is required`);
+  }
 }
 
 if (stageIdx >= stageRank["research/proof"]) {
@@ -1984,7 +3098,13 @@ if (stageIdx >= stageRank["render"]) {
     approvalReady("Lookdev Approval", true),
     `INV-LOOKDEV-BEFORE-RENDER: Lookdev Approval must be approved (or manual_review_required with human override) before active_stage "${stage}"`
   );
+  assertLookdevGateResultsReadyForRender();
+  assertVoxLookdevGateResultsReadyForRender();
   assertRenderJobsReady();
+}
+
+if (stageIdx >= stageRank["knowledge-writeback"]) {
+  assertKnowledgeWritebackReady();
 }
 
 if (stageIdx >= stageRank["visual-direction"] && recordingFirstInputExists()) {
@@ -2021,6 +3141,7 @@ const candidateCount = candidates.length;
 const hyperframesCandidateCount = hyperframesCandidates.length;
 const aiVideoPromptRequestCount = aiVideoPromptRequests.length;
 const aiVideoCandidateCount = aiVideoCandidates.length;
+const visualPreprocessAssetCount = visualPreprocessAssets.length;
 const pluginAdapterRunCount = pluginAdapterRuns.length;
 const approvalSummary = allowedCheckpoints
   .map((c) => `${c}=${approvalByCheckpoint[c]?.status ?? "missing"}`)
@@ -2034,6 +3155,8 @@ console.log(
     `hyperframes_candidates=${hyperframesCandidateCount}, ` +
     `ai_video_prompt_requests=${aiVideoPromptRequestCount}, ` +
     `ai_video_candidates=${aiVideoCandidateCount}, ` +
+    `visual_preprocess_assets=${visualPreprocessAssetCount}, ` +
     `plugin_adapter_runs=${pluginAdapterRunCount}, ` +
+    `blocking_invariants=${invariantManifest.blockingIds.length}, ` +
     `approvals=[${approvalSummary}]`
 );
