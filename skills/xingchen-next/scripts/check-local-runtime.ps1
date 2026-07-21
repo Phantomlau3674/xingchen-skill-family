@@ -1,5 +1,13 @@
 $ErrorActionPreference = "Continue"
 
+$skillRoot = Split-Path -Parent $PSScriptRoot
+$computedSkillsRoot = Split-Path -Parent $skillRoot
+$skillsRoot = [Environment]::GetEnvironmentVariable("AGENT_SKILLS_HOME")
+if ([string]::IsNullOrWhiteSpace($skillsRoot)) {
+  $skillsRoot = $computedSkillsRoot
+}
+$skillsRoot = [System.IO.Path]::GetFullPath($skillsRoot)
+
 $runtimeRoot = "C:\Users\liuzh\.codex\runtimes\xingchen-next"
 $venvPython = Join-Path $runtimeRoot ".venv\Scripts\python.exe"
 $nodeTools = Join-Path $runtimeRoot "node-tools"
@@ -12,7 +20,7 @@ if ([string]::IsNullOrWhiteSpace($sharedBrowser)) {
 if ([string]::IsNullOrWhiteSpace($sharedBrowser)) {
   $sharedBrowser = $sharedBrowserFallback
 }
-$remotionHarness = "C:\Users\liuzh\.codex\skills\remotion-render-adapter\templates\director-motion-kernel"
+$remotionHarness = Join-Path $skillsRoot "remotion-render-adapter\templates\director-motion-kernel"
 $sparkRoot = "C:\xingchen-spark"
 $vendorRoot = "C:\Users\liuzh\.codex\vendor_imports\video-runtimes"
 
