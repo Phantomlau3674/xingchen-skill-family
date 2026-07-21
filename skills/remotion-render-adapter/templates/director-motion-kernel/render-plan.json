@@ -1,0 +1,458 @@
+{
+  "meta": {
+    "project_id": "pm-skill-breakdown-recording-recut-v3",
+    "title": "PM Skill Breakdown Recording Recut V3",
+    "profile_id": "generic-vertical",
+    "aspect": "9:16",
+    "state": "ready_to_render",
+    "composition_id": "VideoProjectVertical",
+    "review_sheet_id": "RenderPlanReviewSheet",
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "scene_count": 11,
+    "duration_s": 124.8
+  },
+  "globals": {
+    "caption_preset": "clean-bottom",
+    "safe_areas": {
+      "top": 96,
+      "right": 56,
+      "bottom": 220,
+      "left": 56
+    },
+    "audio_mix": {
+      "voice": 1.0,
+      "music": 0.3,
+      "sfx": 0.45
+    }
+  },
+  "scenes": [
+    {
+      "scene_id": "s01",
+      "intent": "协作范式开场",
+      "narration": "我个人是觉得这套方法论比较有价值的地方 是它第一次给了一个范氏 就是一个智能体怎么给你的知识库做交互的范氏",
+      "headline": "第一次给了普通知识工作者\n一个和 agent 协作的范式",
+      "duration_s": 10.6,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s01-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 10.6,
+          "asset_id": null,
+          "text": "第一次给了普通知识工作者\n一个和 agent 协作的范式",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "infographic",
+            "composition_intent": "hierarchy",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "把长期协作这件事讲清楚"
+          }
+        },
+        {
+          "layer_id": "s01-visual",
+          "kind": "image",
+          "start_s": 0.0,
+          "end_s": 10.6,
+          "asset_id": "s01-visual",
+          "text": null,
+          "placement": {},
+          "style": {
+            "dominant_medium": "infographic",
+            "composition_intent": "hierarchy",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "把长期协作这件事讲清楚"
+          },
+          "asset": {
+            "asset_id": "s01-visual",
+            "kind": "image",
+            "source": "visuals/human-agent-loop.svg",
+            "proof_mode": "decorative",
+            "status": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s02",
+      "intent": "我不是没试过 我是一直没回答对问题",
+      "narration": "其实我自己开始接触AI到现在也做了非常多的尝试 各种智能体我其实自己也都搭过了 但是我一直也没有想清楚一个事情 就是我自己这个职业产品经理他到底该怎么样 用智能体去做自己日常的一个管理和提效",
+      "headline": "我做过很多智能体尝试\n但一直没想明白\nPM 到底怎么用智能体提效",
+      "duration_s": 16.0,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s02-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 16.0,
+          "asset_id": null,
+          "text": "我做过很多智能体尝试\n但一直没想明白\nPM 到底怎么用智能体提效",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "briefing",
+            "information_density": "dense",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s03",
+      "intent": "现有方案只是在补文档",
+      "narration": "其实你去看市面上 当然已经有一些什么写需求的sqeal写需求的智能体也好等等 大部分产品其实我都觉得太出击了 他们更多的时候就是帮你完成一片文档的这样的一个生成 但是大家做产品的其实也知道",
+      "headline": "补一篇文档\n不等于\n管理整套工作",
+      "duration_s": 15.0,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s03-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 15.0,
+          "asset_id": null,
+          "text": "补一篇文档\n不等于\n管理整套工作",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "comparison",
+            "composition_intent": "contrast",
+            "information_density": "low",
+            "evidence_mode": "inference-only",
+            "subline": "不等于",
+            "contrast_left": "补一篇文档",
+            "contrast_right": "管理整套工作"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s04",
+      "intent": "PM 本来就是知识累积型工作",
+      "narration": "因为产品经理本身就是一个特别典型的知识累积型的这样的一个工作 你自己做过的产品规划做过的进品调研",
+      "headline": "PM 本来就是\n典型的知识累积型工作",
+      "duration_s": 8.2,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s04-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 8.2,
+          "asset_id": null,
+          "text": "PM 本来就是\n典型的知识累积型工作",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "infographic",
+            "composition_intent": "hierarchy",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "规划 竞品 需求 推进 都吃过去的上下文"
+          }
+        },
+        {
+          "layer_id": "s04-visual",
+          "kind": "image",
+          "start_s": 0.0,
+          "end_s": 8.2,
+          "asset_id": "s04-visual",
+          "text": null,
+          "placement": {},
+          "style": {
+            "dominant_medium": "infographic",
+            "composition_intent": "hierarchy",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "规划 竞品 需求 推进 都吃过去的上下文"
+          },
+          "asset": {
+            "asset_id": "s04-visual",
+            "kind": "image",
+            "source": "visuals/pm-context-web.svg",
+            "proof_mode": "decorative",
+            "status": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s05",
+      "intent": "为什么以前做不下去",
+      "narration": "问题其实也是大家不是不知道说就是维护好自己的知识库很重要 问题是维护本身就是一个非常巨大的一个工作",
+      "headline": "知道重要\n不代表维护得下去",
+      "duration_s": 9.6,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s05-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 9.6,
+          "asset_id": null,
+          "text": "知道重要\n不代表维护得下去",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "infographic",
+            "composition_intent": "process",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "维护本身就是巨大工作"
+          }
+        },
+        {
+          "layer_id": "s05-visual",
+          "kind": "image",
+          "start_s": 0.0,
+          "end_s": 9.6,
+          "asset_id": "s05-visual",
+          "text": null,
+          "placement": {},
+          "style": {
+            "dominant_medium": "infographic",
+            "composition_intent": "process",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "维护本身就是巨大工作"
+          },
+          "asset": {
+            "asset_id": "s05-visual",
+            "kind": "image",
+            "source": "visuals/upkeep-shift.svg",
+            "proof_mode": "decorative",
+            "status": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s06",
+      "intent": "新需求总和旧需求连在一起",
+      "narration": "写过需求也明白就是你自己有一份机线需求文档之后 围绕着某一个功能文化做的各种各样的迭代 迭代的需求往机线文档做回补的时候",
+      "headline": "很多漏洞不是你不会写\n是你忘了过去",
+      "duration_s": 9.6,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s06-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 9.6,
+          "asset_id": null,
+          "text": "很多漏洞不是你不会写\n是你忘了过去",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "quote",
+            "information_density": "medium",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s07",
+      "intent": "所以我先拿 PM 做实验",
+      "narration": "所以上周卡帕西的这个方法论出来之后 我就想了想我非常值得先拿产品经理的sqeal去做一下尝试 试完之后其实效果还真的挺不错的",
+      "headline": "这套方法出来之后\n我最值得先做的\n就是 PM 这套实验",
+      "duration_s": 12.0,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s07-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 12.0,
+          "asset_id": null,
+          "text": "这套方法出来之后\n我最值得先做的\n就是 PM 这套实验",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "quote",
+            "information_density": "medium",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s08",
+      "intent": "先预判今天要干什么 再让系统判断",
+      "narration": "使用的时候你就只要先预判今天要干什么 然后跟智能体做对你一个交流就好了 如果刚初始化完他会对你做采访 如果是知识库里面已经有基础的内容的话 你就随时可以跟他交流 然后开启任意的一个任务",
+      "headline": "先预判今天要干什么\n再和智能体交流\n开启任意任务",
+      "duration_s": 12.9,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s08-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 12.9,
+          "asset_id": null,
+          "text": "先预判今天要干什么\n再和智能体交流\n开启任意任务",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "infographic",
+            "composition_intent": "process",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "mode / output / evidence 的判断顺序"
+          }
+        },
+        {
+          "layer_id": "s08-visual",
+          "kind": "image",
+          "start_s": 0.0,
+          "end_s": 12.9,
+          "asset_id": "s08-visual",
+          "text": null,
+          "placement": {},
+          "style": {
+            "dominant_medium": "infographic",
+            "composition_intent": "process",
+            "information_density": "medium",
+            "evidence_mode": "decorative",
+            "source_skill": "bespoke-svg",
+            "subline": "mode / output / evidence 的判断顺序"
+          },
+          "asset": {
+            "asset_id": "s08-visual",
+            "kind": "image",
+            "source": "visuals/pm-operating-logic.svg",
+            "proof_mode": "decorative",
+            "status": "ready"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s09",
+      "intent": "知识库开始自己维护",
+      "narration": "自己去做自动化的一个沉淀 所以他的知识库是完全由他维护的 你完全不用关心知识库里面到底写了什么东西 他会把知识库维护的很好",
+      "headline": "知识库会自己维护好\n你不用手动整理",
+      "duration_s": 9.2,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s09-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 9.2,
+          "asset_id": null,
+          "text": "知识库会自己维护好\n你不用手动整理",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "quote",
+            "information_density": "medium",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s10",
+      "intent": "长期积累的知识工作者都该开始搭系统",
+      "narration": "就是我是觉得你只要是一个需要长期积累的知识工作者 你现在就可以继续卡巴西的这个方法论 开始去搭建一个自己的这样的一个东西",
+      "headline": "你只要是长期积累的知识工作者\n你也该开始搭\n自己的系统",
+      "duration_s": 10.0,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s10-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 10.0,
+          "asset_id": null,
+          "text": "你只要是长期积累的知识工作者\n你也该开始搭\n自己的系统",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "quote",
+            "information_density": "medium",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    },
+    {
+      "scene_id": "s11",
+      "intent": "任何岗位都可以搭自己的工作操作系统",
+      "narration": "我是希望变成大家的一个启发 然后大家能够基于这个视频百花齐放 然后其实任何的这样一个岗位 都可以基于自己的工作流程 搭建出来自己专属的sql 今天就这么多",
+      "headline": "任何岗位都可以\n基于自己的工作流程\n搭自己的工作操作系统",
+      "duration_s": 11.7,
+      "proof_required": false,
+      "review_state": "locked",
+      "proof_annotations": [],
+      "layers": [
+        {
+          "layer_id": "s11-text",
+          "kind": "text",
+          "start_s": 0.0,
+          "end_s": 11.7,
+          "asset_id": null,
+          "text": "任何岗位都可以\n基于自己的工作流程\n搭自己的工作操作系统",
+          "placement": {},
+          "style": {
+            "role": "headline",
+            "emphasis_words": [],
+            "dominant_medium": "statement",
+            "composition_intent": "quote",
+            "information_density": "medium",
+            "evidence_mode": "inference-only"
+          }
+        }
+      ]
+    }
+  ]
+}

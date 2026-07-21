@@ -1,0 +1,49 @@
+<svg width="1200" height="1400" viewBox="0 0 1200 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="haloA" x1="160" y1="220" x2="1040" y2="1180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EADFD1" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#F8F4EE" stop-opacity="0.72"/>
+    </linearGradient>
+    <linearGradient id="lineA" x1="226" y1="365" x2="976" y2="1040" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C34E38"/>
+      <stop offset="0.55" stop-color="#7E5E4B"/>
+      <stop offset="1" stop-color="#4C657B"/>
+    </linearGradient>
+    <filter id="shadowA" x="92" y="138" width="1016" height="1124" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="30" flood-color="#3B241B" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect x="116" y="160" width="968" height="1080" rx="52" fill="url(#haloA)" filter="url(#shadowA)"/>
+  <rect x="156" y="204" width="888" height="992" rx="40" stroke="#D8C9BA" stroke-width="2"/>
+  <text x="164" y="118" fill="#A24331" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif" letter-spacing="4">协作闭环</text>
+  <text x="164" y="1010" fill="#746355" font-size="22" font-family="JetBrains Mono, Consolas, monospace" letter-spacing="2">不是整理更多内容，而是把长期协作讲清楚</text>
+
+  <path d="M372 436C470 344 730 342 824 436" stroke="url(#lineA)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M292 612C266 796 372 980 564 1044" stroke="url(#lineA)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M904 612C930 796 824 980 632 1044" stroke="url(#lineA)" stroke-width="14" stroke-linecap="round"/>
+
+  <circle cx="322" cy="520" r="138" fill="#FFF8F1" stroke="#C34E38" stroke-width="8"/>
+  <circle cx="878" cy="520" r="138" fill="#FAFBFD" stroke="#4C657B" stroke-width="8"/>
+  <rect x="336" y="930" width="528" height="168" rx="42" fill="#F4ECE3" stroke="#7A6859" stroke-width="4"/>
+
+  <text x="322" y="496" text-anchor="middle" fill="#1C1713" font-size="44" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">人</text>
+  <text x="322" y="554" text-anchor="middle" fill="#6E5645" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">判断 / 目标</text>
+  <text x="322" y="594" text-anchor="middle" fill="#6E5645" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">方向 / 取舍</text>
+
+  <text x="878" y="496" text-anchor="middle" fill="#1C1713" font-size="44" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">智能体</text>
+  <text x="878" y="554" text-anchor="middle" fill="#54697B" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">拆解 / 执行</text>
+  <text x="878" y="594" text-anchor="middle" fill="#54697B" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">整理 / 更新</text>
+
+  <text x="600" y="992" text-anchor="middle" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">工作空间</text>
+  <text x="600" y="1048" text-anchor="middle" fill="#6E5645" font-size="30" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">上下文 / 记忆 / 资产</text>
+
+  <circle cx="598" cy="314" r="58" fill="#1C1713"/>
+  <text x="598" y="304" text-anchor="middle" fill="#F5EDE4" font-size="22" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">长期</text>
+  <text x="598" y="332" text-anchor="middle" fill="#F5EDE4" font-size="22" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">协作</text>
+
+  <path d="M442 432L470 398L478 440" fill="#C34E38"/>
+  <path d="M766 438L726 396L720 444" fill="#4C657B"/>
+  <path d="M520 1028L566 1052L518 1070" fill="#7A6859"/>
+  <path d="M680 1052L634 1028L682 1008" fill="#7A6859"/>
+</svg>

@@ -1,0 +1,43 @@
+<svg width="1200" height="1400" viewBox="0 0 1200 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glowC" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(606 724) rotate(90) scale(520 520)">
+      <stop stop-color="#FFF7EC"/>
+      <stop offset="1" stop-color="#F2EADF"/>
+    </radialGradient>
+  </defs>
+
+  <rect x="112" y="152" width="976" height="1096" rx="58" fill="url(#glowC)"/>
+  <text x="152" y="120" fill="#425069" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif" letter-spacing="4">PM AS FIRST BEST PRACTICE</text>
+
+  <circle cx="602" cy="718" r="164" fill="#1B1713"/>
+  <circle cx="602" cy="718" r="154" stroke="#D96A54" stroke-width="4"/>
+  <text x="602" y="694" text-anchor="middle" fill="#F6EFE7" font-size="42" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">PM OS</text>
+  <text x="602" y="752" text-anchor="middle" fill="#CFC2B5" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">上下文越积越强</text>
+
+  <circle cx="602" cy="338" r="110" fill="#FFF8F1" stroke="#C34E38" stroke-width="6"/>
+  <circle cx="912" cy="518" r="110" fill="#F8FBFD" stroke="#4C657B" stroke-width="6"/>
+  <circle cx="912" cy="914" r="110" fill="#FFF8F1" stroke="#C34E38" stroke-width="6"/>
+  <circle cx="292" cy="914" r="110" fill="#F8FBFD" stroke="#4C657B" stroke-width="6"/>
+  <circle cx="292" cy="518" r="110" fill="#FFF8F1" stroke="#C34E38" stroke-width="6"/>
+
+  <path d="M602 448V554" stroke="#C9B7A7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M766 590L706 624" stroke="#C9B7A7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M766 846L706 812" stroke="#C9B7A7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M438 846L498 812" stroke="#C9B7A7" stroke-width="8" stroke-linecap="round"/>
+  <path d="M438 590L498 624" stroke="#C9B7A7" stroke-width="8" stroke-linecap="round"/>
+
+  <text x="602" y="324" text-anchor="middle" fill="#1C1713" font-size="32" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">产品规划</text>
+  <text x="912" y="506" text-anchor="middle" fill="#1C1713" font-size="32" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">竞品调研</text>
+  <text x="912" y="902" text-anchor="middle" fill="#1C1713" font-size="32" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">需求管理</text>
+  <text x="292" y="902" text-anchor="middle" fill="#1C1713" font-size="32" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">项目推进</text>
+  <text x="292" y="506" text-anchor="middle" fill="#1C1713" font-size="32" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">发布 / 复盘</text>
+
+  <text x="602" y="368" text-anchor="middle" fill="#6E5645" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">过去的判断</text>
+  <text x="912" y="550" text-anchor="middle" fill="#54697B" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">过去的观察</text>
+  <text x="912" y="946" text-anchor="middle" fill="#6E5645" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">基线 / 变更 / 遗留</text>
+  <text x="292" y="946" text-anchor="middle" fill="#54697B" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">项目节奏和状态</text>
+  <text x="292" y="550" text-anchor="middle" fill="#6E5645" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">结果反馈进系统</text>
+
+  <rect x="166" y="1080" width="868" height="92" rx="28" fill="#FBF5EE" stroke="#D8C8BA" stroke-width="3"/>
+  <text x="600" y="1138" text-anchor="middle" fill="#615448" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">产品经理本来就不是一次性输出工作，而是持续吃上下文的工作</text>
+</svg>

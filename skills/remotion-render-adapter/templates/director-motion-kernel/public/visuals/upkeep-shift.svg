@@ -1,0 +1,55 @@
+<svg width="1200" height="1400" viewBox="0 0 1200 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgB" x1="120" y1="180" x2="1080" y2="1210" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F8F2E9"/>
+      <stop offset="1" stop-color="#F2EBE1"/>
+    </linearGradient>
+    <linearGradient id="dividerB" x1="600" y1="230" x2="600" y2="1160" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D7C6B5"/>
+      <stop offset="1" stop-color="#E9DDD0"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="120" y="180" width="960" height="1040" rx="56" fill="url(#bgB)"/>
+  <text x="156" y="132" fill="#A24331" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif" letter-spacing="4">WHY NOW</text>
+  <path d="M600 252V1148" stroke="url(#dividerB)" stroke-width="4" stroke-dasharray="18 18"/>
+
+  <text x="230" y="294" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">以前</text>
+  <text x="760" y="294" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">现在</text>
+
+  <rect x="184" y="372" width="328" height="118" rx="34" fill="#FFF7EE" stroke="#B44A36" stroke-width="4"/>
+  <rect x="216" y="530" width="328" height="118" rx="34" fill="#FFF7EE" stroke="#B44A36" stroke-width="4"/>
+  <rect x="184" y="688" width="328" height="118" rx="34" fill="#FFF7EE" stroke="#B44A36" stroke-width="4"/>
+  <rect x="216" y="846" width="328" height="118" rx="34" fill="#FFF7EE" stroke="#B44A36" stroke-width="4"/>
+
+  <text x="348" y="430" text-anchor="middle" fill="#1C1713" font-size="34" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">自己整理</text>
+  <text x="380" y="588" text-anchor="middle" fill="#1C1713" font-size="34" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">自己更新</text>
+  <text x="348" y="746" text-anchor="middle" fill="#1C1713" font-size="34" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">自己连接</text>
+  <text x="380" y="904" text-anchor="middle" fill="#1C1713" font-size="34" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">最后做不下去</text>
+
+  <path d="M348 496V530" stroke="#B44A36" stroke-width="8" stroke-linecap="round"/>
+  <path d="M380 654V688" stroke="#B44A36" stroke-width="8" stroke-linecap="round"/>
+  <path d="M348 812V846" stroke="#B44A36" stroke-width="8" stroke-linecap="round"/>
+  <path d="M364 520L382 548H346L364 520Z" fill="#B44A36"/>
+  <path d="M396 678L414 706H378L396 678Z" fill="#B44A36"/>
+  <path d="M364 836L382 864H346L364 836Z" fill="#B44A36"/>
+
+  <rect x="694" y="354" width="328" height="168" rx="38" fill="#F6FAFD" stroke="#4B687E" stroke-width="4"/>
+  <text x="858" y="414" text-anchor="middle" fill="#1C1713" font-size="36" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">智能体接手维护</text>
+  <text x="858" y="462" text-anchor="middle" fill="#587287" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">整理 / 更新 / 连接</text>
+
+  <rect x="694" y="602" width="328" height="374" rx="42" fill="#FFFFFF" stroke="#7B695A" stroke-width="4"/>
+  <text x="734" y="664" fill="#1C1713" font-size="36" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">知识库开始自己变厚</text>
+  <rect x="744" y="724" width="228" height="68" rx="20" fill="#F4ECE2"/>
+  <rect x="744" y="816" width="228" height="68" rx="20" fill="#F4ECE2"/>
+  <rect x="744" y="908" width="228" height="68" rx="20" fill="#F4ECE2"/>
+  <text x="858" y="768" text-anchor="middle" fill="#5C4D41" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">上下文被持续维护</text>
+  <text x="858" y="860" text-anchor="middle" fill="#5C4D41" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">历史判断能回流</text>
+  <text x="858" y="952" text-anchor="middle" fill="#5C4D41" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">后续输出变自然</text>
+
+  <path d="M596 770H662" stroke="#4B687E" stroke-width="10" stroke-linecap="round"/>
+  <path d="M644 742L684 770L644 798" fill="#4B687E"/>
+
+  <text x="180" y="1094" fill="#8A7868" font-size="24" font-family="JetBrains Mono, Consolas, monospace">maintenance was the work</text>
+  <text x="700" y="1094" fill="#5E7486" font-size="24" font-family="JetBrains Mono, Consolas, monospace">maintenance becomes delegated</text>
+</svg>

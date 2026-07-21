@@ -1,0 +1,57 @@
+<svg width="1200" height="1400" viewBox="0 0 1200 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgD" x1="116" y1="170" x2="1084" y2="1238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4EDE3"/>
+      <stop offset="1" stop-color="#EFE7DC"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="116" y="170" width="968" height="1068" rx="54" fill="url(#bgD)"/>
+  <text x="156" y="128" fill="#425069" font-size="28" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif" letter-spacing="4">判断路径</text>
+
+  <rect x="172" y="264" width="856" height="214" rx="42" fill="#FFF9F2" stroke="#D0C1B2" stroke-width="4"/>
+  <rect x="172" y="536" width="856" height="214" rx="42" fill="#F8FBFD" stroke="#D0C1B2" stroke-width="4"/>
+  <rect x="172" y="808" width="856" height="296" rx="42" fill="#FFF9F2" stroke="#D0C1B2" stroke-width="4"/>
+
+  <circle cx="226" cy="332" r="38" fill="#B24432"/>
+  <circle cx="226" cy="604" r="38" fill="#4C657B"/>
+  <circle cx="226" cy="876" r="38" fill="#B24432"/>
+  <text x="226" y="344" text-anchor="middle" fill="#F8F1E9" font-size="34" font-weight="700" font-family="JetBrains Mono, Consolas, monospace">1</text>
+  <text x="226" y="616" text-anchor="middle" fill="#F8F1E9" font-size="34" font-weight="700" font-family="JetBrains Mono, Consolas, monospace">2</text>
+  <text x="226" y="888" text-anchor="middle" fill="#F8F1E9" font-size="34" font-weight="700" font-family="JetBrains Mono, Consolas, monospace">3</text>
+
+  <text x="292" y="326" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">先判断 工作模式</text>
+  <text x="292" y="598" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">再判断 模块 / 输出</text>
+  <text x="292" y="870" fill="#1C1713" font-size="38" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">最后拆开证据层级</text>
+
+  <rect x="292" y="362" width="192" height="68" rx="24" fill="#F7E7E0"/>
+  <rect x="500" y="362" width="192" height="68" rx="24" fill="#F7E7E0"/>
+  <rect x="708" y="362" width="220" height="68" rx="24" fill="#F7E7E0"/>
+  <text x="388" y="406" text-anchor="middle" fill="#7C3D2E" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">初始化建档</text>
+  <text x="596" y="406" text-anchor="middle" fill="#7C3D2E" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">日常执行</text>
+  <text x="818" y="406" text-anchor="middle" fill="#7C3D2E" font-size="26" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">系统维护</text>
+
+  <rect x="292" y="634" width="180" height="68" rx="24" fill="#E8F0F6"/>
+  <rect x="490" y="634" width="180" height="68" rx="24" fill="#E8F0F6"/>
+  <rect x="688" y="634" width="160" height="68" rx="24" fill="#E8F0F6"/>
+  <rect x="864" y="634" width="132" height="68" rx="24" fill="#E8F0F6"/>
+  <text x="382" y="678" text-anchor="middle" fill="#466277" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">策略</text>
+  <text x="580" y="678" text-anchor="middle" fill="#466277" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">竞品</text>
+  <text x="768" y="678" text-anchor="middle" fill="#466277" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">需求</text>
+  <text x="930" y="678" text-anchor="middle" fill="#466277" font-size="24" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">推进</text>
+
+  <rect x="292" y="930" width="212" height="116" rx="28" fill="#FFFFFF" stroke="#B24432" stroke-width="4"/>
+  <rect x="524" y="930" width="212" height="116" rx="28" fill="#FFFFFF" stroke="#B48D32" stroke-width="4"/>
+  <rect x="756" y="930" width="212" height="116" rx="28" fill="#FFFFFF" stroke="#4C657B" stroke-width="4"/>
+  <text x="398" y="982" text-anchor="middle" fill="#8B3B2C" font-size="28" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">直接证据</text>
+  <text x="630" y="982" text-anchor="middle" fill="#8B6B1F" font-size="28" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">工作假设</text>
+  <text x="862" y="982" text-anchor="middle" fill="#466277" font-size="28" font-weight="700" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">判断建议</text>
+  <text x="398" y="1024" text-anchor="middle" fill="#69594D" font-size="22" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">能证明的就写能证明的</text>
+  <text x="630" y="1024" text-anchor="middle" fill="#69594D" font-size="22" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">推测必须显式标注</text>
+  <text x="862" y="1024" text-anchor="middle" fill="#69594D" font-size="22" font-family="Noto Sans SC, Microsoft YaHei UI, sans-serif">判断要和证据脱钩</text>
+
+  <path d="M600 478V536" stroke="#BFAE9E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M600 750V808" stroke="#BFAE9E" stroke-width="8" stroke-linecap="round"/>
+  <path d="M600 512L628 548H572L600 512Z" fill="#BFAE9E"/>
+  <path d="M600 784L628 820H572L600 784Z" fill="#BFAE9E"/>
+</svg>
