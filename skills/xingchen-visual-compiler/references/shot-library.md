@@ -2,9 +2,9 @@
 
 Single source of truth for the **shot components** that `xingchen-visual-compiler` may pick into `chrome_components` for any render-bound scene.
 
-The library lives at `C:\Users\liuzh\.codex\skills\remotion-render-adapter\templates\director-motion-kernel\src\` and ships with the Remotion render kernel. Any scene whose `chrome_components[*]` references a name not in this catalog is invalid (visual-compiler must reject or raise `kit-extension-request`).
+The library lives at `../../remotion-render-adapter/templates/director-motion-kernel/src` and ships with the Remotion render kernel. Any scene whose `chrome_components[*]` references a name not in this catalog is invalid (visual-compiler must reject or raise `kit-extension-request`).
 
-`renderer_family` and `actual_renderer_family` enums are authored in [renderer-families.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\renderer-families.md). This file authors **shot names** — finer-grained than renderer family, the actual React component a scene compiles into.
+`renderer_family` and `actual_renderer_family` enums are authored in [renderer-families.md](../../xingchen-next/references/renderer-families.md). This file authors **shot names** — finer-grained than renderer family, the actual React component a scene compiles into.
 
 ## Dispatch model
 
@@ -261,6 +261,68 @@ These are NOT YET BUILT. When `xingchen-visual-compiler` writes a `chrome_compon
 - **Motion verbs**: drift, hold, reveal
 - **AI 科普 fit**: 3 — useful for abstract concept-motion gaps; invalid for hero proof, UI evidence, readable claims, subtitles, logos, or faces.
 - **Route rule**: prompt-only stage uses `render.ai_video_prompt_requests[]` and `ai_video_prompt_request_ids[]`; final/render stage requires `render.ai_video_candidates[]`, `ai_video_candidate_ids[]`, `motion_source: "ai_video_generation"`, and `integration_mode: "video_plate"`.
+
+## ReactBits-derived planned extension candidates
+
+These are NOT BUILT in the current Remotion kernel. They are allowed names for `component_registry_plan[]`, director-board extension planning, or `kit-extension-request.md` only. If `xingchen-visual-compiler` writes one into `chrome_components[]` before the component exists, render validation must fail or the compiler must select an existing fallback.
+
+Use [reactbits-remotion-upgrade.md](./reactbits-remotion-upgrade.md) for source-component mapping and Remotion adaptation rules.
+
+### KineticKeywordReveal
+- **Anchor**: `visual_anchor.type === "kinetic-keyword"`
+- **ReactBits references**: `SplitText`, `BlurText`, `DecryptedText`, `ScrambledText`, `GlitchText`, `ShinyText`, `GradientText`
+- **Props**: `{text, keywords[], mode, frame, fps, durationFrames, accent, safeRegion, designLanguage}`
+- **Job**: hook / explain / payoff. One keyword or short phrase becomes the scene beat; it is not a subtitle renderer.
+- **Motion verbs**: reveal, sharpen, decrypt, pulse
+- **Route rule**: Remotion-native rewrite only; no CSS keyframes, scroll trigger, hover trigger, or uncontrolled random scrambling.
+
+### ProofFocusCard
+- **Anchor**: `visual_anchor.type === "proof-focus-card"`
+- **ReactBits references**: `SpotlightCard`, `GlareHover`, `TiltedCard`, `ElectricBorder`, `BorderGlow`
+- **Props**: `{sourceSrc, proofRegions[], focusRegion, shellMode, frame, fps, accent, subtitleSafeRegion, designLanguage}`
+- **Job**: proof / context. Adds focus shell, glare, border, or light sweep around literal evidence while preserving readable pixels.
+- **Motion verbs**: lock-on, scan, reveal, hold
+- **Route rule**: proof region must stay flat or distortion-free during the inspection hold.
+
+### EvidenceStackMorph
+- **Anchor**: `visual_anchor.type === "evidence-stack-morph"`
+- **ReactBits references**: `Stack`, `CardSwap`, `BounceCards`, `ScrollStack`, `PixelTransition`
+- **Props**: `{cards[], activeIndex, transitionMode, frame, fps, accent, proofRegions[], designLanguage}`
+- **Job**: proof / build / transition. Several evidence cards become an ordered argument or hand off into the next scene.
+- **Motion verbs**: stack, swap, peel, morph
+- **Route rule**: if the stack contains proof, each active card must get a dwell period with no perspective distortion.
+
+### ConceptFieldPlate
+- **Anchor**: `visual_anchor.type === "concept-field-plate"`
+- **ReactBits references**: `Aurora`, `Threads`, `Particles`, `DotGrid`, `GridMotion`, `Beams`, `LightRays`
+- **Props**: `{fieldFamily, density, energyLevel, frame, fps, accent, safeRegions[], proofExclusionPolicy, designLanguage}`
+- **Job**: explain / transition / background. Non-proof atmosphere or relation field behind source material and subtitles.
+- **Motion verbs**: drift, scan, flow, pulse
+- **Route rule**: default to Remotion-native rewrite for simple fields; use HyperFrames/HTML candidate only for shader/canvas/WebGL fields with a promotion plan.
+
+### KnowledgeBentoMap
+- **Anchor**: `visual_anchor.type === "knowledge-bento-map"`
+- **ReactBits references**: `MagicBento`, `ChromaGrid`, `AnimatedList`, `FlowingMenu`, `Dock`
+- **Props**: `{items[], groups[], activeItemId, frame, fps, accent, layoutMode, designLanguage}`
+- **Job**: explain / context / build. Tool ecosystem, agent map, module inventory, or model comparison as a working surface.
+- **Motion verbs**: organize, reveal, highlight, connect
+- **Route rule**: must avoid landing-page UI composition; each tile needs a knowledge role.
+
+### TactileStickerRelay
+- **Anchor**: `visual_anchor.type === "tactile-sticker-relay"`
+- **ReactBits references**: `StickerPeel`, `PixelTransition`, `GradualBlur`
+- **Props**: `{fromHandle, toHandle, peelRegion, revealLayer, frame, fps, accent, subtitleSafeRegion, designLanguage}`
+- **Job**: transition / proof reveal. A hidden layer, contradiction, or label peels away and becomes the next scene handle.
+- **Motion verbs**: peel, uncover, push, relay
+- **Route rule**: valid only when the director board edge names a continuity handle and lookdev can see the handoff.
+
+### CountPressureStat
+- **Anchor**: `visual_anchor.type === "count-pressure-stat"`
+- **ReactBits references**: `CountUp`, `TextPressure`, `GradientText`, `TrueFocus`
+- **Props**: `{value, label, pressureWord, unit, frame, fps, accent, emphasisWindow, designLanguage}`
+- **Job**: data / hook / payoff. A number or pressure word becomes the scene's dominant anchor.
+- **Motion verbs**: count, pressurize, focus, lock-on
+- **Route rule**: claim source must be traceable; effect cannot replace proof citation or evidence.
 
 ## Shared utilities (for new shots)
 

@@ -72,7 +72,25 @@
   "sources": {
     "source_pack": {
       "core_thesis": "",
-      "audience": "",
+      "audience": {
+        "summary": "",
+        "tier": "",
+        "content_lane": "",
+        "creator_profile": "",
+        "spoken_knowledge_video": false,
+        "tier_inferred_by": "",
+        "tier_inference_evidence": [],
+        "tier_user_confirmed": false,
+        "tier_user_confirmed_at": "",
+        "tier_locked_at": "",
+        "self_check_persona": "",
+        "technical_literacy": "",
+        "insider_chrome_allowed": false,
+        "vocabulary_level": {
+          "allowed_jargon_terms": [],
+          "max_jargon_density_per_minute": 3
+        }
+      },
       "goal": "",
       "links": [],
       "screenshots": [],
@@ -264,6 +282,13 @@
         "candidate_origin_required": true,
         "state_trace_refs_required": true
       },
+      "spoken_knowledge_motion_policy": {
+        "selected": false,
+        "why": "",
+        "asset_policy": "",
+        "motion_primitives": [],
+        "lookdev_risks": []
+      },
       "vfx_director_pass": {
         "required": true,
         "scene_decisions": [],
@@ -356,7 +381,77 @@
           "scene_boards.knowledge_action",
           "scene_edge_boards.flow"
         ],
-        "output_rule": "Every scene and scene edge must record options considered, selected direction, and anti-PPT reasoning before Visual Lock."
+        "output_rule": "Every scene and scene edge must record options considered, selected direction, and anti-PPT reasoning before Visual Lock.",
+        "visual_collaboration": {
+          "source_ref": "visual-collaboration-contract.md",
+          "status": "agent_proposed",
+          "recording_or_beat_basis": "",
+          "options_presented": [],
+          "selected_option": "",
+          "rejected_options": [],
+          "user_feedback": "",
+          "agent_assumptions": [],
+          "short_video_constraints": [],
+          "lessons_applied": [],
+          "unresolved_visual_concerns": []
+        },
+        "github_design_intake": {
+          "source_ref": "github-design-skill-intake.md",
+          "fact_check": {
+            "status": "",
+            "verified_items": [],
+            "not_needed_reason": ""
+          },
+          "core_assets": {
+            "available": [],
+            "missing": [],
+            "placeholder_policy": ""
+          },
+          "design_system": "",
+          "direction_choice": {
+            "selected": "",
+            "killed_alternatives": []
+          },
+          "anti_slop_bar": [],
+          "verification_route": "",
+          "five_dimension_review_plan": {
+            "philosophy_consistency": "",
+            "visual_hierarchy": "",
+            "detail_execution": "",
+            "functionality": "",
+            "innovation": ""
+          },
+          "not_needed_reason": ""
+        },
+        "resource_preflight": {
+          "visual_resource_research_path": "",
+          "visual_resource_research_json_path": "",
+          "source_reality": {
+            "real_assets_available": [],
+            "must_preserve_pixels": [],
+            "can_generate_or_rebuild": [],
+            "missing_assets": [],
+            "honest_placeholder_policy": ""
+          },
+          "design_system_memory": "",
+          "library_candidate_matrix": [],
+          "selected_routes": {
+            "design_system_memory": "",
+            "icon_family": "",
+            "svg_graphics": [],
+            "remotion_packages": [],
+            "imagegen_models_or_skills": [],
+            "real_asset_sources": []
+          },
+          "prompt_pack_paths": [],
+          "rejected_defaults": [],
+          "lookdev_audit_hooks": [],
+          "global_asset_registry_checked": false,
+          "global_asset_candidate_ids": [],
+          "project_usage_manifest_path": "",
+          "stock_footage_scout_path": "",
+          "stock_footage_candidates": []
+        }
       },
       "scene_boards": [],
       "scene_edge_boards": [],
@@ -469,12 +564,14 @@
         "spark_hybrid_three",
         "html_canvas_world_plate_fallback"
       ],
-      "truth_rule": "Procedural Spark plates cannot be marked true_3dgs_asset."
+      "truth_rule": "Procedural Spark plates cannot be marked true_3dgs_asset.",
+      "marble_intake_rule": "World Labs Marble SPZ/PLY/splat exports may be true_3dgs_asset after approval; GLB exports are hybrid_spark_three; pano/png exports are fallback plates only."
     },
     "vibemotion_candidates": [],
     "hyperframes_candidates": [],
     "ai_video_prompt_requests": [],
     "ai_video_candidates": [],
+    "visual_preprocess_assets": [],
     "plugin_adapter_runs": [],
     "scene_motion_specs": [],
     "jobs": [],

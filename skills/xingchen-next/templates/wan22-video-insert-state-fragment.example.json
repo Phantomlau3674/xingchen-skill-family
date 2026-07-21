@@ -1,0 +1,89 @@
+{
+  "render": {
+    "ai_video_prompt_requests": [
+      {
+        "request_id": "wan22-scene-03-request",
+        "scene_ids": ["scene-03"],
+        "option_type": "recommended",
+        "provider": "other_ai_video",
+        "provider_model_hint": "local_comfyui_wan22_ti2v_5b",
+        "technical_route": "image_to_video",
+        "prompt_pack_path": "wan22-video-insert-brief.json",
+        "prompt_path": "wan22-video-insert-brief.json",
+        "prompt_text": "slow push-in, subtle amber desk-lamp glow, controlled particles, no text",
+        "negative_prompt": "text, watermark, logo, UI, chart, numbers, subtitles, fake interface, readable claims, low quality, jitter",
+        "output_expectation": "short bounded concept-motion video_plate",
+        "status": "drafted",
+        "state_trace_refs": [
+          "visual.director_board.scene_boards[scene-03]",
+          "render.scene_motion_specs[scene-03]"
+        ],
+        "proof_exclusion_policy": "No proof, no readable text, no UI, no factual claims. Remotion owns captions and evidence overlays.",
+        "remotion_integration_plan": "Use as a 2-second background video_plate under Remotion captions and proof-safe overlays.",
+        "handoff_instructions": "Run comfyui-wan-video with the referenced input image and smoke-test settings first."
+      }
+    ],
+    "ai_video_candidates": [
+      {
+        "candidate_id": "wan22-scene-03-candidate",
+        "prompt_request_id": "wan22-scene-03-request",
+        "scene_ids": ["scene-03"],
+        "option_type": "recommended",
+        "provider": "other_ai_video",
+        "provider_model": "local_comfyui_wan22_ti2v_5b",
+        "technical_route": "image_to_video",
+        "prompt_path": "wan22-video-insert-brief.json",
+        "prompt_text": "slow push-in, subtle amber desk-lamp glow, controlled particles, no text",
+        "negative_prompt": "text, watermark, logo, UI, chart, numbers, subtitles, fake interface, readable claims, low quality, jitter",
+        "duration_sec": 2,
+        "aspect_ratio": "16:9",
+        "output_path": "C:/comfyui/output/video/wan22_scene_03_00001_.mp4",
+        "output_kind": "mp4",
+        "review_status": "pending",
+        "motion_source": "ai_video_generation",
+        "candidate_origin": "reference_guided_from_current_state",
+        "state_trace_refs": [
+          "visual.director_board.scene_boards[scene-03]",
+          "render.scene_motion_specs[scene-03]"
+        ],
+        "proof_exclusion_policy": "No proof, no readable text, no UI, no factual claims. Remotion owns captions and evidence overlays.",
+        "remotion_integration_plan": "Use as a 2-second background video_plate under Remotion captions and proof-safe overlays.",
+        "safety_review": {
+          "no_false_evidence": true,
+          "no_readable_claim_text": true,
+          "no_brand_or_ip_issue": true,
+          "no_face_or_identity_risk": true,
+          "notes": "Pending lookdev review of the actual local output."
+        },
+        "integration_mode": "video_plate",
+        "promotion_target_renderer_family": "remotion_component",
+        "selected_by_user": false,
+        "promotion_rule": "approved_local_wan_candidate_must_be_video_plate_under_remotion",
+        "notes": "Local Wan2.2 output is a bounded concept-motion insert, not proof or final assembly."
+      }
+    ],
+    "plugin_adapter_runs": [
+      {
+        "run_id": "adapter-wan22-scene-03",
+        "adapter_kind": "local_skill",
+        "adapter_id": "comfyui-wan22-ti2v",
+        "skill_name": "comfyui-wan-video",
+        "scene_ids": ["scene-03"],
+        "input_state_refs": [
+          "render.ai_video_prompt_requests[wan22-scene-03-request]",
+          "visual.director_board.scene_boards[scene-03]"
+        ],
+        "output_paths": ["C:/comfyui/output/video/wan22_scene_03_00001_.mp4"],
+        "state_writebacks": [
+          "render.ai_video_candidates",
+          "render.plugin_adapter_runs"
+        ],
+        "status": "generated",
+        "candidate_ids": ["wan22-scene-03-candidate"],
+        "promotion_target_renderer_family": "remotion_component",
+        "lookdev_evidence_required": true,
+        "notes": "Local Wan2.2 TI2V candidate only; final composition remains Remotion."
+      }
+    ]
+  }
+}

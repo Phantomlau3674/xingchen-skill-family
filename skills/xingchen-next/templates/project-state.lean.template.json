@@ -1,0 +1,199 @@
+{
+  "kind": "XingchenNextLeanProjectState",
+  "version": "2.5.0",
+  "mode": "lean",
+  "metadata": {
+    "project_id": "replace-me",
+    "title": "Untitled video",
+    "platform": "douyin",
+    "format": {
+      "profile": "douyin-horizontal-1920x1080",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "aspect_ratio": "16:9",
+      "typography": {
+        "subtitle_px": 60,
+        "thesis_px": 48,
+        "important_node_px": 42
+      }
+    },
+    "active_stage": "brief-evidence",
+    "stage_status": "active",
+    "created_at": "",
+    "updated_at": ""
+  },
+  "workflow": {
+    "approvals": [
+      {
+        "checkpoint": "Content Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "",
+        "updated_at": ""
+      },
+      {
+        "checkpoint": "Preview Lock",
+        "status": "pending",
+        "reviewer": null,
+        "reason": "",
+        "blocked_fields": [],
+        "created_at": "",
+        "updated_at": ""
+      }
+    ],
+    "blocked": false,
+    "blocking_reason": "",
+    "stage_history": []
+  },
+  "brief": {
+    "thesis": "",
+    "audience": "",
+    "goal": "",
+    "sources": [],
+    "claims": []
+  },
+  "script": {
+    "spoken_text": "",
+    "audio_ref": "",
+    "timing_basis": "estimated",
+    "timeline_revision": 0,
+    "beats": [],
+    "content_approved": false
+  },
+  "visual_policy": {
+    "creator_avatar": {
+      "decision": "reuse",
+      "asset_path": "C:\\Users\\liuzh\\Pictures\\04_AI生成图片\\2026-05\\ChatGPT Image 2026年5月7日 15_14_14.png",
+      "skip_reason": ""
+    },
+    "reference_style": {
+      "selected": false,
+      "source": "",
+      "selection_reason": "",
+      "selected_traits": [],
+      "avoid_copying": []
+    }
+  },
+  "scenes": [],
+  "delivery": {
+    "status": "not-started",
+    "critical_previews": [],
+    "full_preview": null,
+    "preview_review": {
+      "completed": false,
+      "blind_review_completed": false,
+      "blocking_issues": [],
+      "revision_log": [],
+      "notes": ""
+    },
+    "platform_draft": {
+      "checked": false,
+      "device": "",
+      "checked_at": ""
+    },
+    "final_path": "",
+    "cover_path": "",
+    "learning": {
+      "observation": "",
+      "evidence": "",
+      "likely_cause": "",
+      "next_change": "",
+      "comparison_metric": ""
+    }
+  },
+  "extensions": {
+    "agent_harness": {
+      "version": "1.0.0",
+      "run_id": "replace-me",
+      "status": "planned",
+      "runtime_policy": {
+        "thinking_mode": "deep",
+        "quality_mode": "quality",
+        "permission_scope": "project",
+        "capability_permissions": {
+          "motion_graphics": "ask",
+          "video_generation": "ask",
+          "image_generation": "ask"
+        }
+      },
+      "route": {
+        "workflow_skill": "",
+        "design_style": "",
+        "design_style_source": "none",
+        "design_style_spec_ref": "",
+        "visual_format": "film",
+        "output_grammar": "",
+        "artifact_ladder": [],
+        "next_artifact": "",
+        "medium_strategy": {
+          "mode": "narration-led",
+          "choice_source": "brief",
+          "modalities": [],
+          "exception_reason": ""
+        },
+        "batch_policy": {
+          "planned_visual_assets": 1,
+          "style_basis": "none",
+          "representative_status": "not-needed",
+          "expansion_allowed": false
+        }
+      },
+      "scene_strategies": [],
+      "anti_ppt": {
+        "max_card_scene_ratio": 0.35,
+        "max_repeated_layout_ratio": 0.5,
+        "max_static_hold_ratio": 0.6,
+        "card_scene_ratio": 0,
+        "repeated_layout_ratio": 0,
+        "static_hold_ratio": 0,
+        "editorial_card_exception": false,
+        "exception_reason": "",
+        "decision": "block",
+        "blocking_reasons": ["Scene strategies have not been authored or validated."]
+      },
+      "trace": [],
+      "receipts": {
+        "asset_authoring_ref": "",
+        "timeline_placement_ref": "",
+        "composed_frame_verification_ref": ""
+      },
+      "jobs": []
+    },
+    "source_led_film": {
+      "version": "1.0.0",
+      "status": "planned",
+      "timeline_revision": 0,
+      "source_inspections": [],
+      "events": [],
+      "shots": [],
+      "coverage": {
+        "source_owned_duration_ratio": 0,
+        "sound_sync_coverage_ratio": 0,
+        "scene_coverage_ratio": 0
+      }
+    },
+    "voice_led_film": {
+      "version": "1.0.0",
+      "status": "planned",
+      "timeline_revision": 0,
+      "visibility_policy": "faceless",
+      "animated_a_roll": {
+        "enabled": true,
+        "continuity_model": "voice-owned animated primary picture",
+        "primary_tracks": [],
+        "state_machine_required_for_roles": ["diagram", "kinetic-type", "process", "metaphor"]
+      },
+      "voice_beats": [],
+      "shots": [],
+      "coverage": {
+        "voice_beat_coverage_ratio": 0,
+        "script_beat_coverage_ratio": 0,
+        "scene_coverage_ratio": 0,
+        "sound_sync_coverage_ratio": 0
+      }
+    }
+  }
+}

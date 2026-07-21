@@ -1,0 +1,165 @@
+{
+  "report_kind": "xingchen_material_route_scout",
+  "schema_version": "1.0",
+  "project_id": "",
+  "project_root": "",
+  "created_at": "",
+  "scout_reason": "",
+  "route_order": [
+    "global_asset_library",
+    "stock_footage",
+    "imagegen_plate",
+    "veo_video_generation",
+    "remotion_precision_layer"
+  ],
+  "scene_needs": [
+    {
+      "scene_id": "",
+      "visual_job": "",
+      "need_type": "stock_footage_or_imagegen_fallback",
+      "why_stock_footage": "",
+      "why_imagegen_or_veo": "",
+      "remotion_precision_layer_required": true,
+      "fallback_if_rejected": ""
+    }
+  ],
+  "fallback_chain": [
+    {
+      "scene_id": "",
+      "ordered_routes": [
+        {
+          "route": "global_asset_library",
+          "decision": "check_before_new_download_or_generation",
+          "reason": ""
+        },
+        {
+          "route": "stock_footage",
+          "decision": "search_first",
+          "reason": ""
+        },
+        {
+          "route": "imagegen_plate",
+          "decision": "request_if_stock_rejected",
+          "reason": ""
+        },
+        {
+          "route": "veo_video_generation",
+          "decision": "request_after_image_plate_if_motion_needed",
+          "reason": ""
+        },
+        {
+          "route": "remotion_precision_layer",
+          "decision": "always_required",
+          "reason": ""
+        }
+      ],
+      "final_default": ""
+    }
+  ],
+  "query_plan": [
+    {
+      "scene_id": "",
+      "queries": [],
+      "negative_terms": [
+        "text",
+        "logo",
+        "watermark",
+        "subtitle"
+      ],
+      "desired_motion": "",
+      "desired_aspect": "9:16",
+      "min_duration_sec": 4
+    }
+  ],
+  "stock_candidates": [],
+  "candidates": [
+    {
+      "asset_id": "",
+      "source_name": "",
+      "source_url": "",
+      "provider_asset_id": "",
+      "search_query": "",
+      "preview_url": "",
+      "download_url": "",
+      "width": 0,
+      "height": 0,
+      "duration_sec": 0,
+      "license_name": "",
+      "license_url": "",
+      "commercial_use_status": "manual_review_required",
+      "attribution_required": false,
+      "attribution_text": "",
+      "people_or_model_release_risk": "manual_review_required",
+      "trademark_or_brand_risk": "manual_review_required",
+      "property_or_landmark_risk": "manual_review_required",
+      "intended_scene_ids": [],
+      "role": "broll_plate",
+      "local_path": "",
+      "checksum_sha256": "",
+      "downloaded_at": "",
+      "decision": "pending",
+      "fit_score": 0,
+      "fit_reason": "",
+      "reject_reason": "",
+      "notes": ""
+    }
+  ],
+  "imagegen_requests": [
+    {
+      "request_id": "",
+      "scene_id": "",
+      "status": "fallback_if_stock_rejected",
+      "visual_job": "",
+      "proof_role": "not_proof",
+      "prompt": "",
+      "negative_prompt": "Chinese text, English text, readable words, subtitles, captions, logo, watermark, UI, chart, table, proof dashboard, fake screenshot, face",
+      "safe_zones": {
+        "subtitle": "",
+        "proof_overlay": ""
+      },
+      "overlay_plan": "Remotion owns all text, captions, labels, proof, and timing.",
+      "expected_output_paths": [],
+      "acceptance_criteria": [],
+      "state_trace_refs": []
+    }
+  ],
+  "veo_video_requests": [
+    {
+      "request_id": "",
+      "scene_ids": [],
+      "option_type": "recommended",
+      "provider": "veo_video_generation",
+      "provider_model_hint": "configured_veo_model_id",
+      "technical_route": "image_to_video",
+      "prompt_pack_path": "veo-video-request.md",
+      "prompt_path": "",
+      "prompt_text": "",
+      "negative_prompt": "readable claim text, Chinese text, English text, proof, evidence, UI, chart, numbers, subtitles, captions, watermark, logo, face, fake interface",
+      "duration_sec": 4,
+      "aspect_ratio": "9:16",
+      "reference_asset_paths": [],
+      "output_expectation": "One muted mp4 or mov plate for Remotion video_plate integration.",
+      "status": "drafted",
+      "state_trace_refs": [],
+      "proof_exclusion_policy": "No proof, no evidence, no readable claims, and no subtitles; Remotion owns proof overlays and captions.",
+      "remotion_integration_plan": "Use only as a muted Remotion video_plate under programmatic subtitles, proof overlays, labels, and timing controls.",
+      "handoff_instructions": "User manually generates this on the configured Veo platform/model, downloads the file, and returns it for registration.",
+      "expected_candidate_id": "",
+      "notes": ""
+    }
+  ],
+  "rejected": [],
+  "provider_status": [],
+  "derived_artifacts": {
+    "imagegen_prompt_pack_json": "",
+    "imagegen_prompt_pack_md": "",
+    "veo_video_request_json": "",
+    "veo_video_request_md": ""
+  },
+  "remotion_integration": {
+    "video_plate_scene_ids": [],
+    "background_or_transition_scene_ids": [],
+    "captions_and_proof_owned_by_remotion": true,
+    "attribution_placement": ""
+  }
+}

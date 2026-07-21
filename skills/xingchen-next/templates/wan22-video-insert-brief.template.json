@@ -1,0 +1,44 @@
+{
+  "brief_id": "",
+  "scene_id": "",
+  "visual_gap": "",
+  "why_not_remotion_or_hyperframes": "",
+  "input_image_path": "",
+  "input_image_role": "hero_still|concept_plate|background_plate|source_safe_still",
+  "motion_intent": "",
+  "camera_motion": "",
+  "subject_motion": "",
+  "material_motion": "",
+  "background_motion": "",
+  "duration_target_seconds": 2,
+  "wan_settings_hint": {
+    "width": 512,
+    "height": 288,
+    "frames": 9,
+    "fps": 8,
+    "steps": 4,
+    "cfg": 5.0,
+    "seed": null,
+    "sampler": "uni_pc",
+    "scheduler": "simple",
+    "shift": 8.0
+  },
+  "prompt": "",
+  "negative_prompt": "text, watermark, logo, UI, chart, numbers, subtitles, fake interface, readable claims, distorted hands, low quality, jitter",
+  "proof_exclusion_policy": "",
+  "subtitle_safe_region": "",
+  "remotion_integration_plan": "",
+  "fallback_plan": "",
+  "review_criteria": [
+    "motion supports the named scene intent",
+    "no readable factual text or fake UI appears",
+    "subtitle and proof overlays remain Remotion-owned",
+    "clip works as a bounded video_plate",
+    "fallback remains valid if the candidate is rejected"
+  ],
+  "state_writeback_plan": {
+    "prompt_request_path": "render.ai_video_prompt_requests[]",
+    "candidate_path": "render.ai_video_candidates[]",
+    "adapter_run_path": "render.plugin_adapter_runs[]"
+  }
+}

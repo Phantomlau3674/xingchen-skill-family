@@ -1,0 +1,59 @@
+{
+  "version": "1.0.0",
+  "run_id": "replace-me",
+  "status": "planned",
+  "runtime_policy": {
+    "thinking_mode": "deep",
+    "quality_mode": "quality",
+    "permission_scope": "project",
+    "capability_permissions": {
+      "motion_graphics": "ask",
+      "video_generation": "ask",
+      "image_generation": "ask"
+    }
+  },
+  "route": {
+    "workflow_skill": "",
+    "design_style": "",
+    "design_style_source": "none",
+    "design_style_spec_ref": "",
+    "visual_format": "film",
+    "output_grammar": "",
+    "artifact_ladder": [],
+    "next_artifact": "",
+    "medium_strategy": {
+      "mode": "narration-led",
+      "choice_source": "brief",
+      "modalities": [],
+      "exception_reason": ""
+    },
+    "batch_policy": {
+      "planned_visual_assets": 1,
+      "style_basis": "none",
+      "representative_status": "not-needed",
+      "expansion_allowed": false
+    }
+  },
+  "scene_strategies": [],
+  "anti_ppt": {
+    "max_card_scene_ratio": 0.35,
+    "max_repeated_layout_ratio": 0.5,
+    "max_static_hold_ratio": 0.6,
+    "card_scene_ratio": 0,
+    "repeated_layout_ratio": 0,
+    "static_hold_ratio": 0,
+    "editorial_card_exception": false,
+    "exception_reason": "",
+    "decision": "block",
+    "blocking_reasons": [
+      "Scene strategies have not been authored or validated."
+    ]
+  },
+  "trace": [],
+  "receipts": {
+    "asset_authoring_ref": "",
+    "timeline_placement_ref": "",
+    "composed_frame_verification_ref": ""
+  },
+  "jobs": []
+}

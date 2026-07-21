@@ -106,6 +106,10 @@ Record:
 - preferred subtitle zone
 - forbidden overlap region
 - fallback subtitle behavior if the default zone collides with proof
+- subtitle background policy: `none`, `stroke_only`, or `rounded_translucent_box`
+- max subtitle lines and padding when a background box is used
+
+If a rounded or translucent subtitle background is selected, reserve enough padding for the longest expected line and test that the text is not clipped at box corners, descenders, stroke edges, or line breaks. Subtitle backgrounds must improve mobile readability without becoming a card that hides proof, source pixels, or the dominant anchor.
 
 ### 7. Z-Order Plan
 
@@ -163,6 +167,9 @@ This pass should feed state-backed scene motion or layout truth such as:
 - `anchor_region`
 - `proof_regions`
 - `subtitle_safe_region`
+- `subtitle_background_policy`
+- `subtitle_background_padding`
+- `subtitle_max_lines`
 - `z_order_plan`
 - `camera_window`
 - `geometry_risks`
@@ -177,6 +184,7 @@ This pass should feed state-backed scene motion or layout truth such as:
 - proof screenshot is stretched to fill frame
 - proof callout points to empty or decorative area
 - subtitles sit on top of the proof noun or result
+- subtitle background clips text, crowds two-line captions, or hides proof/source pixels
 - crop removes the action that makes the screenshot meaningful
 - support chips are more legible than the evidence
 - camera motion makes the proof readable only when paused

@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0",
+  "status": "planned",
+  "timeline_revision": 0,
+  "visibility_policy": "faceless",
+  "animated_a_roll": {
+    "enabled": true,
+    "continuity_model": "voice-owned animated primary picture",
+    "primary_tracks": [],
+    "state_machine_required_for_roles": ["diagram", "kinetic-type", "process", "metaphor"]
+  },
+  "voice_beats": [],
+  "shots": [],
+  "coverage": {
+    "voice_beat_coverage_ratio": 0,
+    "script_beat_coverage_ratio": 0,
+    "scene_coverage_ratio": 0,
+    "sound_sync_coverage_ratio": 0
+  }
+}

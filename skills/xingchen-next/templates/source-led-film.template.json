@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "status": "planned",
+  "timeline_revision": 0,
+  "source_inspections": [],
+  "events": [],
+  "shots": [],
+  "coverage": {
+    "source_owned_duration_ratio": 0,
+    "sound_sync_coverage_ratio": 0,
+    "scene_coverage_ratio": 0
+  }
+}
