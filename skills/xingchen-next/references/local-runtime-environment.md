@@ -11,8 +11,12 @@ This file is the durable machine contract for running Xingchen Next locally. Do 
 - Shared headless browser: `C:\Users\liuzh\AppData\Local\ms-playwright\chromium_headless_shell-1217\chrome-headless-shell-win64\chrome-headless-shell.exe`
 - Model cache: `C:\Users\liuzh\.codex\models\huggingface`
 - Upstream runtime source snapshots: `C:\Users\liuzh\.codex\vendor_imports\video-runtimes`
-- Remotion adapter harness: `C:\Users\liuzh\.codex\skills\remotion-render-adapter\templates\director-motion-kernel`
+- Remotion adapter harness: `../../remotion-render-adapter/templates/director-motion-kernel`
 - Spark route root, when Spark is selected: `C:\xingchen-spark`
+- Local ComfyUI base directory for Wan2.2 inserts: `C:\comfyui`
+- Local ComfyUI Wan skill: `../../comfyui-wan-video`
+- Local ComfyUI API host: `http://127.0.0.1:8188`
+- Local ComfyUI output directory: `C:\comfyui\output`
 
 ## Current baseline on this machine
 
@@ -30,7 +34,7 @@ Use the persistent venv for human recording takes:
 
 ```powershell
 & C:\Users\liuzh\.codex\runtimes\xingchen-next\.venv\Scripts\python.exe `
-  C:\Users\liuzh\.codex\skills\xingchen-transcribe\scripts\transcribe_faster_whisper.py `
+  ../../xingchen-transcribe/scripts/transcribe_faster_whisper.py `
   --audio take1.mp3 take2.mp3 take3.mp3 `
   --state project-state.json `
   --out-dir . `
@@ -70,12 +74,48 @@ Use the shared browser for render/capture:
 
 Project-specific Remotion renders should still use the approved render project or adapter harness so package versions remain tied to the current render plan.
 
+## Remotion runtime doctor
+
+Use the Remotion adapter harness doctor when a project's videos, props, and process files live in one folder:
+
+```powershell
+cd ../../remotion-render-adapter/templates/director-motion-kernel
+npm run doctor -- --project-root C:\path\to\project
+npm run doctor:still:vertical -- --project-root C:\path\to\project --frame 30
+```
+
+The static doctor checks JSON, asset paths, package alignment, browser paths, and typecheck. The still doctor also renders a frame and checks that the PNG is nonblank. Still checks are runtime verification; use them for project retest or render debugging, not pure skill-edit housekeeping.
+
+## Local ComfyUI Wan2.2 runtime
+
+Use the `comfyui-wan-video` skill only for bounded image-to-video insert clips. It is not the final renderer and it does not own subtitles, proof, or full-video timing.
+
+Runtime check:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ../../comfyui-wan-video/scripts/check-runtime.ps1
+```
+
+Start local ComfyUI when needed:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File ../../comfyui-wan-video/scripts/start-comfyui.ps1
+```
+
+Submit a smoke clip:
+
+```powershell
+C:\comfyui\.venv\Scripts\python.exe ../../comfyui-wan-video/scripts/submit-wan22-ti2v.py --image C:\path\to\image.png --prompt "subtle controlled motion, slow push-in, no text"
+```
+
+Defaults are `512x288`, `9` frames, `8` fps, `4` steps, `cfg=5.0`, `sampler=uni_pc`, `scheduler=simple`, and `shift=8.0`. Register successful outputs as `render.ai_video_candidates[]` with adapter id `comfyui-wan22-ti2v`.
+
 ## Runtime check
 
 Run this before a full project if the machine has changed:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File C:\Users\liuzh\.codex\skills\xingchen-next\scripts\check-local-runtime.ps1
+powershell -ExecutionPolicy Bypass -File ../scripts/check-local-runtime.ps1
 ```
 
 The script checks the core CLI tools, persistent transcription venv, model cache, Remotion harness, Playwright browser availability, vendor runtime snapshots, and Spark root.
@@ -92,7 +132,7 @@ The script checks the core CLI tools, persistent transcription venv, model cache
 | `visual-direction` | validator; optional upstream source snapshots for runtime choice review |
 | `platform-adapt` | validator |
 | `lookdev` | Node/npm, Remotion harness or project-local Remotion, browser capture path for Hyperframes/Spark/HTML lanes |
-| `render` | project-local Remotion, `ffmpeg`/`ffprobe`, approved render job paths |
+| `render` | project-local Remotion, `ffmpeg`/`ffprobe`, approved render job paths; optional local ComfyUI Wan2.2 only for approved `gen_insert` video plates |
 | `publish` | final media files and cover assets |
 | `review` | shipped output, metrics or qualitative evidence |
 

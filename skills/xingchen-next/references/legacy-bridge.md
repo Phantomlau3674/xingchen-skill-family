@@ -34,7 +34,7 @@ Import these legacy artifacts into `project-state.json` when available:
 - imported `sources`, `proof`, `script`, `visual`, `mother`, `render`, and `review` sections should each carry a `provenance` object with `origin`, `used_artifacts`, `missing_artifacts`, and `imported_at`
 - legacy `lookdev-gate-result.json` entries should be copied into `review.lookdev_gate_results` verbatim during import
 
-The Python `xingchen_next_runner` CLI referenced in older docs does not exist (see [runner-integration.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\runner-integration.md)). Codex performs legacy import directly: walk the legacy bundle, populate the matching `project-state.json` sections (each with a `provenance` object), then run `node C:\Users\liuzh\.codex\skills\xingchen-next\schema\validate-project-state.mjs` against the result.
+The Python `xingchen_next_runner` CLI referenced in older docs does not exist (see [runner-integration.md](./runner-integration.md)). Codex performs legacy import directly: walk the legacy bundle, populate the matching `project-state.json` sections (each with a `provenance` object), then run `node ../schema/validate-project-state.mjs` against the result.
 
 ## Export Direction
 

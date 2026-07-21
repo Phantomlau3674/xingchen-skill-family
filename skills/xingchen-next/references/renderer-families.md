@@ -3,7 +3,7 @@
 This file is the single source of truth for `renderer_family`, `actual_renderer_family`, and Spark `route_status` values.
 
 `render.route.default_mode` (`code_primary` / `gen_insert` / `mixed_scene`) is high-level policy. `renderer_family` is final execution intent for a scene. `actual_renderer_family` records what actually ran. VibeMotion is a motion-source/candidate system, not a final renderer family except as a temporary lookdev state.
-Hyperframes is also a motion-source/candidate system. It should normally resolve into `html_scene`, `canvas_scene`, transparent assets, or Remotion-promoted components rather than becoming a new final renderer family. AI video generation is a prompt-request/candidate video-plate source under Remotion, not a renderer family.
+Hyperframes is also a motion-source/candidate system. It should normally resolve into `html_scene`, `canvas_scene`, transparent assets, or Remotion-promoted components rather than becoming a new final renderer family. Lottie is a vector motion asset source inside Remotion or a Hyperframes candidate, not a renderer family. AI video generation is a prompt-request/candidate video-plate source under Remotion, not a renderer family.
 
 ## Route Taxonomy
 
@@ -16,6 +16,7 @@ Every render-bound `SceneMotionSpec` may record these semantic route fields:
 Use them to separate runtime from origin:
 
 - Remotion can be both runtime and motion source (`execution_runtime: "remotion"`, `motion_source: "native_remotion"`).
+- Lottie loaded through `@remotion/lottie` stays under Remotion (`motion_source: "native_remotion"`) and records the asset source/local JSON path in the resource matrix or motion stack.
 - VibeMotion should usually be a motion source under Remotion (`motion_source: "vibemotion_skill"`).
 - Hyperframes should usually be a motion source for HTML/canvas capture or Remotion-promoted assets (`motion_source: "hyperframes_runtime"`).
 - AI video generation should only be a bounded Remotion-composited video plate (`motion_source: "ai_video_generation"`, `integration_mode: "video_plate"`).
@@ -45,7 +46,7 @@ Use them to separate runtime from origin:
 
 `true_3dgs_asset`, `streaming_rad_world`, `procedural_splat_world`, `hybrid_spark_three`, `fallback_preview`, `blocked_missing_asset`, `approved_fallback_final`.
 
-Authoritative Spark route rules live in [spark-3dgs-world-route.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\spark-3dgs-world-route.md). Recording-first technology routing lives in [recording-motion-routing.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\recording-motion-routing.md).
+Authoritative Spark route rules live in [spark-3dgs-world-route.md](./spark-3dgs-world-route.md). Recording-first technology routing lives in [recording-motion-routing.md](./recording-motion-routing.md).
 
 ---
 
@@ -53,7 +54,7 @@ Authoritative Spark route rules live in [spark-3dgs-world-route.md](C:\Users\liu
 
 **Role**: primary final video runtime and renderer family.
 
-**When to use**: proof overlays, exact subtitles, charts, UI captures, screen-recording plates, evidence callouts, structured explanation, voice/BGM composition, reusable React/SVG/Canvas scenes, and final export.
+**When to use**: proof overlays, exact subtitles, charts, UI captures, screen-recording plates, evidence callouts, structured explanation, voice/BGM composition, local Lottie motion layers, reusable React/SVG/Canvas scenes, and final export.
 
 **Typical route fields**:
 
@@ -69,7 +70,7 @@ Authoritative Spark route rules live in [spark-3dgs-world-route.md](C:\Users\liu
 
 **Preview gate**: a real Remotion preview frame or sequence captured from the scene's component.
 
-**Failure conditions**: component imports a route-external Spark, VibeMotion, or Hyperframes artifact without a recorded `motion_source`, `integration_mode`, and promotion target.
+**Failure conditions**: component imports a route-external Spark, VibeMotion, Hyperframes, or Lottie artifact without recorded source/provenance, `motion_source`, `integration_mode`, and promotion target when applicable.
 
 ## html_scene
 
@@ -173,7 +174,7 @@ Authoritative Spark route rules live in [spark-3dgs-world-route.md](C:\Users\liu
 
 **Failure conditions**: `renderer_family: "vibemotion_candidate"` remains at render; candidate is approved but lacks `integration_mode`, `promotion_target_renderer_family`, `candidate_origin`, or `state_trace_refs[]`; candidate source is a fixed demo/template rather than current-state generation.
 
-See [vibemotion-skill-inventory.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\vibemotion-skill-inventory.md).
+See [vibemotion-skill-inventory.md](./vibemotion-skill-inventory.md).
 
 ## hyperframes_runtime
 
@@ -211,7 +212,7 @@ See [vibemotion-skill-inventory.md](C:\Users\liuzh\.codex\skills\xingchen-next\r
 
 **Failure conditions**: Hyperframes owns final full-video assembly by default, lacks promotion metadata or `state_trace_refs[]` at render, uses network/interactive/non-deterministic state, hides a Spark world route, handles literal screen recordings that should remain `existing_media`, or copies a fixed HTML visual template.
 
-See [hyperframes-route-policy.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\hyperframes-route-policy.md).
+See [hyperframes-route-policy.md](./hyperframes-route-policy.md).
 
 ## ai_video_generation
 
@@ -271,6 +272,8 @@ See [hyperframes-route-policy.md](C:\Users\liuzh\.codex\skills\xingchen-next\ref
 - Spark plus Three.js staging: `route_status: "hybrid_spark_three"` and `actual_renderer_family: "spark_hybrid_three"`.
 - Non-Spark fallback: `actual_renderer_family: "html_canvas_world_plate_fallback"` with `route_status: "fallback_preview"` or explicit `approved_fallback_final`.
 
+**Marble intake**: World Labs Marble is a source inside this family, not a separate renderer. Marble SPZ/PLY/splat exports follow the real-approved asset rule; Marble GLB exports follow the hybrid Spark+Three rule; Marble panorama/PNG exports are fallback plates. See [world-labs-marble-intake.md](./world-labs-marble-intake.md).
+
 **Preview gate**: `SparkRoutePreview`, captured or watched as a moving browser canvas plate.
 
 **Failure conditions**: Spark used as generic background, missing `execution_runtime: "spark_browser_canvas"`, procedural plate marked as true 3DGS, `.rad` without `paged: true`, or full render requested before SparkRoutePreview.
@@ -279,7 +282,7 @@ See [hyperframes-route-policy.md](C:\Users\liuzh\.codex\skills\xingchen-next\ref
 
 ## Validator Coverage
 
-The Node validator at `C:\Users\liuzh\.codex\skills\xingchen-next\schema\validate-project-state.mjs` enforces:
+The Node validator at `../schema/validate-project-state.mjs` enforces:
 
 - `active_stage >= "render"` blocks unresolved `renderer_family: "vibemotion_candidate"`.
 - Approved VibeMotion candidates at render require `integration_mode` and `promotion_target_renderer_family`.
@@ -292,6 +295,8 @@ The Node validator at `C:\Users\liuzh\.codex\skills\xingchen-next\schema\validat
 - Procedural Spark assets require `route_status: "procedural_splat_world"` and `actual_renderer_family: "spark_procedural_splat"`.
 - `true_3dgs_asset` requires a real `world_asset.path_or_url` and cannot use `procedural_packed_splats`.
 - `streaming_rad_world` requires `world_asset.format: "rad"` and `spark_runtime_profile.paged === true`.
+- Marble `world_asset.source_kind: "marble"` requires `library_manifest`; SPZ/PLY/splat formats must be `true_3dgs_asset`, GLB must be `hybrid_spark_three`, and pano/PNG cannot claim true Spark 3DGS.
+- `render.visual_preprocess_assets[]` records depth, mask, upscale, repair, and 2.5D camera artifacts for Remotion; generated assets must link to `render.plugin_adapter_runs[].candidate_ids[]` and declare a proof policy that preprocessing does not rewrite proof.
 
 Run from this skill directory:
 

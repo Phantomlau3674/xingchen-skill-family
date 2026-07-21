@@ -9,7 +9,7 @@
 
 ## Codex-Visible Copies
 
-Local copies under `C:\Users\liuzh\.codex\skills`:
+Local sibling skills under `../../<skill-name>`:
 
 - `claude-typer`
 - `light-spotlight-render`
@@ -20,7 +20,7 @@ Local copies under `C:\Users\liuzh\.codex\skills`:
 - `svg-assembly-animator`
 - `wechat-2d-render`
 
-CLI-visible copies under `C:\Users\liuzh\.agents\skills` may omit `remotion-vinyl-player`; Codex-local copies are still valid as source material.
+Some CLI profiles may omit `remotion-vinyl-player`; the sibling skill remains valid source material when it is installed under the same skills root.
 
 ## Use In Xingchen
 

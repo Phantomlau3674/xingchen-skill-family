@@ -1,6 +1,6 @@
 # Recording Motion Routing
 
-Use this after recording correction has completed and the source material director pass has read the corrected recording rhythm and bound narration beats to StoryMother scenes. This file chooses route hints for motion execution; it does not replace the earlier page/beat-level director reading.
+Use this after recording correction and speech-rhythm analysis have completed, and after the source material director pass has read the corrected recording rhythm and bound narration beats to StoryMother scenes. This file chooses route hints for motion execution; it does not replace the earlier page/beat-level director reading.
 
 ## Purpose
 
@@ -8,7 +8,7 @@ This file only governs recording-first videos: the user brings a narration take,
 
 The route starts from corrected voice evidence, not from a renderer menu. First identify what the voice is doing, then choose the visual job, then choose the runtime and motion source.
 
-Do not use raw takes for visual design when `sources.recording_correction.status` is still `pending` or `blocked`.
+Do not use raw takes for visual design when `sources.recording_correction.status` is still `pending` or `blocked`. For voice-led recording-first projects, do not ignore `sources.speech_rhythm`; it is the timing evidence for pauses, rushed terms, flat runs, and anchor beats.
 
 ## State Writeback
 
@@ -17,6 +17,7 @@ Write the analysis into `project-state.json.visual.recording_visual_brief`:
 ```json
 {
   "source_audio_ref": "",
+  "speech_rhythm_ref": "",
   "voice_energy_curve": [],
   "pause_map": [],
   "emphasis_beats": [],

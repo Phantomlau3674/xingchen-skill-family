@@ -52,6 +52,8 @@ Use `spark_3dgs` as `actual_renderer_family` only when a real approved splat ass
 
 If no approved real 3DGS asset exists, the scene may be previewed as a fallback world plate, but it must not be described as a completed true 3DGS asset route.
 
+World Labs Marble assets follow the stricter intake rules in [world-labs-marble-intake.md](./world-labs-marble-intake.md): SPZ/PLY/splat exports may become `true_3dgs_asset`, GLB exports are `hybrid_spark_three`, and panorama/PNG exports are preview or fallback plates only.
+
 ## Spark 2.0 Capability Routes
 
 Use these route families so the plan maps to real Spark 2.0 APIs:
