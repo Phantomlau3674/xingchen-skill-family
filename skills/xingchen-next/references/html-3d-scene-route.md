@@ -4,6 +4,8 @@ Use this when a scene needs browser-native 3D: Three.js, React Three Fiber, CSS 
 
 The rule is: 3D must serve the material director pass. It is not a premium-looking background. The scene must say what the 3D space explains, what the camera reveals, and how the plate enters the final Remotion-controlled video.
 
+If a scene depends on generated 3D assets from ComfyUI, Hunyuan3D, TRELLIS, Stable Fast 3D, or similar workflows, first apply [comfyui-3d-asset-lane.md](./comfyui-3d-asset-lane.md). A generated mesh is a candidate asset until it has turntable/multi-angle preview, quality status, camera limits, fallback plan, and proof/subtitle separation.
+
 ## Route Families
 
 ### 1. Remotion-native 3D component
@@ -147,6 +149,7 @@ Before selecting HTML 3D, `visual.director_board.scene_boards[].tech_stack_layer
 - what source material is kept literal
 - what subtitles and proof regions must avoid
 - whether the 3D scene is final live component, captured plate, or transparent overlay
+- when generated 3D assets are involved: generator/workflow, output format, quality status, camera limits, fallback plan, and whether the asset is proof, metaphor, or atmosphere
 
 If the answer is "it looks cool," reject HTML 3D.
 
@@ -158,6 +161,7 @@ HTML 3D scenes require real preview evidence:
 - frame-accurate timing at the scene's key beats
 - camera path readable at 2x speed
 - source/proof planes preserve aspect ratio
+- generated meshes have approved turntable/multi-angle preview and are not visibly melted, seam-broken, or unreadable at the planned camera distance
 - no proof-critical text distorted, blurred, or too small
 - subtitle safe region remains outside dominant anchor and proof regions
 - the 3D scene still makes sense as 4 representative stills

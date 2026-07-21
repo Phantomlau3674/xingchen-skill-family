@@ -20,6 +20,10 @@ Prefer Hyperframes for:
 - future editor-friendly scenes where DOM elements should remain inspectable, selectable, or reusable
 - lookdev candidates that need real moving evidence before becoming final render specs
 
+GSAP trigger: when the selected Hyperframes route is DOM/SVG-heavy, node/flow-heavy, dashboard/webpage-like, or depends on staggered semantic reveals, create a GSAP-timeline candidate first unless the scene board records a concrete skip reason. "Remotion can also do it" is not a sufficient skip reason; skip only when Remotion already has a state-specific component, literal proof geometry must stay fully in Remotion, or the HTML lane would duplicate a simpler approved route.
+
+Lottie route: when Hyperframes uses a Lottie asset, read [lottie-motion-assets.md](./lottie-motion-assets.md). The source JSON must be local or explicitly pinned, license/provenance must be recorded, and the candidate must explain why Lottie is a better scene support than a Remotion-native SVG/Canvas implementation. `technical_route` should be `hyperframes_lottie`.
+
 Avoid Hyperframes for:
 
 - final full-video assembly, voice/BGM, subtitle layout, and platform delivery
@@ -72,7 +76,7 @@ Typical Remotion-promoted asset:
 
 Use `render.hyperframes_candidates[]` for real review artifacts produced by Hyperframes. They are lookdev evidence until approved and promoted.
 
-When HyperFrames is used through a Codex plugin, local CLI, local skill, or manual implementation, also append `render.plugin_adapter_runs[]` per [plugin-adapter-policy.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\plugin-adapter-policy.md). The adapter run must name the adapter kind/id, concrete skill or command lane, scene ids, input state refs, output paths, state writebacks, status, candidate ids, promotion target renderer family, and lookdev evidence requirement.
+When HyperFrames is used through a Codex plugin, local CLI, local skill, or manual implementation, also append `render.plugin_adapter_runs[]` per [plugin-adapter-policy.md](./plugin-adapter-policy.md). The adapter run must name the adapter kind/id, concrete skill or command lane, scene ids, input state refs, output paths, state writebacks, status, candidate ids, promotion target renderer family, and lookdev evidence requirement.
 
 Each candidate should record:
 
@@ -92,6 +96,8 @@ Each candidate should record:
 - `promotion_target_renderer_family`
 - `selected_by_user`
 - `promotion_rule`
+- `gsap_usage`: `used`, `not_needed`, or `skipped_with_reason`
+- `gsap_timeline_notes` when GSAP is used or skipped
 - `notes`
 
 Before `metadata.active_stage >= "render"`, every approved Hyperframes candidate must have `integration_mode`, `promotion_target_renderer_family`, `candidate_origin`, and `state_trace_refs[]`. A Hyperframes-sourced final scene must also carry matching route fields in `render.scene_motion_specs[]`.
@@ -117,9 +123,11 @@ Block or reroute when:
 - `motion_source: "hyperframes_runtime"` is present at render without `integration_mode` or `promotion_target_renderer_family`
 - a Hyperframes candidate is present without a matching `render.plugin_adapter_runs[].candidate_ids[]` trace
 - a Hyperframes HTML/canvas final scene uses a runtime other than `html_browser_capture`
+- a Hyperframes Lottie candidate depends on an unpinned remote JSON, unclear license, embedded text/proof, or a decorative loop with no named scene job
 - a screen recording is routed through Hyperframes instead of `existing_media`
 - a Spark/world-asset scene is disguised as Hyperframes canvas
 - the scene is a generic decorative background rather than a named scene job
+- a DOM/SVG-heavy Hyperframes scene skips GSAP without a recorded reason
 
 ## Adapter Handoff
 

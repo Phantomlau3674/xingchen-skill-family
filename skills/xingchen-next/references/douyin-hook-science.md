@@ -106,6 +106,8 @@ Before approving any hook, ask:
 
 5. **Thumbnail survival**: does this frame work as a still image in search results and recommendations? If the hook depends entirely on motion, it fails in static contexts.
 
+6. **Audience tier check（AI 自检，不是用户检）**: AI 读 `sources.source_pack.audience.tier`。如果 tier ∈ {lay_scrolling, lay_curious} 且 hook 文案/画面含任一 `audience_visibility=banned_for_lay` 词汇（`PROOF` / `REVEAL` / `scene-board` / `xingchen-*` / `S01-S99` 章节编号 / PowerShell log / tool 品牌名如 `VoxCPM2` / `Remotion` 等）⇒ AI 自己重写 hook，不交付给用户审阅再退回。普通观众的 0.3 秒决策窗口里，看到内部词汇就划走——这是任何"金句 + 引用框"组合都补不回来的损失。本检查在所有具体 Hook Pattern 选择前生效；如果一个候选 hook 满足上面 4 条但中了第 6 条，候选作废、AI 重新生成。
+
 ## Hook and Energy Curve Integration
 
 The hook sets the energy ceiling for the piece. If the hook is at 9/10 intensity, the piece must sustain high energy or it creates a letdown. If the hook is at 6/10 intensity (a thoughtful question, a calm evidence reveal), the piece can build upward.

@@ -179,7 +179,7 @@ Think about:
 - when the narrator pauses, the visual should pause too (hold on a frame, let the viewer read the evidence).
 - a mismatch between voice pacing and visual pacing creates cognitive dissonance — the viewer's eyes and ears are telling different stories.
 
-Record audio-visual sync decisions in `project-state.json.visual.energy_map` alongside the visual energy assignments. The energy map is not complete until audio energy is considered.
+In Lean mode, record only speech-linked energy cues that change the render under `extensions.visual_intent.scenes[].speech_cues`. The intent is incomplete until audio energy is considered.
 
 ## Integration With Other Systems
 
@@ -187,7 +187,7 @@ Record audio-visual sync decisions in `project-state.json.visual.energy_map` alo
 
 Energy levels should be assigned during story mother construction, not during visual direction. The energy shape is a narrative decision, not a decoration decision.
 
-Write energy assignments into `project-state.json.script.scenes[].energy_level` (1-10) and `project-state.json.script.scenes[].density_units` (integer count).
+For Lean mode, compress the planning scale to `low`, `medium`, or `high` in `extensions.visual_intent.scenes[].energy`. Keep 1-10 and density-unit analysis as working reasoning, not extra required state.
 
 ### Visual Direction
 
@@ -216,11 +216,4 @@ Think about: does this video contain at least one "screenshot-worthy" frame and 
 
 ## State Writeback
 
-Record the energy map in `project-state.json.visual.energy_map`:
-
-- `shape`: which three-act pattern was chosen
-- `peak_scenes`: list of scene IDs assigned energy 7+
-- `rest_scenes`: list of scene IDs assigned energy 1-3
-- `density_budget`: total information units across all scenes
-- `rewatch_candidate_scenes`: scenes designed to reward replay
-- `screenshot_candidate_scenes`: scenes designed to survive as stills
+In Lean mode, record only per-scene `energy`, `speech_cues`, and `contrast_from_previous` in `extensions.visual_intent.scenes[]`. Extended projects may retain the historical detailed energy map.

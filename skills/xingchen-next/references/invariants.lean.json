@@ -1,0 +1,22 @@
+{
+    "schema_version":  "1.0.0",
+    "mode":  "lean",
+    "blocking_ids":  [
+                         "INV-STATE-TRUTH",
+                         "INV-SOURCE-PACK-TRACE",
+                         "INV-PROOF-TRUTH",
+                         "INV-AUDIO-TIMING-TRUTH",
+                         "INV-SCENE-COGNITIVE-JOB",
+                         "INV-MOBILE-READABILITY",
+                         "INV-REAL-PREVIEW-BEFORE-DELIVERY",
+                         "INV-FINAL-RENDER-JOB-TRACE",
+                         "INV-CREATOR-AVATAR-DEFAULT",
+                         "INV-REFERENCE-STYLE-CONDITIONAL",
+                         "INV-SEMANTIC-RELATION-EXPLICIT",
+                         "INV-AGENT-HARNESS-TRACE",
+                         "INV-ANTI-PPT-SEMANTIC-MOTION",
+                         "INV-SOURCE-LED-FILM",
+                         "INV-VOICE-LED-FACELESS"
+                     ],
+    "source":  "./lean-invariants.md"
+}

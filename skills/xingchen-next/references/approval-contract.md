@@ -1,10 +1,10 @@
 # Approval Contract
 
-## ApprovalDecision
+## Principle
 
-Store each checkpoint as an `ApprovalDecision` inside `project-state.json.workflow.approvals`.
+Lean mode has two blocking decisions. Internal reviews may produce notes and revisions, but they do not become additional locks.
 
-Minimum fields:
+Store decisions in `workflow.approvals[]` with:
 
 - `checkpoint`
 - `status`
@@ -14,7 +14,7 @@ Minimum fields:
 - `created_at`
 - `updated_at`
 
-Allowed `status` values:
+Allowed statuses:
 
 - `pending`
 - `approved`
@@ -22,90 +22,61 @@ Allowed `status` values:
 - `superseded`
 - `manual_review_required`
 
-`manual_review_required` is valid only on `Lookdev Approval` and on aesthetic-check gates that an automated rule cannot defend yet (INV-NO-SILENT-PASS). It still requires explicit human override before downstream stages may proceed. The four content locks (`Topic Lock`, `Script Lock`, `StoryMother Lock`, `Visual Lock`) require `approved` — they do not accept `manual_review_required` as a bypass, because content correctness is not what `manual_review_required` is meant to defer.
+## Content Lock
 
-## Hard Checkpoints
-
-### `Topic Lock`
-
-Locks:
+`Content Lock` approves one coherent package:
 
 - thesis
-- audience
-- goal
+- audience and viewing goal
+- complete spoken script
+- factual claims and proof boundaries
+- beat map
+- timing basis or recording plan
 
-Blocks downstream:
+It blocks `scene-production`.
 
-- `script`
-- `story-mother`
-- `visual-direction`
+Do not split this decision into Topic, Script, and StoryMother approvals in Lean mode. The user should judge the actual argument, not the router's internal decomposition.
 
-### `Script Lock`
+Reject when a factual claim lacks a source, the thesis is unstable, the script is incomplete, or the beats do not support the intended runtime.
 
-Locks:
+## Preview Lock
 
-- spoken wording
-- narration spine
-- proof boundaries
-- beat truth
+`Preview Lock` approves the actual viewing experience:
 
-Blocks downstream:
+- a full playable preview with the real or accepted final audio
+- pairwise rendered-candidate decisions for `hook`, `hardest-proof`, and `payoff`
+- readable subtitles and key information on a phone-sized downsample
+- trustworthy, legible proof geometry
+- acceptable voice-picture-subtitle sync
+- completed blind full-piece review
+- no unresolved blocking issue
+- a real-device playback check; local transfer is sufficient unless platform upload is explicitly authorized
 
-- `story-mother`
-- `visual-direction`
-- `platform-adapt`
-- `lookdev`
-- `render`
+It blocks `final-delivery`.
 
-### `StoryMother Lock`
+Preview evidence is structured, not a list of unchecked strings. Each critical role keeps two decodable candidates by default, or three when an unresolved tradeoff is documented, plus the selected candidate and viewing reason, accepted audio, positive duration, phone-downsample viewport, current timeline revision, and review time. The full preview records equivalent timing and revision evidence. Paths and candidate ids cannot repeat.
 
-Locks:
+`Preview Lock` authorizes entry into `final-delivery`. It does not claim that the final render already exists.
 
-- `mother.story_mother.thesis`
-- `mother.story_mother.scene_order`
-- `mother.story_mother.scene_cards`
-- `mother.story_mother.proof_binding`
-- `mother.story_mother.narration_spine`
+`ffprobe` and full FFmpeg decode establish media truth. Machine checks still cannot approve taste, comprehension, rhythm, or trust by themselves. Numeric scores are optional diagnostics and never authorize the lock.
 
-Blocks downstream:
-
-- `visual-direction`
-- `platform-adapt`
-- `lookdev`
-- `render`
-
-### `Visual Lock`
-
-Locks:
-
-- `visual.director_board`
-- `VisualPolicy`
-- `lookdev_gate`
-- scene motion intent
-- derived director-board and art-direction review surfaces exported from current state
-
-Blocks downstream:
-
-- `platform-adapt`
-- `lookdev`
-- `render`
-- publish-facing exports that claim final quality
-
-### `Lookdev Approval`
-
-Locks:
-
-- `review.lookdev_gate_results[*]`
-- preview slices used for approval
-- preview audit findings
-
-Blocks downstream:
-
-- `render`
-- publish-facing exports that claim final quality
+`manual_review_required` is allowed when automation cannot judge an aesthetic or comprehension issue. Final delivery still needs an explicit human decision.
 
 ## Rejection Rules
 
-- rejected checkpoints must name the blocked fields explicitly
-- a rejection must never be represented as silent inactivity
-- downstream stages may keep drafts, but they must not be treated as approved truth
+- Name the blocked fields, scene ids, or timestamps.
+- Preserve drafts without presenting them as approved truth.
+- Roll back only to the narrowest stage that can repair the issue.
+- Do not convert rejection into a new permanent form field.
+
+## Extended Compatibility
+
+Extended and legacy projects may retain:
+
+- `Topic Lock`
+- `Script Lock`
+- `StoryMother Lock`
+- `Visual Lock`
+- `Lookdev Approval`
+
+When importing them into Lean mode, map the latest approved Topic, Script, and StoryMother decisions into `Content Lock`; map Visual and Lookdev evidence into `Preview Lock` only after a real full preview exists.
