@@ -1,0 +1,35 @@
+{
+  "name": "remotion-director-harness",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Remotion adapter harness for state-generated xingchen-family director motion outputs",
+  "dependencies": {
+    "@fontsource-variable/noto-sans-sc": "^5.2.5",
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.8",
+    "@remotion/cli": "4.0.445",
+    "@remotion/noise": "4.0.445",
+    "@remotion/paths": "4.0.445",
+    "@remotion/shapes": "4.0.445",
+    "@remotion/transitions": "4.0.445",
+    "katex": "^0.16.45",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.445"
+  },
+  "devDependencies": {
+    "@antv/x6": "^3.1.7",
+    "@types/katex": "^0.16.8",
+    "@types/react": "19.2.7",
+    "typescript": "5.9.3"
+  },
+  "scripts": {
+    "compile:board-motion": "node ./scripts/compile-board-motion.mjs --out ./director-script.compiled.preview.json",
+    "studio": "remotion studio",
+    "typecheck": "tsc --noEmit",
+    "render:director:horizontal": "node ./scripts/render-director.mjs horizontal",
+    "render:director:vertical": "node ./scripts/render-director.mjs vertical",
+    "render:horizontal": "remotion render src/index.ts VideoProjectHorizontal ../out/output-16x9.mp4 --props=./render-plan.json",
+    "render:vertical": "remotion render src/index.ts VideoProjectVertical ../out/output-9x16.mp4 --props=./render-plan.json"
+  }
+}

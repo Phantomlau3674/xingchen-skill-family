@@ -1,34 +1,31 @@
 # Xingchen Skill Family
 
-This repository packages the local Xingchen short-video creator skill family as a portable set of Codex/Claude skills.
+Xingchen is a portable skill family for evidence-led, narration-driven short-video production. `xingchen-next` is the Lean router; specialist skills own scripting, visual direction, editorial collage, lookdev, rendering, transcription, and optional spatial or speech-rhythm routes.
 
-## Included Skills
+## 2026-07-21 release
 
-- `xingchen-next` - canonical stateful router, project-state schema, approval gates, and workflow contracts.
-- `xingchen` - legacy compatibility bridge for older artifact-first projects.
-- `xingchen-asset-intake` - source material intake and manifest shaping.
-- `xingchen-editorial-room` - topic, angle, and story-mother work.
-- `xingchen-proof-pack` - proof and evidence visibility rules.
-- `xingchen-script-polish` - script refinement.
-- `xingchen-director-board` - source-led visual director board.
-- `xingchen-art-direction` - aesthetic system and lookdev policy.
-- `xingchen-visual-compiler` - scene specs, visual anchors, prompt packs, and route hints.
-- `xingchen-lookdev` - preview audit and lookdev gate checks.
-- `xingchen-transcribe` - recording cleanup and transcript generation support.
+This release synchronizes the current Lean family and adds the production-tested `xingchen-vox-collage` branch.
 
-## Layout
+- five Lean stages: `brief-evidence -> script-beats -> scene-production -> preview-revision -> final-delivery`
+- two blocking decisions only: `Content Lock` and `Preview Lock`
+- real-audio timing and `script.timeline_revision` as the structural baseline
+- hero-frame-first editorial collage with separate assets and code-owned exact text
+- strict state/spec synchronization and per-scene playable evidence
+- blind-review checks for caption-only motion, phone-size semantic scale, and adjacent-scene continuity anchors
+- bounded generated-video use; deterministic Remotion remains responsible for exact text, proof, timing, and final assembly
 
-```text
-skills/
-  xingchen-next/
-  xingchen/
-  xingchen-asset-intake/
-  ...
-```
+The production case behind these changes is documented in [docs/2026-07-21-vox-production-retrospective.md](docs/2026-07-21-vox-production-retrospective.md).
 
-Each skill directory is copied as a full tree, including `SKILL.md`, `agents/`, `references/`, `schema/`, `scripts/`, `templates/`, and visual reference assets when present.
+## Included skills
 
-Generated caches and local dependency folders are intentionally excluded.
+- `xingchen-next` — Lean router, state, approval, validation, and review contracts
+- `xingchen-editorial-room`, `xingchen-proof-pack`, `xingchen-script-polish` — argument, evidence, and narration
+- `xingchen-director-board`, `xingchen-art-direction`, `xingchen-visual-compiler` — scene responsibility, visual language, and implementation contracts
+- `xingchen-vox-collage` — original editorial paper-collage branch with strict visual evidence
+- `xingchen-lookdev` — candidate comparison, blind full-piece review, phone review, and Preview Lock evidence
+- `remotion-render-adapter` — deterministic Remotion implementation and render checks
+- `xingchen-asset-intake`, `xingchen-transcribe`, `xingchen-speech-rhythm`, `xingchen-3dgs-retrieval` — on-demand input and specialist routes
+- `xingchen` — legacy compatibility bridge
 
 ## Install
 
@@ -46,10 +43,33 @@ Install into another skill root:
 
 ## Validate
 
-After install, validate the `xingchen-next` schema tooling with:
+Run the family and Lean-state test suites:
 
 ```powershell
-node "$env:USERPROFILE\.codex\skills\xingchen-next\schema\validate-project-state.test.mjs"
+npm --prefix .\skills\xingchen-next test
+npm --prefix .\skills\xingchen-next run audit:family
 ```
 
-The main workflow should start from `xingchen-next`; the other skills are specialist routes used by that controller.
+Run the Vox branch tests:
+
+```powershell
+$env:PYTHONUTF8 = "1"
+python -m unittest discover -s .\skills\xingchen-vox-collage\tests -v
+```
+
+Validate a real Lean project and Vox branch:
+
+```powershell
+node .\skills\xingchen-next\schema\validate-lean-project-state.mjs <project-state.json>
+python .\skills\xingchen-vox-collage\scripts\validate_vox_branch.py <project-root>
+```
+
+## Distribution boundary
+
+- Project videos, cloned voices, user photos, generated project assets, provider receipts, and local model files are not included.
+- Local Stitch reference archives are intentionally excluded because public visibility is not a substitute for redistribution rights. Their manifest remains only as a local-reference contract.
+- Creator-avatar and runtime paths in the local workflow are installation-specific. Configure them for the target machine before production.
+
+## License
+
+See `LICENSE`. The license covers repository content that the copyright holder is entitled to license; it does not grant rights to third-party brands, source media, models, or locally excluded reference archives.

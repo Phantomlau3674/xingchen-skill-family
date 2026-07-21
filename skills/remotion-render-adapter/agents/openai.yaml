@@ -1,0 +1,3 @@
+interface:
+  display_name: "Remotion Render Adapter"
+  short_description: "Compile state-backed render exports into live Remotion plans under a code-first route without fixed-theme fallback."

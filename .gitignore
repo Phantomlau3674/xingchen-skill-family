@@ -19,3 +19,6 @@ __pycache__/
 # Local packaging output
 dist/
 .packaging-stage/
+
+# Local reference archives without established redistribution rights
+skills/xingchen-next/assets/stitch-remotion-family-templates/archives/

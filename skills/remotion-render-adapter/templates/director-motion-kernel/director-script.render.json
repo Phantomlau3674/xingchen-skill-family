@@ -1,0 +1,286 @@
+{
+  "meta": {
+    "topic": "Premium editorial showcase",
+    "aspect": "9:16",
+    "style": "director-cinematic",
+    "style_pack": "premium-tech-editorial",
+    "sound_mode": "voiceover+sfx",
+    "voice_style": "clear and practical",
+    "estimated_total_s": 25,
+    "source_estimated_total_s": 25,
+    "source_unit_count": 5,
+    "scene_count": 5,
+    "audio_file": "",
+    "alignment_mode": "outline-visual-evidence-locked",
+    "screenshot_scene_count": 1,
+    "screenshot_scene_budget": 1,
+    "visual_strategy_confirmation_required": true
+  },
+  "director_intent": {
+    "thesis": "Premium editorial showcase for the renderer.",
+    "rhythm": "visual strategy first, editorial plan second, render last",
+    "camera_system": "four-scene-shell renderer"
+  },
+  "scenes": [
+    {
+      "scene_id": "scene_1",
+      "beat": "hook",
+      "scene_kind": "ppt-only",
+      "visual_strategy": "hook-opener",
+      "editorial_role": "establish",
+      "transition_out": "directional-push",
+      "evidence_need": "none",
+      "evidence_source": "none",
+      "evidence_span_id": "",
+      "objective": "Open with a premium editorial tone.",
+      "start_s": 0,
+      "end_s": 5,
+      "duration_s": 5,
+      "narration": "Claude Code and Codex first lock the premium editorial direction before any render starts.",
+      "on_screen": ["Claude Code + Codex", "premium editorial"],
+      "source_unit_ids": ["u1"],
+      "source_texts": ["Claude Code and Codex first lock the premium editorial direction before any render starts."],
+      "caption_cues": [
+        {"text": "Claude Code + Codex", "start_s": 0, "end_s": 2.5},
+        {"text": "premium editorial", "start_s": 2.5, "end_s": 5}
+      ],
+      "ppt_layer": {
+        "headline": "Claude Code + Codex",
+        "bullets": ["premium editorial system"],
+        "render_mode": "headline+bullets",
+        "highlight_words": ["Claude Code", "Codex"]
+      },
+      "visual_anchor": {
+        "type": "icon",
+        "icons": ["claude-code", "codex", "workflow"]
+      },
+      "asset_placements": [],
+      "interaction_timeline": [],
+      "styleframe_tokens": {
+        "background_family": "atmospheric-grid",
+        "typography_mode": "hero-kicker",
+        "material_family": "screen-emissive"
+      },
+      "camera_plan": {
+        "move": "orbit-micro",
+        "framing": "hero-center",
+        "pace": "measured"
+      },
+      "sound_cues": ["whoosh", "pulse"],
+      "proof_focus": null
+    },
+    {
+      "scene_id": "scene_2",
+      "beat": "mechanism",
+      "scene_kind": "ppt-only",
+      "visual_strategy": "auto-diagram",
+      "editorial_role": "focus",
+      "transition_out": "zoom-burst",
+      "evidence_need": "optional",
+      "evidence_source": "auto-generated",
+      "evidence_span_id": "",
+      "objective": "Map the production system.",
+      "start_s": 5,
+      "end_s": 10,
+      "duration_s": 5,
+      "narration": "Show the director workflow from narration analysis to strategy lock, editorial planning, and final render props.",
+      "on_screen": ["Narration to render", "director workflow"],
+      "source_unit_ids": ["u2"],
+      "source_texts": ["Show the director workflow from narration analysis to strategy lock, editorial planning, and final render props."],
+      "caption_cues": [
+        {"text": "Narration to render", "start_s": 0, "end_s": 2.3},
+        {"text": "director workflow", "start_s": 2.3, "end_s": 5}
+      ],
+      "ppt_layer": {
+        "headline": "Narration to render",
+        "bullets": ["director workflow"],
+        "render_mode": "headline+bullets",
+        "highlight_words": ["Narration", "render"]
+      },
+      "visual_anchor": null,
+      "asset_placements": [],
+      "interaction_timeline": [],
+      "styleframe_tokens": {
+        "background_family": "studio-halo",
+        "typography_mode": "quiet-quote",
+        "material_family": "matte-paper"
+      },
+      "camera_plan": {
+        "move": "push-in",
+        "framing": "asymmetric-focus",
+        "pace": "measured"
+      },
+      "sound_cues": ["tick", "pulse"],
+      "proof_focus": null
+    },
+    {
+      "scene_id": "scene_3",
+      "beat": "example",
+      "scene_kind": "split-layout",
+      "visual_strategy": "screenshot",
+      "editorial_role": "proof",
+      "transition_out": "contrast-cut",
+      "evidence_need": "required",
+      "evidence_source": "user-screenshot",
+      "evidence_span_id": "span_asset_phone_3",
+      "objective": "Review the proof insert.",
+      "start_s": 10,
+      "end_s": 15,
+      "duration_s": 5,
+      "narration": "Show the actual product UI, annotate the proof, and magnify the exact region that makes the claim believable.",
+      "on_screen": ["Review the proof", "annotate the evidence"],
+      "source_unit_ids": ["u3"],
+      "source_texts": ["Show the actual product UI, annotate the proof, and magnify the exact region that makes the claim believable."],
+      "caption_cues": [
+        {"text": "Review the proof", "start_s": 0, "end_s": 2.1},
+        {"text": "annotate the evidence", "start_s": 2.1, "end_s": 5}
+      ],
+      "ppt_layer": {
+        "headline": "Review the proof",
+        "bullets": ["annotate the evidence"],
+        "render_mode": "headline+bullets",
+        "highlight_words": ["proof"]
+      },
+      "visual_anchor": null,
+      "asset_placements": [
+        {
+          "asset_id": "asset_phone",
+          "file": "screenshots/proof-phone.svg",
+          "role": "primary",
+          "display_mode": "pip-right",
+          "aspect_hint": "portrait",
+          "content_type": "app-screenshot",
+          "visual_description": "portrait phone screenshot",
+          "anchor_reason": "show the exact product proof",
+          "immersive_ok": false,
+          "needs_human_review": true,
+          "match_confidence": 0.91,
+          "device_frame": "phone",
+          "annotations": [
+            {
+              "type": "highlight-region",
+              "region": {"x": 0.12, "y": 0.18, "w": 0.62, "h": 0.22},
+              "label": "proof focus",
+              "timing_s": 1
+            }
+          ]
+        }
+      ],
+      "interaction_timeline": [],
+      "styleframe_tokens": {
+        "background_family": "proof-slate",
+        "typography_mode": "split-proof",
+        "material_family": "glass-ink"
+      },
+      "camera_plan": {
+        "move": "proof-punch",
+        "framing": "proof-insert",
+        "pace": "measured"
+      },
+      "sound_cues": ["hit", "tick"],
+      "proof_focus": {
+        "label": "proof focus",
+        "annotation_style": "magnify",
+        "timing_s": 1
+      }
+    },
+    {
+      "scene_id": "scene_4",
+      "beat": "caveat",
+      "scene_kind": "ppt-only",
+      "visual_strategy": "auto-code",
+      "editorial_role": "contrast",
+      "transition_out": "contrast-cut",
+      "evidence_need": "optional",
+      "evidence_source": "auto-generated",
+      "evidence_span_id": "",
+      "objective": "Make the quality gate visible.",
+      "start_s": 15,
+      "end_s": 20,
+      "duration_s": 5,
+      "narration": "Do not render blindly, run the score gate and review the contact sheet before shipping anything that looks cheap.",
+      "on_screen": ["quality gate", "review before render"],
+      "source_unit_ids": ["u4"],
+      "source_texts": ["Do not render blindly, run the score gate and review the contact sheet before shipping anything that looks cheap."],
+      "caption_cues": [
+        {"text": "quality gate", "start_s": 0, "end_s": 2.2},
+        {"text": "review before render", "start_s": 2.2, "end_s": 5}
+      ],
+      "ppt_layer": {
+        "headline": "Review before render",
+        "bullets": ["quality gate visible"],
+        "render_mode": "headline+bullets",
+        "highlight_words": ["Review", "render"]
+      },
+      "visual_anchor": {
+        "type": "terminal",
+        "lines": [
+          "python scripts/score_director_script.py --director video/director-script.json --min-score 90",
+          "npx remotion still src/index.ts DirectorReviewContactSheet"
+        ]
+      },
+      "asset_placements": [],
+      "interaction_timeline": [],
+      "styleframe_tokens": {
+        "background_family": "contrast-vignette",
+        "typography_mode": "terminal-editorial",
+        "material_family": "screen-emissive"
+      },
+      "camera_plan": {
+        "move": "parallax-drift",
+        "framing": "editorial-left",
+        "pace": "measured"
+      },
+      "sound_cues": ["whoosh", "hit"],
+      "proof_focus": null
+    },
+    {
+      "scene_id": "scene_5",
+      "beat": "cta",
+      "scene_kind": "ppt-only",
+      "visual_strategy": "auto-metric",
+      "editorial_role": "release",
+      "transition_out": "fade-out",
+      "evidence_need": "optional",
+      "evidence_source": "auto-generated",
+      "evidence_span_id": "",
+      "objective": "Land on the metric wall.",
+      "start_s": 20,
+      "end_s": 25,
+      "duration_s": 5,
+      "narration": "Finish on a metric wall so the ending feels warm, conclusive, and premium instead of abrupt.",
+      "on_screen": ["Metric wall", "soft resolve"],
+      "source_unit_ids": ["u5"],
+      "source_texts": ["Finish on a metric wall so the ending feels warm, conclusive, and premium instead of abrupt."],
+      "caption_cues": [
+        {"text": "Metric wall", "start_s": 0, "end_s": 2.4},
+        {"text": "soft resolve", "start_s": 2.4, "end_s": 5}
+      ],
+      "ppt_layer": {
+        "headline": "Metric wall",
+        "bullets": ["soft resolve"],
+        "render_mode": "headline+bullets",
+        "highlight_words": ["Metric"]
+      },
+      "visual_anchor": {
+        "type": "counter",
+        "value": 9,
+        "label": "s"
+      },
+      "asset_placements": [],
+      "interaction_timeline": [],
+      "styleframe_tokens": {
+        "background_family": "warm-resolve",
+        "typography_mode": "metric-wall",
+        "material_family": "tactile-metal"
+      },
+      "camera_plan": {
+        "move": "lockoff",
+        "framing": "metric-dominant",
+        "pace": "soft"
+      },
+      "sound_cues": ["resolve", "shimmer"],
+      "proof_focus": null
+    }
+  ]
+}
