@@ -16,7 +16,76 @@
       "scene_boards.knowledge_action",
       "scene_edge_boards.flow"
     ],
-    "output_rule": "Every scene and scene edge must record options considered, selected direction, and anti-PPT reasoning before Visual Lock."
+    "output_rule": "Every scene and scene edge must record options considered, selected direction, anti-PPT reasoning, and language-game correction for key phrases before Visual Lock.",
+    "visual_collaboration": {
+      "source_ref": "visual-collaboration-contract.md",
+      "status": "agent_proposed",
+      "recording_or_beat_basis": "",
+      "options_presented": [],
+      "selected_option": "",
+      "rejected_options": [],
+      "user_feedback": "",
+      "agent_assumptions": [],
+      "short_video_constraints": [],
+      "lessons_applied": [],
+      "unresolved_visual_concerns": []
+    },
+    "github_design_intake": {
+      "source_ref": "github-design-skill-intake.md",
+      "fact_check": {
+        "status": "",
+        "verified_items": [],
+        "not_needed_reason": ""
+      },
+      "core_assets": {
+        "available": [],
+        "missing": [],
+        "placeholder_policy": ""
+      },
+      "design_system": "",
+      "direction_choice": {
+        "selected": "",
+        "killed_alternatives": []
+      },
+      "anti_slop_bar": [],
+      "verification_route": "",
+      "five_dimension_review_plan": {
+        "philosophy_consistency": "",
+        "visual_hierarchy": "",
+        "detail_execution": "",
+        "functionality": "",
+        "innovation": ""
+      },
+      "not_needed_reason": ""
+    },
+    "resource_preflight": {
+      "visual_resource_research_path": "visual-resource-research.md",
+      "visual_resource_research_json_path": "visual-resource-research.json",
+      "source_reality": {
+        "real_assets_available": [],
+        "must_preserve_pixels": [],
+        "can_generate_or_rebuild": [],
+        "missing_assets": [],
+        "honest_placeholder_policy": ""
+      },
+      "design_system_memory": "",
+      "library_candidate_matrix": [],
+      "selected_routes": {
+        "selected_icon_family": "",
+        "selected_svg_tools": [],
+        "selected_remotion_packages": [],
+        "selected_imagegen_routes": [],
+        "real_asset_sources": []
+      },
+      "prompt_pack_paths": [],
+      "rejected_defaults": [],
+      "lookdev_audit_hooks": [],
+      "global_asset_registry_checked": false,
+      "global_asset_candidate_ids": [],
+      "project_usage_manifest_path": "",
+      "stock_footage_scout_path": "",
+      "stock_footage_candidates": []
+    }
   },
   "scene_boards": [
     {
@@ -48,6 +117,8 @@
         ],
         "selected_direction": "",
         "why_selected": "",
+        "resource_route": "",
+        "prompt_pack_ref": "",
         "continuity_handles": [
           {
             "handle_id": "handle-scene-01-keyword",
@@ -90,6 +161,7 @@
         "primary_component": "",
         "supporting_components": [],
         "component_props_brief": "",
+        "library_package_trace": "",
         "fallback_component": "",
         "kit_extension_needed": false
       },

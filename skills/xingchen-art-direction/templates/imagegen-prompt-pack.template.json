@@ -1,0 +1,35 @@
+{
+  "pack_path": "imagegen-prompt-pack.md",
+  "pack_json_path": "imagegen-prompt-pack.json",
+  "status": "draft|ready|blocked",
+  "global_text_policy": "no readable text inside generated image; Chinese text is Remotion overlay only",
+  "asset_requests": [
+    {
+      "asset_id": "",
+      "scene_id": "",
+      "proof_role": "none|supporting|texture|metaphor|background|character|object|plate",
+      "model_route": "",
+      "reference_image_paths": [],
+      "source_truth_constraints": [],
+      "subject": "",
+      "action_or_state": "",
+      "environment": "",
+      "composition": "",
+      "camera_and_lens": "",
+      "lighting": "",
+      "materials_and_texture": "",
+      "palette_tokens": [],
+      "style_dna": "",
+      "negative_constraints": [],
+      "positive_replacements": [],
+      "text_policy": "no readable text inside image; no Chinese characters; leave clean caption space",
+      "aspect_ratio": "",
+      "resolution_target": "",
+      "variation_count": 3,
+      "acceptance_criteria": [],
+      "expected_output_paths": [],
+      "remotion_overlay_plan": "",
+      "fallback_plan": ""
+    }
+  ]
+}

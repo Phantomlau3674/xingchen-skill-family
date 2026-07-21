@@ -64,6 +64,14 @@ Each rule result should include:
 - `threshold`
 - `message`
 
+Conditional rules may also include:
+
+- `applies_when`
+- `applies_when_evaluated`
+- `applies_when_result`
+
+`applies_when` is a conditional activation expression from the gate template. If the evaluator cannot resolve it, the rule must be `unsupported` or `not_evaluated` and the overall result must become `manual_review_required`; it must not silently pass or apply to the wrong project. If the condition resolves false, report the rule as `not_evaluated` with a short message such as `condition false`.
+
 Recommended rule result statuses:
 
 - `passed`
@@ -101,6 +109,7 @@ When the project uses VibeMotion Candidate Pass, each finding should state:
 - geometry blockers from scene composition audit should be preserved explicitly instead of flattened into one vague `reason`
 - missing or text-only VibeMotion candidates must block candidate-based approval
 - if any blocking machine rule fails, overall `status` must be `failed`
+- if any active conditional blocking rule is unsupported or not evaluated, overall `status` must be `manual_review_required` unless the project has an explicit human override for that rule
 - if no blocking machine rule fails, but any required review-only or aesthetic rule is unresolved, unsupported, or not evaluated, overall `status` must be `manual_review_required`
 - `passed` is allowed only when all blocking rules pass and no required review-only rule remains unresolved
 - write the same status to file and state when both outputs exist

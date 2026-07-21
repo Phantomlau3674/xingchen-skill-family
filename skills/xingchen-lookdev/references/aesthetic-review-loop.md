@@ -103,6 +103,45 @@ If the evaluator cannot judge an aesthetic rule with confidence:
 - record what a human must decide
 - do not substitute a generic taste opinion for a rule the machine cannot check
 
+### 8. Run the Huashu five-axis review
+
+Use [huashu-design-taste-upgrade.md](../../xingchen-next/references/huashu-design-taste-upgrade.md) as the taste repair layer for actual previews and stills. Score the work from 0-10 on:
+
+- `thesis_fit`: visual philosophy matches content, audience, and selected aesthetic mode
+- `visual_hierarchy`: the viewer knows what to watch first, second, and third
+- `craft_quality`: spacing, crop, type, alignment, color, and motion feel deliberate
+- `functional_clarity`: every visible element earns its place
+- `originality`: the piece avoids generic AI/default-template language
+
+Routing rule:
+
+- overall score below 8 or any axis below 7 means revise before final render
+- proof-heavy pieces may accept restrained originality only when hierarchy, clarity, and source fidelity are strong
+- hook, cover, peak, and hero scenes cannot pass with weak hierarchy or originality
+- findings must name concrete fixes, such as "replace fake product silhouette with real asset", "remove status chips", "make proof 70% of frame", or "carry the hero object through the next edge"
+
+### 9. Verify the visual resource route
+
+Use [visual-resource-and-prompt-preflight.md](../../xingchen-next/references/visual-resource-and-prompt-preflight.md) to check that the actual preview follows the promised resource decisions.
+
+Check:
+
+- selected icon family is consistent; no casual mixing of Lucide, Heroicons, Tabler, Phosphor, or brand-logo sources
+- SVG is used for symbols, diagrams, paths, masks, charts, and highlights, not for fake physical objects or fake UI proof
+- selected Remotion packages are actually imported or the scene has a recorded dependency/install blocker
+- L2/L3 Remotion routes produce visible motion language, not only opacity and translate polish
+- generated image/video assets have prompt-pack entries, expected output paths, no Chinese bitmap text, and real component imports
+- brand/logo assets have source and provenance notes
+- D3/data labels, proof quotes, and onscreen text still trace to source data or cited text
+
+Routing rule:
+
+- missing resource preflight or stale library route means return to `xingchen-art-direction`
+- declared package route not used in code means return to `xingchen-visual-compiler`
+- generated asset without prompt pack or component import means return to `xingchen-visual-compiler`
+- physical metaphor rendered as SVG/div geometry means return to `xingchen-director-board`
+- missing logo/license/provenance note means `manual_review_required` unless the asset is removed
+
 ## Finding Shape
 
 Record aesthetic findings with enough detail to support rerender or approval decisions.

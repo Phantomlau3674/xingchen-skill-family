@@ -1,0 +1,42 @@
+{
+  "kind": "StitchRemotionFamilyTemplateReferenceManifest",
+  "version": "1.1.0-public",
+  "updated_at": "2026-07-21T00:00:00+08:00",
+  "public_distribution": {
+    "archives_bundled": false,
+    "reason": "The local source packs did not establish public redistribution rights.",
+    "copy_source_code_allowed": false,
+    "copy_remote_image_urls_allowed": false
+  },
+  "common_design_md": {
+    "relative_path_inside_local_pack": "stitch_remotion_family_templates/cozy_paws_executive/DESIGN.md",
+    "length_bytes": 6482,
+    "sha256": "07eb7842fa7f0ef113f652c7e42f2b2e2ba4c1840cfead1213bd6a0e368487db"
+  },
+  "archives": [
+    {
+      "archive_id": "2026-05-24-pack-01-ai-model-systems",
+      "bundled": false,
+      "size_bytes": 3986402,
+      "sha256": "7CECC7ADD94DE859C9929CBA1318A2197ABA4B11B176974F00B790DE3F1A98C0"
+    },
+    {
+      "archive_id": "2026-05-24-pack-02-ai-explainer-scenes",
+      "bundled": false,
+      "size_bytes": 4130360,
+      "sha256": "18D692609359B052EEC40988A53D22B3E4142807F6256836714D75A2BA1C0DBD"
+    },
+    {
+      "archive_id": "2026-05-24-pack-03-knowledge-analytics",
+      "bundled": false,
+      "size_bytes": 2153041,
+      "sha256": "74EECDC3BF2FFBAB0DE3D255D7048BAC3E3007E842CCC87CFC6DBCC496A597CC"
+    },
+    {
+      "archive_id": "2026-05-24-pack-04-advanced-motion-vfx",
+      "bundled": false,
+      "size_bytes": 2808312,
+      "sha256": "5A6EB9B4A47A017BB1CCC9B3C714CEEF260886A6A19A6C06AB99259CFBBCE03A"
+    }
+  ]
+}

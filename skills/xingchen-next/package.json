@@ -4,10 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "preflight:dependencies": "node scripts/dependency-preflight.mjs",
+    "lint:paths": "node scripts/path-lint.mjs",
+    "audit:family": "node scripts/xingchen-family-coupling-audit.mjs",
+    "audit:project": "node scripts/xingchen-project-audit.mjs",
+    "verify:media": "node scripts/verify-media-evidence.mjs",
+    "analyze:reference": "node scripts/analyze-reference-output.mjs",
+    "validate:harness": "node scripts/validate-agent-harness.mjs",
+    "validate:source-led": "node scripts/validate-source-led-film.mjs",
+    "validate:voice-led": "node scripts/validate-voice-led-film.mjs",
+    "analyze:source-events": "node scripts/analyze-source-events.mjs",
+    "skillopt:build-douyin": "node scripts/build-douyin-sample-eval.mjs",
+    "skillopt:eval": "powershell -ExecutionPolicy Bypass -File scripts/run-skillopt-xingchen-eval.ps1",
+    "test": "node scripts/validate-agent-harness.test.mjs && node scripts/validate-source-led-film.test.mjs && node scripts/validate-voice-led-film.test.mjs && node scripts/analyze-source-events.test.mjs && node schema/validate-lean-project-state.test.mjs && node scripts/verify-media-evidence.test.mjs && node scripts/analyze-reference-output.test.mjs && node schema/validate-project-state.test.mjs && node scripts/stock-footage-scout.test.mjs && node scripts/recover-llm-json.test.mjs"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs"
 }

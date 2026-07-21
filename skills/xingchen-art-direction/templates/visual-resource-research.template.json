@@ -1,0 +1,60 @@
+{
+  "visual_resource_preflight": {
+    "ran_at_stage": "visual-direction",
+    "visual_resource_research_path": "visual-resource-research.md",
+    "visual_resource_research_json_path": "visual-resource-research.json",
+    "research_sources": [
+      {
+        "label": "",
+        "url_or_path": "",
+        "source_kind": "github|official_docs|local_asset|user_material|brand_asset|package_docs|model_skill",
+        "used_for": "",
+        "provenance_or_license_note": ""
+      }
+    ],
+    "source_reality": {
+      "real_assets_available": [],
+      "must_preserve_pixels": [],
+      "can_generate_or_rebuild": [],
+      "missing_assets": [],
+      "honest_placeholder_policy": ""
+    },
+    "design_system_memory": {
+      "summary": "",
+      "tokens": {
+        "colors": [],
+        "typography": [],
+        "spacing": [],
+        "radius": [],
+        "stroke": [],
+        "motion": []
+      },
+      "rules": [],
+      "rationale": ""
+    },
+    "library_candidate_matrix": [
+      {
+        "candidate": "",
+        "category": "design_system|icon|brand_logo|svg_graphics|remotion|imagegen|3d|data_viz|animation",
+        "source_url": "",
+        "use_for": "",
+        "do_not_use_for": "",
+        "license_or_provenance_note": "",
+        "project_fit_score": 0,
+        "selected": false,
+        "reason": ""
+      }
+    ],
+    "selected_routes": {
+      "design_system_memory": "",
+      "icon_family": "not_needed",
+      "svg_graphics": [],
+      "remotion_packages": [],
+      "imagegen_models_or_skills": [],
+      "real_asset_sources": []
+    },
+    "prompt_pack_paths": [],
+    "rejected_defaults": [],
+    "lookdev_audit_hooks": []
+  }
+}

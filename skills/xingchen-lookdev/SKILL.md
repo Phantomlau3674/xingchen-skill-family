@@ -1,123 +1,137 @@
 ---
 name: xingchen-lookdev
-description: Use when a code-first candidate project needs motion-aware preview approval, gate evaluation, or selective rerender decisions before final render in the xingchen family.
+description: Review actual Xingchen and Remotion clips for comprehension, proof truth, mobile readability, sync, continuity, anti-PPT quality, and Preview Lock evidence. Lean mode uses rendered evidence and the preview scorecard; Extended and legacy projects use the historical contract.
 ---
 
 # Xingchen Lookdev
 
-## When to enter
+Judge the viewing experience, not planning completeness.
 
-Triggered during `lookdev`, after `xingchen-visual-compiler` writes scene motion specs and `video-project-graph` produces the render-pack, before `remotion-render-adapter` runs final render. Catches the common failure where a project is structurally valid but still ships flat, templated, unreadable, slide-like, or built on text-only motion promises. Do not approve final render from stills alone. Do not force a full-project rerender when the problem is isolated.
+## Mode
 
-## Stage owned
+Read `project-state.json`.
 
-`lookdev` | writeback: `project-state.json -> review.lookdev_gate_results[]` (and the Lookdev Approval). Exported audit artifact: `lookdev-gate-result.json`. Sets INV-LOOKDEV-BEFORE-RENDER.
+- `mode: "lean"`: follow this file.
+- `mode: "extended"` or legacy state without `mode`: read [extended-contract.md](references/extended-contract.md).
 
-## Ownership in family
+Lean rules override conflicting requirements in every template or reference loaded by this skill. Historical five-lock, chrome-whitelist, continuous-motion, L2/L3, camera-amplitude, package, and complete-board blockers are Extended-only.
 
-Canonical owner of the **scene composition audit** ([scene-composition-audit.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\scene-composition-audit.md)) and the **aesthetic review loop** ([aesthetic-review-loop.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\aesthetic-review-loop.md)). The pre-render scene composition pass is owned by `xingchen-visual-compiler`; the audit consumes the geometry fields written there and verifies them against `visual.director_board.scene_boards[]`.
+## Required Lean Evidence
 
-## Ironclad rules
+Review:
 
-- Approval requires real motion artifacts: `.mp4`, `.mov`, `.html`, Remotion component, or transparent asset. Stills are support only. Text-only VibeMotion descriptions are not evidence.
-- Adapter-created artifacts must be traceable through `render.plugin_adapter_runs[]`; missing input state refs, output paths, state writebacks, or candidate ids are lookdev blockers, not paperwork gaps.
-- AI video prompt requests are not preview evidence. AI video candidates are never proof; approve them only after the user/API has produced real files registered as Remotion-controlled `video_plate` artifacts with `render.ai_video_candidates[]`, safety review, proof exclusion policy, Remotion integration plan, and matching adapter trace.
-- Preview approval must audit consistency against each matching `visual.director_board.scene_boards[]` entry: `source_layer`, `arrangement_layer`, `brainstorming_layer`, `aesthetic_layer`, `frame_layer`, `detail_layer`, `component_layer`, `subtitle_layer`, and `tech_stack_layer`.
-- Preview approval must audit every adjacent transition against `visual.director_board.scene_edge_boards[]`: the selected bridge, continuity handles, transition method, cut moment, and anti-PPT risk must be visible in the motion artifact.
-- Failures must cite exact scene board or edge-board field paths, such as `scene-03.brainstorming_layer.anti_ppt_decision`, `scene-03.frame_layer.camera_path`, `scene-03.component_layer.primary_component`, `scene-05.subtitle_layer.must_not_cover`, or `edge-scene-03-to-scene-04.selected_bridge`. Vague failures like "not pretty enough" are invalid.
-- Any unsupported aesthetic rule must route to `manual_review_required` (INV-NO-SILENT-PASS) — never a fake pass.
-- Spark scenes: never approve `spark_3dgs` from a still, blank canvas, missing asset, or speculative plate. Procedural plates label as `procedural_splat_world`, not `true_3dgs_asset`. Fallback final quality requires explicit `approved_fallback_final` state and user acceptance.
+1. two hook candidates by default; a third only for an unresolved tradeoff
+2. two hardest-proof candidates by default; a third only for an unresolved tradeoff
+3. two payoff candidates by default; a third only for an unresolved tradeoff
+4. the complete preview
+5. a real-phone playback, transferred locally by default
 
-Other shared rules: see [cross-skill-invariants.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\cross-skill-invariants.md).
+All clips use the accepted script audio. Static boards, source code, API grep, and isolated stills cannot replace playable evidence.
 
-## Skill-local procedure
+When a scene has checkpoint evidence, use its declared profile: MG/diagram `entry-settled-exit`, proof `context-detail-hold`, footage `cut-in-action-peak-exit`, talking head `face-gesture-handoff`, or montage `group-open-rhythm-peak-group-exit`. Frames catch composition defects; clips remain the authority for timing, continuity, and sound.
 
-### Preview contract
+## Structured Preview Evidence
 
-Lookdev produces:
+Write `delivery.critical_previews[]` with exactly one of each role:
 
-- `lookdev-brief.md`
-- `lookdev-gate-result.json` and the state-backed `LookdevGateResult` entry
-- low-res motion slices for the first 1–3 critical scenes or scene types
-- actual VibeMotion candidate files for selected scene options when candidates are part of the plan
-- actual HyperFrames plugin candidate files and their `render.plugin_adapter_runs[]` trace when HTML/canvas candidates are part of the plan
-- actual AI video candidate files and their `render.ai_video_candidates[]` / `render.plugin_adapter_runs[]` trace when Seedance/manual generated-video plates are part of the plan; `render.ai_video_prompt_requests[]` alone is a handoff artifact, not lookdev evidence
-- optional stills as support only
+- `hook`
+- `hardest-proof`
+- `payoff`
 
-Recommended output paths: `lookdev-slices/*.mp4`, `vibemotion-candidates/*`, `lookdev-stills/*.png`, `preview-audit.json`.
+Each record includes:
 
-### Preview levels
+- two decodable local candidate clips with different hypotheses, or three when the unresolved tradeoff is recorded
+- selected candidate id, selected path, and a concrete viewing reason
+- matching `script.audio_ref`
+- positive duration
+- `phone-downsample` viewport
+- matching `script.timeline_revision`
+- review time
 
-- `L2 keyframe-stills` — validates scale, palette, safe areas. Not enough to approve final motion.
-- `L3 low-res-motion` — default approval surface. Short low-res motion slices with working timing and subtitles. Validates rhythm, proof readability, transition behavior, candidate viability.
-- `L4 full-preview` — full-resolution preview with audio. Use when the motion language is already trusted.
+Write equivalent evidence to `delivery.full_preview`.
 
-Defaults: new render work goes `L3 → L4`. `L2` is optional support, never the main gate.
+## Review Procedure
 
-### Approval gate prerequisites
+### Critical Candidate Challenge
 
-Render path may continue only when:
+Randomize candidate labels when practical. Watch pairwise with real audio and phone downsampling. Keep speech span, dimensions, and encoding conditions comparable. Reject a candidate if it improves spectacle while reducing comprehension, proof trust, or continuity.
 
-- `project-state.json` is current
-- Topic Lock, Script Lock, StoryMother Lock, Visual Lock all resolved
-- proof and script layers reviewed in state
-- `visual.director_board.status` is `completed` or `manual_review_required`
-- every reviewed scene has a non-generic `brainstorming_layer`, and every adjacent scene pair has a `scene_edge_boards[]` bridge
-- visual policy and exported review files consistent
-- every reviewed `render.scene_motion_specs[]` item back-references `visual.director_board.scene_boards[scene_id]`
-- VibeMotion candidate files exist for selected candidate ids
-- HyperFrames candidate files exist for selected candidate ids and every candidate id is linked from `render.plugin_adapter_runs[].candidate_ids`
-- AI video candidate files exist for selected candidate ids, every candidate id is linked from `render.plugin_adapter_runs[].candidate_ids`, and the candidate safety review says no false evidence, no readable claim text, no brand/IP issue, and no face/identity risk
-- Remotion plugin implementation or preview records identify affected `render.scene_motion_specs[]`, `render.jobs[]`, or render-pack paths when used
-- render-pack graph current for the target variant
-- `lookdev-gate.yaml` evaluation passes
-- relevant motion slices approved
-- Lookdev Approval written into `workflow.approvals`
+Check:
 
-### Recording-first motion review
+- the subject is visible immediately
+- proof remains readable without pausing
+- subtitle, thesis, and important-node hierarchy survives
+- motion reveals meaning rather than decorating a card
+- a diagram directly states its big question, small question, and relationship
+- scene-specific checkpoints expose the right risk rather than forcing one visual grammar
+- adjacent scenes vary shot grammar, scale, density, temperature, or energy for a semantic reason
+- a hero frame is judged only when `hero_scene_id` is intentionally selected
+- voice remains dominant; music ducks under dense speech; sound effects punctuate only meaningful peaks
+- transition endpoints do not jump, and the handoff still works with both adjacent scenes visible
+- effects preserve skin, highlight detail, natural blacks, source text, and proof contrast
 
-For human-narration projects: preview slices use the real recording (or a timing-identical proxy, never a generic placeholder voice); opening order follows spoken sequence even when scene numbering shifted; frames are ready when keywords land, not a beat late; dominant anchors hold long enough to be understood; custom scenes still read after duration stretch; subtitles stay subordinate; recording-file boundaries did not create a fake scene break inside one continuous spoken thought.
+Write the selected candidate and why it won. Preserve rejected candidates and hypotheses so a later full-piece regression can reverse the choice.
 
-### Scene composition audit (proof / UI / screenshot work)
+### Blind Full-Piece Review
 
-Before approving screenshot-heavy or proof-heavy scenes, run [scene-composition-audit.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\scene-composition-audit.md) to verify plate truth, geometry truth, region truth, read path, and exit safety against `visual.director_board.scene_boards[scene_id].frame_layer`. When a preview-frame manifest is available, pass `preview-audit.json` so overlap and safe-area failures are computed from actual pixels, not vibes.
+Without reading planning fields, ask the reviewer to:
 
-### What to verify in any approval
+- restate the thesis
+- identify confusing exits
+- name the least trusted proof
+- describe the main relationship in diagram scenes
 
-- proof readability and aspect/crop integrity (no non-uniform scaling on literal proof)
-- subtitle avoidance of dominant anchor and proof-critical pixels
-- one dominant visual anchor per scene, not multiple competing
-- approved frame strategy actually respected
-- piece feels like motion design, not a slide deck
-- rendered scenes honor `visual.director_board.scene_boards[]`: source units are preserved, arrangement beats land on time, aesthetic intent is visible, frame/camera/proof/subtitle regions are respected, component choices match the board, and the chosen stack still matches `tech_stack_layer.why_this_stack`
-- rendered scenes honor `brainstorming_layer.selected_direction`, use at least one declared continuity handle, and visibly avoid the stated `anti_ppt_decision`
-- adjacent scene cuts honor `scene_edge_boards[]`: the outgoing handle, incoming handle, selected bridge, cut moment, and transition primitive read as one knowledge flow rather than slide replacement
-- color script and style continuity read as one authored piece
-- selected aesthetic mode honored, not drifted into a different high-end family
-- VibeMotion candidates follow the approved script and have a Remotion promotion path
-- HyperFrames plugin candidates follow the approved scene board, preserve subtitle/proof-safe regions, and have a captured HTML/canvas, transparent asset, video plate, or Remotion promotion path
-- AI video candidates follow `tech_stack_layer.primary_stack: "gen_insert"` exactly: they fill only the bounded visual gap, contain no proof/subtitles/readable claims/UI evidence/logos/faces, and remain a muted Remotion `video_plate`
-- `render.plugin_adapter_runs[]` records match actual files and do not claim an adapter did planning work that belongs to director-board or visual-compiler
-- total-duration alignment is not hiding scene-internal timing drift
-- Spark route_status and actual_renderer_family match the asset actually loaded; `.rad` worlds use paged streaming with explicit LOD/foveation budget; Spark plate exposes `window.__XINGCHEN_SPARK_PLATE__` with load state, splat count, route status, runtime profile, canvas health
+Then identify the weakest semantic interval, whatever its length. For every repair, append `preview_review.revision_log[]` with scene id, interval, issue, action, real before/after artifacts, status, and verification time. Rewatch adjacent scenes after the local fix.
 
-### Result write-back rules
+Run three failure-specific passes before choosing that interval:
 
-- gate with `on_fail: block` halts the pipeline with a specific scene pointer + rule id
-- every failed gate records `scene_id`, `rule_id`, and one or more exact board paths from `source_layer`, `arrangement_layer`, `brainstorming_layer`, `aesthetic_layer`, `frame_layer`, `detail_layer`, `component_layer`, `subtitle_layer`, or `tech_stack_layer`; transition failures also record the exact `scene_edge_boards[].field` path
-- review-only aesthetic rule that cannot be defended yet → `manual_review_required`
-- write to `lookdev-gate-result.json` for audit
-- write the same result back into state when `project-state.json` exists
-- plugin failures should cite the adapter trace and the director-board field it failed to realize, for example `render.plugin_adapter_runs[2].output_paths` plus `scene-03.frame_layer.subtitle_safe_region`
-- AI video failures should cite both the candidate and board path, for example `render.ai_video_candidates[0].safety_review.no_readable_claim_text` plus `scene-02.tech_stack_layer.why_this_stack`
-- document geometry blockers explicitly when scene composition audit fails
-- if a motion slice fails, capture affected `scene_id` values and reroute selectively (no blind full-project rerender)
+- `caption-only-static`: hide subtitles and exact labels; if the picture no longer changes or advances meaning, captions were masking a static scene;
+- `semantic-subject-too-small`: at phone size, confirm the essential actors and their relationship remain identifiable without zooming, even when all text is readable;
+- `transition-anchor-break`: watch the previous scene, the interval, and the next scene together; require one carried physical anchor or record an intentional world reset.
 
-## References
+Do not convert these checks into a constant-motion rule. A deliberate hold is valid when the held image carries the active idea and the review says why it should remain still.
 
-- [plugin-adapter-policy.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\plugin-adapter-policy.md)
-- [aesthetic-review-loop.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\aesthetic-review-loop.md)
-- [scene-composition-audit.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\scene-composition-audit.md)
-- [lookdev-gate-result-contract.md](C:\Users\liuzh\.codex\skills\xingchen-lookdev\references\lookdev-gate-result-contract.md)
-- [spark-3dgs-world-route.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\spark-3dgs-world-route.md) for Spark scene approval rules
-- [renderer-families.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\renderer-families.md) for `actual_renderer_family` honesty
+### Platform Draft
+
+Record the real device and check time. Verify safe regions, crop, subtitle size, proof visibility, and audio behavior. Transfer locally by default. Do not upload a platform draft, publish, or create a remote project without explicit user authorization.
+
+## Preview Decision
+
+Use [preview-quality-scorecard.md](../xingchen-next/references/preview-quality-scorecard.md) and [lean-invariants.md](../xingchen-next/references/lean-invariants.md).
+
+Use the seven dimensions as diagnostic prompts, not a release equation. Numeric scores are optional and advisory. Preview Lock requires real candidate selection, a current full preview, completed blind review, real-device platform check, and no blocking issue.
+
+## Machine Checks
+
+Use automation for:
+
+- missing, empty, black, or transparent media
+- asset failures
+- text overflow and safe-region overlap
+- proof distortion
+- audio/subtitle timing drift
+- deterministic render failures
+
+Run the actual media verifier before visual review:
+
+```powershell
+node ..\xingchen-next\scripts\verify-media-evidence.mjs <project-state.json>
+```
+
+It uses `ffprobe` plus full FFmpeg decode. File existence, extension, and API presence are not media proof.
+
+Do not use API presence, particle count, camera amplitude, L2/L3 labels, or constant motion as quality scores.
+
+## Creator And Style Checks
+
+When the avatar appears, verify it is the fixed cat-director asset and does not cover proof or subtitles.
+
+Run style-specific checks only when `visual_policy.reference_style.selected` is `true`. An unselected reference style cannot add blockers.
+
+## Preview Lock
+
+Approve `Preview Lock` only after all structured evidence is decodable, every preview matches the current `script.timeline_revision`, candidate winners survive the assembled full piece, and no blocker remains.
+
+Preview Lock authorizes entry into `final-delivery`; it does not claim that the final render already exists.
+
+Write failures with scene ids or timestamps and repair the narrowest artifact.

@@ -24,6 +24,37 @@ Status: `{{status}}`
 - Skill ref: `superpowers/brainstorming`
 - Required for: every scene frame design, every scene knowledge action, and every scene-to-scene flow decision
 - Output rule: each scene and edge records options considered, selected direction, why selected, continuity handle, and anti-PPT decision before Visual Lock.
+- Language-game rule: key phrases and metaphors must resolve into public scene criteria: source meaning, viewer action, object behavior, camera reveal, on-screen text purpose, tech-stack reason, or lookdev criterion.
+
+## Visual Collaboration
+
+- Status: {{visual_collaboration_status}}
+- Recording / beat basis: {{recording_or_beat_basis}}
+- Options presented: {{options_presented}}
+- Selected option: {{selected_option}}
+- Rejected options: {{rejected_options}}
+- User feedback or assumptions: {{user_feedback_or_assumptions}}
+- Short-video constraints: {{short_video_constraints}}
+- Lessons applied: {{lessons_applied}}
+- Unresolved concerns: {{unresolved_visual_concerns}}
+
+## Language Game Correction
+
+| Phrase | Production game | Public criterion | Corrected use | Route |
+|---|---|---|---|---|
+| {{language_game_phrase}} | {{language_game}} | {{language_game_public_criterion}} | {{language_game_corrected_use}} | {{language_game_route}} |
+
+## Visual Resource Preflight
+
+- Research artifact: {{visual_resource_research_path}}
+- Design system memory: {{design_system_memory}}
+- Selected icon family: {{selected_icon_family}}
+- Selected SVG/vector tools: {{selected_svg_tools}}
+- Selected Remotion packages: {{selected_remotion_packages}}
+- Selected imagegen routes: {{selected_imagegen_routes}}
+- Prompt pack paths: {{prompt_pack_paths}}
+- Rejected defaults: {{rejected_defaults}}
+- Lookdev audit hooks: {{lookdev_audit_hooks}}
 
 ## Component Registry Plan
 
@@ -83,6 +114,9 @@ Director sentence: {{director_sentence}}
 - Why selected: {{why_selected}}
 - Continuity handles: {{continuity_handles}}
 - Anti-PPT decision: {{anti_ppt_decision}}
+- Resource route: {{resource_route}}
+- Prompt pack ref: {{prompt_pack_ref}}
+- Language-game correction: {{language_game_correction}}
 
 #### 4. Aesthetic Layer
 
@@ -119,6 +153,7 @@ Director sentence: {{director_sentence}}
 - Component props brief: {{component_props_brief}}
 - Fallback component: {{fallback_component}}
 - Kit extension needed: {{kit_extension_needed}}
+- Library/package trace: {{library_package_trace}}
 - Primary stack: `{{primary_stack}}`
 - Integration mode: {{integration_mode}}
 - Why this stack: {{why_this_stack}}

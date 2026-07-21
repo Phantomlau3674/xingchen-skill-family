@@ -36,6 +36,7 @@ Confirm the approved regions still map to the real frame:
 - `anchor_region`
 - `proof_regions`
 - `subtitle_safe_region`
+- `subtitle_background_policy`
 - `camera_window`
 
 If motion, crop, or resize moved the plate, the regions must be revalidated, not assumed.
@@ -47,6 +48,16 @@ Check the actual reading order:
 - what lands first
 - what stays readable long enough
 - what gets blocked by subtitles, chrome, or transition motion
+
+### 4.5 Subtitle Background Truth
+
+If the render uses stroke, translucent boxes, or rounded subtitle backgrounds, inspect an actual frame with the longest expected caption:
+
+- no glyphs, descenders, strokes, or second-line text are clipped by the box
+- padding remains visible after 9:16 crop and platform UI safe areas
+- the background does not cover proof pixels, source nouns, faces, or the dominant anchor
+- rounded corners do not make Chinese text look cramped on mobile
+- the background is a readability aid, not a substitute for a clean subtitle-safe layout
 
 ### 5. Exit Safety
 
@@ -84,6 +95,7 @@ Block approval when any of these happen:
 - the crop hides the noun, result, or action the claim depends on
 - callouts or highlights point to the wrong area after motion
 - subtitles invade a proof-critical region
+- subtitle backgrounds clip text, obscure proof/source regions, or become the dominant visual card
 - the scene can only be understood when paused
 - Spark route status overclaims the actual loaded asset
 - a Spark preview is blank, missing its asset, or lacks runtime health evidence

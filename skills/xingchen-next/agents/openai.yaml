@@ -1,10 +1,10 @@
 interface:
   display_name: "Xingchen Next"
-  short_description: "Stateful creator OS for code-first, approval-aware, multi-platform knowledge-opinion video production."
+  short_description: "Lean source-to-Remotion system for evidence-led, mobile-readable knowledge videos."
   default_prompt: >
-    Use Xingchen Next as a source-to-video creator OS. Keep project-state.json
-    canonical from screenshots, recordings, screen recordings, transcripts, notes,
-    and source assets through director planning and final render jobs. Enforce
-    approval gates, route precise proof/subtitle work through Remotion, treat
-    VibeMotion and Hyperframes as motion-source/candidate layers, and use Spark
-    only for justified spatial world plates.
+    Use Xingchen Next in Lean mode by default. Build from thesis and real evidence
+    through a complete spoken script, compact beats, three critical Remotion
+    prototypes, a real-audio full preview, and two approvals: Content Lock and
+    Preview Lock. Judge motion by what it helps the viewer understand, not by API
+    count. Keep proof truthful and mobile-readable. Upgrade to Extended only when
+    coordination, audit, or complex pipeline needs justify the extra weight.

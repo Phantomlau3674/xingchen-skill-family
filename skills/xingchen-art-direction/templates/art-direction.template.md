@@ -91,6 +91,87 @@ Example:
 - proof cropped into decorative cards
 - side bubbles that repeat the narration instead of adding meaning
 
+## 3.5 Huashu Taste Preflight
+
+- medium_persona:
+- core_asset_protocol:
+- direction_options:
+- selected_direction:
+- anti_slop_bar:
+- placeholder_policy:
+- continuous_motion_rule:
+- lookdev_five_axis_plan:
+
+Example:
+
+- `medium_persona`: `motion director + information designer, not web UI designer`
+- `core_asset_protocol`: `real screenshots are proof; missing product image blocks hero scene; no CSS silhouette fallback`
+- `direction_options`: `safe_professional / kinetic_immersive / poetic_distinctive, each with different metaphor and chrome family`
+- `selected_direction`: `kinetic_immersive because the thesis depends on process pressure, killed safe_professional as too report-like, killed poetic_distinctive as too indirect`
+- `anti_slop_bar`: `fake dashboards, decorative gradient glow, status chips, generated proof UI, stock-photo filler`
+- `placeholder_policy`: `honest labeled placeholder only when the source asset is missing`
+- `continuous_motion_rule`: `carry the proof region rectangle and one red thread across scene edges`
+- `lookdev_five_axis_plan`: `thesis_fit, hierarchy, craft, clarity, originality must all score >= 7; overall >= 8`
+
+## 3.52 GitHub Design Skill Intake
+
+- source_ref:
+- fact_check:
+- core_assets:
+- design_system:
+- direction_choice:
+- anti_slop_bar:
+- verification_route:
+- five_dimension_review_plan:
+- not_needed_reason:
+
+Example:
+
+- `source_ref`: `github-design-skill-intake.md`
+- `fact_check`: `no recent product/version claims; source screenshots verified from project asset manifest`
+- `core_assets`: `logo not needed; source screenshots are proof; missing UI detail uses labeled placeholder`
+- `design_system`: `warm desk/cool city palette, 8px radius cap for cards, proof text owned by Remotion`
+- `direction_choice`: `selected source-led cinematic workspace; killed generic premium dark tech and template dashboard`
+- `anti_slop_bar`: `no purple gradient hero, no decorative orbs, no fake SVG product, no random glass card stack`
+- `verification_route`: `lookdev L3 motion slice + screenshot safe-zone check + component grep`
+- `five_dimension_review_plan`: `philosophy/hierarchy/detail/functionality/innovation; hierarchy/detail/functionality >= 7`
+- `not_needed_reason`: `only if no design-heavy/brand/product/UI scene exists`
+
+## 3.55 Language Game Correction
+
+| Phrase | Production game | Public criterion | Corrected use | Route |
+|---|---|---|---|---|
+| `{{phrase}}` | `{{game}}` | `{{public_criterion}}` | `{{corrected_use}}` | `keep / rewrite / show-through-motion / move-to-proof / remove / manual-review` |
+
+Example:
+
+- `电影感` -> camera reveals a new relation between proof plate and thesis object; no static title-card hold over 12 frames.
+- `更丰富` -> at least three scene jobs use different visual vocabulary: proof crop, concept structure, payoff return.
+
+## 3.6 Visual Resource And Prompt Preflight
+
+- source_reality:
+- design_system_memory:
+- library_candidate_matrix:
+- selected_icon_family:
+- selected_svg_tools:
+- selected_remotion_packages:
+- selected_imagegen_routes:
+- prompt_pack_paths:
+- rejected_defaults:
+- lookdev_audit_hooks:
+
+Example:
+
+- `source_reality`: `real screenshots are proof; generated metaphor objects are allowed; missing product logo blocks hero frame`
+- `design_system_memory`: `tokens + rules + rationale captured in visual-resource-research.md; palette and type values are exact`
+- `library_candidate_matrix`: `Lucide selected for UI glyphs; Simple Icons only for verified brand marks; @remotion/paths selected for proof-region morph; D3 selected for data axis; Rough.js rejected because sketch tone weakens trust`
+- `selected_remotion_packages`: `@remotion/paths, @remotion/transitions, @remotion/motion-blur`
+- `selected_imagegen_routes`: `imagegen_2d for physical metaphor props; no generated proof UI`
+- `prompt_pack_paths`: `imagegen-prompt-pack.md`, `imagegen-prompt-pack.json`
+- `rejected_defaults`: `single gradient hero, SVG fake product, card stack with status chips, one-line image prompt`
+- `lookdev_audit_hooks`: `grep @remotion/paths import; OCR generated PNGs; verify prompt asset imported by scene component`
+
 ## 4. Forbidden List
 
 List at least 5 patterns.

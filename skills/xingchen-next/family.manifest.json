@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "family": "xingchen",
+  "router": "xingchen-next",
+  "required": [
+    "xingchen-editorial-room",
+    "xingchen-script-polish",
+    "xingchen-director-board",
+    "xingchen-visual-compiler",
+    "xingchen-lookdev",
+    "remotion-render-adapter"
+  ],
+  "on_demand": [
+    "xingchen-asset-intake",
+    "xingchen-transcribe",
+    "xingchen-proof-pack",
+    "xingchen-art-direction",
+    "xingchen-vox-collage"
+  ],
+  "optional": [
+    "xingchen-speech-rhythm",
+    "xingchen-3dgs-retrieval"
+  ],
+  "claude_profile": {
+    "profile_relative_to_skills_root": "../profiles/claude-skills.txt",
+    "include_all_route_owners": true
+  },
+  "contracts": {
+    "lean_invariants": "./references/invariants.lean.json",
+    "extended_invariants": "./references/invariants.extended.json"
+  }
+}

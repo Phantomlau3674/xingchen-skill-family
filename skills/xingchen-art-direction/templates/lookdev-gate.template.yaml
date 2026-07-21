@@ -7,6 +7,7 @@ meta:
   contract_notes:
     - blocking_rules and advisory_rules must be machine-checkable
     - aesthetic_rules are review-only until a detector contract exists
+    - applies_when gates conditional rules; if the evaluator cannot resolve the condition, report manual_review_required instead of passing silently
 
 blocking_rules:
   - rule_id: evidence_coverage
@@ -97,6 +98,132 @@ blocking_rules:
     on_fail: block
     failure_message: "Lookdev preview triggered at least one machine-detectable forbidden pattern."
 
+  - rule_id: scene_contract_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every non-rest scene
+    metric: missing_vox_scene_contract_fields
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Vox/Remotion-influenced scenes must declare world base, mid cutouts, foreground proof carrier, Remotion overlay, voiceover beat, safe zones, prop controls, and lookdev evidence."
+
+  - rule_id: world_continuity_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every adjacent scene pair
+    metric: editorial_world_background_drift_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Editorial collage scenes must preserve the approved paper/grid world unless StoryMother records a world-break reason."
+
+  - rule_id: layer_stack_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every non-rest scene
+    metric: flat_baked_scene_layer_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Vox/Remotion-influenced scenes must keep separate world, cutout, foreground proof, marker, and Remotion overlay layers instead of one baked card or bitmap."
+
+  - rule_id: remotion_proof_ownership_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: all proof, chart, number, label, and subtitle layers
+    metric: generated_plate_owned_proof_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Generated image/video plates may not own Chinese text, proof labels, data, charts, subtitles, or audited claims."
+
+  - rule_id: bitmap_text_ocr_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: generated image or video plates
+    metric: generated_plate_readable_cjk_hit_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Text-free generated plates must not contain readable Chinese text unless they are user-provided source screenshots."
+
+  - rule_id: mobile_downsample_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: 9:16 or mobile-target variants
+    metric: mobile_downsample_unreadable_core_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Foreground proof, kinetic numbers, and subtitles must remain readable after phone-size downsampling."
+
+  - rule_id: safe_zone_overlap_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every scene
+    metric: style_safe_zone_overlap_ratio
+    operator: "<="
+    threshold: 0.05
+    on_fail: block
+    failure_message: "Subtitles, proof crops, marker strokes, and cutouts may not cover each other in the approved safe zones."
+
+  - rule_id: foreground_dominance_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: hook, proof, peak, and payoff scenes
+    metric: foreground_proof_carrier_present
+    operator: "=="
+    threshold: true
+    on_fail: block
+    failure_message: "Each important scene needs one dominant foreground proof carrier; secondary cutouts cannot replace the claim object."
+
+  - rule_id: red_marker_semantics_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: scenes using red offset markers or strokes
+    metric: decorative_red_marker_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Red marker strokes must carry separation, tension, proof focus, route, warning, or emphasis; random red decoration is not accepted."
+
+  - rule_id: beat_sync_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: scenes with transcript or speech-rhythm timing
+    metric: proof_reveal_keyword_offset_frames
+    operator: "<="
+    threshold: 8
+    on_fail: block
+    failure_message: "Proof, chart, number, or marker reveals must land within the keyword beat window when timing evidence exists."
+
+  - rule_id: motion_density_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every non-rest scene
+    metric: style_motion_density_violations
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Editorial motion needs one dominant motion idea at a time; scenes with too many simultaneous movers or no important motion must be blocked."
+
+  - rule_id: final_hold_frame_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: every non-rest scene
+    metric: unreadable_final_hold_frame_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "The final held frame must communicate the scene claim long enough to read without relying on motion-only context."
+
+  - rule_id: prop_control_smoke_test
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: Remotion components implementing editorial collage scenes
+    metric: missing_core_style_prop_controls
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Editorial collage components must expose x/y/scale/crop/opacity/marker/halftone/grid controls instead of hard-coded all-in-one bitmaps."
+
+  - rule_id: proof_source_trace_check
+    applies_when: visual.visual_policy.visual_style_influence.source == "vox_remotion_visual_style"
+    applies_to: scenes where the claim requires proof
+    metric: foreground_proof_missing_source_trace_count
+    operator: "=="
+    threshold: 0
+    on_fail: block
+    failure_message: "Foreground proof carriers must trace to source, evidence, or state refs when the scene claim requires proof."
+
 advisory_rules:
   - rule_id: palette_drift
     metric: out_of_palette_usage_count
@@ -159,6 +286,17 @@ aesthetic_rules:
         - audio_preview_when_available
       on_unresolved: manual_review_required
       failure_message: "Do not ship cheap-pattern hits that are not covered by the machine blacklist."
+
+    - rule_id: language_game_visibility
+      applies_to: scenes with corrected key phrases or metaphors
+      rule_class: review_only
+      source: visual.director_board.brainstorming_contract
+      required_review_inputs:
+        - scene_board
+        - motion_slice
+        - on_screen_text
+      on_unresolved: manual_review_required
+      failure_message: "Key creative terms must have visible public criteria in the preview, not private taste labels."
 
     - rule_id: hero_frame_law
       applies_to: opening and hero frames
