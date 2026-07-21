@@ -6,8 +6,8 @@ This file exists so voice-routing knowledge stays visible from the family shell 
 
 Detailed execution notes still live in:
 
-- [voice-cloning-routing.md](C:\Users\liuzh\.codex\skills\remotion-render-adapter\references\voice-cloning-routing.md)
-- [amd-wsl-voxcpm2.md](C:\Users\liuzh\.codex\skills\remotion-render-adapter\references\amd-wsl-voxcpm2.md)
+- [voice-cloning-routing.md](../../remotion-render-adapter/references/voice-cloning-routing.md)
+- [amd-wsl-voxcpm2.md](../../remotion-render-adapter/references/amd-wsl-voxcpm2.md)
 
 ## Recommended Order
 

@@ -164,7 +164,7 @@ Think about:
 
 ## The Variety Checkpoint
 
-Before Visual Lock, check:
+Before Lean Preview Lock, or before Extended Visual Lock, check:
 
 1. **Color variety**: do at least 3 scenes have noticeably different color temperatures?
 2. **Layout variety**: are at least 2 different layout structures used?
@@ -177,12 +177,4 @@ If fewer than 4 of these 6 checks pass, the visual direction is too monotonous.
 
 ## State Writeback
 
-Record contrast decisions in `project-state.json.visual.contrast_map`:
-
-- `color_temperature_shifts`: list of scene transitions where temperature changes
-- `layout_pattern_sequence`: the layout pattern used per scene
-- `scale_drama_scenes`: scenes with extreme scale choices
-- `density_range`: min and max density across all scenes
-- `motion_character_map`: motion character assigned per scene
-- `monotony_test_result`: pass/fail with notes on which dimensions vary
-- `variety_checkpoint_score`: count of passed checks out of 6
+In Lean mode, record only the film-changing relation to the previous scene in `extensions.visual_intent.scenes[].contrast_from_previous`. Extended projects may retain the historical detailed `visual.contrast_map`.

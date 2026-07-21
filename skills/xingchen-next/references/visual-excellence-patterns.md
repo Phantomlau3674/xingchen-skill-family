@@ -6,19 +6,19 @@ The goal: when building a scene, the creator should not be checking a list of pr
 
 ## The Hero Frame Principle
 
-Every video has one frame that matters most. Not the first frame, not the last — the frame that carries the thesis's most powerful visual proof.
+Some videos have one frame that carries the thesis's most powerful visual proof or payoff. Use a hero frame when that is true; do not force one onto montage, observational, or rhythm-led work.
 
 Finding it:
 - which scene contains the most surprising fact, the strongest evidence, or the most memorable number?
 - if a viewer could only see ONE still image from this video, which scene would make them understand and feel the thesis?
-- this is the hero frame. It gets the most visual investment: largest scale, strongest color, most deliberate composition.
+- when one candidate clearly carries the film, treat it as the hero frame and give it the most deliberate composition.
 
 How to use it:
-- identify the hero frame during story mother construction, not during visual direction
-- record it in `project-state.json.visual.hero_frame_scene_id`
+- identify an optional hero scene during Lean scene production, not as a mandatory planning ritual
+- record it in `extensions.visual_intent.hero_scene_id` only when selected
 - during visual direction, design the hero frame FIRST. Then design the scenes around it to create contrast that makes the hero frame stand out more.
 - the hero frame's dominant element should be 2-3x larger than anything else in the video
-- if you cannot identify a hero frame, the thesis may not be visually expressible — go back to proof binding
+- if no single frame should dominate, invest in sequence contrast, continuity, or rhythmic progression instead
 
 ## Scene Job Thinking
 
@@ -152,6 +152,7 @@ Before visual direction, every scene should have these decisions explicitly made
 7. **Motion character**: snappy (150-250ms) / smooth (300-500ms) / slow (600-1000ms) / held?
 8. **Density**: minimal (1-2 elements) / moderate (3-5) / dense (6+)?
 9. **Estimated duration** (`est_duration_sec`): how long should this scene be?
+10. **Creator signature role**: absent / identity marker / host cue / transition mark / emotional return. If present, explain why it helps this scene and what proof/subtitle region it must avoid.
 
 Duration thinking:
 - rest scenes: 2-4 seconds (long enough to breathe, short enough not to bore)
@@ -162,14 +163,14 @@ Duration thinking:
 - if a scene exceeds 30 seconds, ask whether it should be split into two scenes with different jobs
 - if total video duration / scene count > 25 seconds average, review whether scenes carry unnecessary padding
 
-These decisions are not aesthetic preferences — they are scene specifications that flow directly from the scene's job and energy level. Record them in `project-state.json.visual.scene_decisions[]`.
+These decisions flow from the scene's job and energy. In Lean mode, keep only film-changing `job`, three-level `energy`, speech cues, contrast target, and candidate hypotheses under `extensions.visual_intent.scenes[]`.
 
 ## The "Best Creator" Self-Test
 
 Before finalizing visual direction, run this self-test:
 
 1. If a top Douyin creator in this topic area saw this video in their feed, would they stop scrolling? If not, the hook needs work.
-2. Can you identify the single most visually striking frame in the video? If you cannot point to it instantly, there is no hero frame.
+2. If the film declares a hero scene, is its decisive frame unmistakable? If no hero is declared, does the sequence still create memorable contrast or progression?
 3. If you watch the video at 2x speed with no audio, can you still feel when the important moments happen? If everything looks the same speed, the energy curve is flat.
 4. Would you screenshot any frame to send to a friend? If not, the video is informative but not memorable.
 5. If you showed 4 consecutive middle scenes as stills to someone who has never seen the video, could they guess the scene order? If the scenes are interchangeable, the visual direction lacks progression.
@@ -180,28 +181,29 @@ These are not pass/fail gates — they are thinking prompts that force honest ev
 
 **During story mother construction:**
 - assign energy levels to every scene
-- identify the hero frame
+- identify an optional hero scene or choose a sequence-led strategy
 - name each scene's job
 - sketch the three-act energy shape
 
 **During visual direction:**
 - run the source material director pass first, so every scene's picture design comes from current material and recording rhythm
 - fill out the scene decision card for every scene
-- design the hero frame first
+- design the hero frame first only when one is intentionally selected
 - design the hook second
 - design remaining scenes to create contrast with the hero and hook
 - run the "best creator" self-test
 
 **During lookdev:**
 - verify that rendered scenes match their assigned energy levels
-- verify that the hero frame is visually dominant
+- verify the selected hero frame is dominant, or verify the sequence-led strategy has readable progression
 - verify that scene-to-scene contrast is visible at 2x speed
 - verify that the energy curve reads clearly
 
 ## State Writeback
 
-Record in `project-state.json.visual`:
-- `hero_frame_scene_id`: the scene that carries the most important visual moment
-- `scene_decisions`: array of per-scene decision cards (job, energy, layout, color_temp, scale_moment, evidence_role, motion_character, density)
-- `color_story`: { act1_palette, act2_variations, act3_resolution }
-- `best_creator_self_test`: { hook_stop, hero_identifiable, energy_at_2x, screenshot_worthy, order_guessable }
+In Lean mode, write only rendered-film decisions to `extensions.visual_intent`:
+
+- optional `hero_scene_id`
+- per-scene `job`, `energy`, `speech_cues`, `contrast_from_previous`, and critical `candidate_hypotheses`
+
+Extended projects may retain their historical `visual.*` decision maps.
