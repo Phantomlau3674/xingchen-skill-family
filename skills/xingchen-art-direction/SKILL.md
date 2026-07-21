@@ -1,131 +1,122 @@
 ---
 name: xingchen-art-direction
-description: Use after xingchen-director-board and before visual-compiler, to lock the whole-piece visual meta-concept, project-original chrome whitelist, anti-reference, and machine-checkable lookdev gates for any render-bound xingchen project.
+description: "Create a coherent whole-piece visual language for Xingchen videos: hierarchy, palette, typography, continuity, proof treatment, creator identity, and conditional reference-style adaptation. Lean mode writes only film-changing decisions; Extended and legacy projects use the historical contract."
 ---
 
 # Xingchen Art Direction
 
-## When to enter
+Create a visual system that strengthens the argument. Do not make the project look consistent by forcing every topic into the same template.
 
-Triggered during `visual-direction`, after `xingchen-director-board` writes `project-state.json.visual.director_board`, before `xingchen-visual-compiler`. The project needs an explicit whole-piece visual direction decision - not a vibe, not a template pick. Refuses to run without at least one concrete `anti_reference`. Do not let `xingchen-visual-compiler` begin before the three approval surfaces below are signed off.
+## Mode
 
-This skill consumes the director board and extracts/refines the whole-piece aesthetic system only. It does not own page-by-page, beat-by-beat, per-scene director work, scene binding, component choice, subtitle placement, or technical-stack justification; those decisions live in `visual.director_board.scene_boards[]`.
+Read `project-state.json`.
 
-## Stage owned
+- `mode: "lean"`: follow this file.
+- `mode: "extended"` or legacy state without `mode`: read [extended-contract.md](references/extended-contract.md).
 
-`visual-direction` (whole-piece aesthetic layer) | writeback: `project-state.json -> visual.visual_policy` (and the Visual Lock approval). Exported review surfaces: `art-direction.md`, `visual-language-kit.json`, `lookdev-gate.yaml`. These are derived once state exists; edit state-backed decisions first, then re-export. `project-state.json.visual.director_board` remains owned by `xingchen-director-board`.
+Lean rules override conflicting requirements in every template or reference loaded by this skill. Historical Visual Lock, chrome whitelist, three-candidate arbitration, continuous-motion, global resource preflight, and style-specific blocker rules are Extended-only unless the Lean contract explicitly selects them.
 
-## Ownership in family
+## Lean Inputs
 
-This skill is the canonical operator of the **aesthetic-grounding method**. The method file lives at [aesthetic-grounding.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\aesthetic-grounding.md) (kept under `xingchen-next/references` because more than one skill reads it), but only this skill writes the resulting `visual.visual_policy.*` fields. Other skills reference the method but do not invoke it independently.
+Read:
 
-## Ironclad rules
+- thesis, audience, platform, and source constraints
+- scene `knowledge_change`, `dominant_visual`, `safe_region`, and semantic relationships
+- current `visual_policy`
+- [lean-invariants.md](../xingchen-next/references/lean-invariants.md)
 
-- **No `anti_reference`, no output.** This skill refuses to generate `art-direction.md` from nothing. The whole purpose is rejecting a concrete bad direction before locking a new one.
-- **No completed director board, no aesthetic lock.** Refuse to proceed unless `project-state.json.visual.director_board.status` is `completed` or `manual_review_required` and every StoryMother scene has a concrete `scene_boards[]` entry.
-- **Adversarial flow is mandatory** - three mutually exclusive `meta_concept` candidates, fatal-weakness critique, arbiter kills two. No blends by default. See [adversarial-flow.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\adversarial-flow.md).
-- **Precedent gallery is inspiration, not a menu.** `visual-language-kit.json` must be project-original output, never a starter template imported wholesale. Critic must kill any proposal that reuses a precedent's chrome family + palette family + motion grammar together.
-- INV-VISUAL-LOCK-BEFORE-RENDER, INV-NO-PARALLEL-TRUTH, INV-NO-SILENT-PASS apply.
+## Lean Output
 
-Other shared rules: see [cross-skill-invariants.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\cross-skill-invariants.md).
+Keep the required `visual_policy.creator_avatar` and `visual_policy.reference_style` in canonical state.
 
-## Skill-local procedure
+When extra whole-piece direction is needed, write a compact object under `extensions.art_direction`:
 
-### Step 0 - Director board intake
+```json
+{
+  "visual_thesis": "",
+  "hierarchy_rule": "",
+  "palette_logic": "",
+  "typography_rule": "",
+  "continuity_anchor": "",
+  "motion_character": "",
+  "allowed_stillness": "",
+  "proof_treatment": "",
+  "anti_template_rules": []
+}
+```
 
-Before creative ignition or aesthetic mode selection, read `project-state.json.visual.director_board` and its `board_md_path` / `board_json_path`. Treat `global_director_thesis`, `aesthetic_system`, `subtitle_system`, `tech_stack_policy`, and `lookdev_acceptance` as upstream constraints.
+Do not add fields that cannot change the rendered film or preview review.
 
-Required behavior:
+Use `extensions.visual_intent` as the shared Lean bridge when sequence decisions matter:
 
-- confirm every `scene_boards[]` item has specific source, arrangement, aesthetic, frame, detail, component, subtitle, and tech-stack layers
-- extract cross-scene aesthetic patterns, recurring motifs, palette pressure, typography posture, motion rhythm, and cheapness risks from the board
-- refine only the whole-piece `meta_concept`, `anti_reference`, `forbidden_list`, `allowed_chrome`, `palette_lock`, `typography_lock`, `motif_system`, and `hero_scene_shortlist`
-- preserve board-owned scene decisions; if a scene board is missing or generic, send it back to `xingchen-director-board` instead of filling the gap here
+```json
+{
+  "timeline_revision": 1,
+  "hero_scene_id": null,
+  "scenes": [
+    {
+      "scene_id": "",
+      "job": "",
+      "energy": "low | medium | high",
+      "speech_cues": [],
+      "contrast_from_previous": "",
+      "candidate_hypotheses": []
+    }
+  ],
+  "audio_roles": {"anchor_ref": "", "followers": []}
+}
+```
 
-Do not proceed to `meta_concept`, chrome, palette, or renderer-family selection while `visual.director_board.status` is missing, `pending`, or `blocked`.
+Read [visual-excellence-patterns.md](../xingchen-next/references/visual-excellence-patterns.md), [energy-density-map.md](../xingchen-next/references/energy-density-map.md), [speech-rhythm-engine.md](../xingchen-next/references/speech-rhythm-engine.md), and [visual-contrast-system.md](../xingchen-next/references/visual-contrast-system.md) only to derive these film-changing cues. Do not copy their historical `visual.*`, StoryMother, Script Lock, or Visual Lock surfaces into Lean state.
 
-### Step 1 - Creative ignition
+## Creator Avatar
 
-Run [creative-ignition.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\creative-ignition.md) before any candidate is pitched. Write the result into `art-direction.md -> ## Ignition`:
+Default to:
 
-1. the content's essential verb
-2. at least 5 candidate symbolic worlds spanning at least 3 distinct domains
-3. the most tempting cliche direction (named, not implied)
-4. the viewer's likely second-two reaction
+`C:\Users\liuzh\Pictures\04_AI生成图片\2026-05\ChatGPT Image 2026年5月7日 15_14_14.png`
 
-Hard requirements: 5 worlds may not all stay inside software UI territory; if ignition collapses into "modern tech aesthetic", restart it.
+Use the fixed cat-director asset for creator identity instead of generating a temporary mascot. It may orient, host, transition, or close. It cannot replace proof.
 
-### Step 2 - Aesthetic method
+The broader Shanghai-night, warm-lamp, workbench style is conditional. Reusing the avatar does not automatically select that visual world.
 
-Run [aesthetic-grounding.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\aesthetic-grounding.md). Write back into `visual.visual_policy` (full field list in `project-state-contract.md` `VisualPolicy` section). Hard requirements:
+## Reference-Style Gate
 
-- taste thesis explicit, not implied
-- director board completed or routed to `manual_review_required`
-- selected aesthetic mode named, not implied; rejected paths recorded
-- benchmark canon concrete enough to review
-- forbidden cheap patterns named (`forbidden_list` at least 8 items)
-- hero frame governed by rules and points to a `scene_id`, not vibes
-- color script explicit across opening / middle / closing
-- voice route, prosody target, and mix posture explicit
-- any rule that can't be automated yet -> `manual_review_required`
-- recurring motifs are deliberate and few; hero quality concentrated in a `hero_scene_shortlist` of 2-3 scenes
+A named video, studio, illustrator, or visual style is unselected by default.
 
-### Step 3 - Strategy mode (one primary, no default blends)
+Select it only when state records:
 
-Choose one and document the cost:
+- `selected: true`
+- a concrete source
+- why it fits the current thesis and audience
+- traits to adapt
+- what must not be copied
 
-- `clarity_first_documentary` - best for proof-heavy work; less theatrical
-- `layered_human_complexity` - best for lived-in density; easier to clutter
-- `theatrical_control` - best for authored mood; easier to feel staged
-- `singular_iconic_frame` - best for hero shots and covers; easier to flatten sequence rhythm
+Only selected styles activate their references, templates, or lookdev checks. Never inject Vox, Kurzgesagt, 3Blue1Brown, PaperClip, or another style because a director left the style blank.
 
-Hybrid is allowed only when at least one other mode is rejected explicitly with the non-negotiable tradeoff stated.
+For a selected public video or template library, use [output-reconstruction-grammar.md](../xingchen-next/references/output-reconstruction-grammar.md). Adapt the causal system—semantic role, layout topology, continuity, hierarchy, motion choreography, audio role, and handoff—not copied wording, branding, or a style costume.
 
-### Step 4 - Adversarial flow (3 candidates -> kill 2)
+## Mobile Hierarchy
 
-Per [adversarial-flow.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\adversarial-flow.md):
+For Douyin-oriented work, start from:
 
-- `Proposer`: 3 mutually exclusive `meta_concept` candidates with different `chrome_family` values, attacking the `anti_reference` from different angles ("same family, different colors" does not count)
-- `Critic`: fatal weakness of each + which forbidden pattern it risks
-- `Arbiter`: pick 1, kill 2 explicitly; no blend
+- subtitles `58-64 px`
+- thesis labels `44-52 px`
+- important node labels `38-46 px`
 
-All three roles preserved in `art-direction.md -> ## Decision Trace`.
+Essential meaning must survive phone downsampling. Decorative text can be smaller only when removing it would not change comprehension.
 
-### Recording-first knowledge video lens
+## Semantic Relationship
 
-When the project is a spoken knowledge video:
+The main visual must carry the relationship, not tiny labels. For diagrams, preserve the explicit big question, small question, and relationship through type, layout, color, and motion.
 
-- lock 3-5 recurring motifs strong enough to carry the whole piece without template reuse
-- decide which 2-3 scenes are true hero scenes; downstream protects them first
-- prefer project-specific symbolic systems over generic "future tech" chrome
-- subtitle bars and HUD strips are support surfaces, not project identity
-- opening earns trust quickly even when bold; middle reuses approved motifs with variation; closing feels like payoff or return
+## Direction Selection
 
-## Output artifacts
+Offer multiple whole-piece systems only when an unresolved high-impact choice exists. Critical hook, hardest-proof, and payoff hypotheses are different: preserve two or three scene mechanisms until real clips can be compared. Otherwise produce one defended system and move to prototypes.
 
-`art-direction.md` required sections (reject the output if any are missing): `meta_concept`, `anti_reference`, `forbidden_list`, `allowed_chrome`, `evidence_rule`, `motion_rhythm`, `palette_lock`, `typography_lock`, `motif_system`, `hero_scene_shortlist`, `decision_trace`, `downstream_binding`, `user_signature_line`.
+Open Design, GitHub, Huashu, Lottie, GSAP, HyperFrames, image generation, and visual-vocabulary libraries are optional references. They are never automatic preflights.
 
-`visual-language-kit.json` is the machine-consumed whitelist for downstream: chosen `chrome_family`, locked palette and typography, every allowed chrome component, motion lexicon, forbidden component names, and how downstream raises `kit-extension-request`. Live project document, never a frozen menu import.
+## Handoff
 
-`lookdev-gate.yaml` is the machine-checkable red-line file used by `xingchen-lookdev`. Blocking rules cover at minimum: evidence coverage, proof legibility, max static run, component whitelist, forbidden pattern hits, subtitle/proof overlap, motion density.
+Send the compact direction plus scene contracts to `xingchen-visual-compiler`.
 
-## Downstream contract
-
-- `xingchen-visual-compiler` may only choose scene components and technical routes from `visual.director_board.scene_boards[].component_layer` and `.tech_stack_layer`; `visual-language-kit.json` constrains the whole-piece chrome language.
-- New components require `kit-extension-request.md`, never silent invention.
-- `video-project-graph` rejects components outside the approved kit and board plan.
-- `xingchen-lookdev` evaluates `lookdev-gate.yaml` plus exact `visual.director_board.scene_boards[]` layers before preview approval.
-
-## References
-
-- [creative-ignition.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\creative-ignition.md)
-- [adversarial-flow.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\adversarial-flow.md)
-- [aesthetic-grounding.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\aesthetic-grounding.md)
-- [forbidden-patterns.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\forbidden-patterns.md)
-- [precedent-gallery.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\precedent-gallery.md)
-- [chrome-kit-library.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\chrome-kit-library.md)
-- [meta-concept-examples.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\meta-concept-examples.md)
-- [art-direction.template.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\templates\art-direction.template.md)
-- [visual-language-kit.template.json](C:\Users\liuzh\.codex\skills\xingchen-art-direction\templates\visual-language-kit.template.json)
-- [lookdev-gate.template.yaml](C:\Users\liuzh\.codex\skills\xingchen-art-direction\templates\lookdev-gate.template.yaml)
-- [project-state-contract.md](C:\Users\liuzh\.codex\skills\xingchen-next\references\project-state-contract.md) - full `VisualPolicy` field list
+Acceptance depends on actual critical clips and full-preview evidence, not on filling a lookdev template.

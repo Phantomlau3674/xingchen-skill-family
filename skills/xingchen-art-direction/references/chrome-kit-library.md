@@ -14,5 +14,5 @@ Historical family names that may appear in old notes:
 Current rule:
 
 - every new project must create its own `visual-language-kit.json`
-- use [precedent-gallery.md](C:\Users\liuzh\.codex\skills\xingchen-art-direction\references\precedent-gallery.md) for inspiration only
+- use [precedent-gallery.md](./precedent-gallery.md) for inspiration only
 - if someone tries to "pick one from the library", stop and return to `creative-ignition.md`

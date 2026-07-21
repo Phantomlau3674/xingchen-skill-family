@@ -1,0 +1,3 @@
+interface:
+  display_name: "Xingchen 3DGS Retrieval"
+  short_description: "Find and vet 3DGS space assets for Aholo Viewer and Xingchen scenes"
