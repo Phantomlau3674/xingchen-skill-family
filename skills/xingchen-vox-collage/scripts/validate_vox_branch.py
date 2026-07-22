@@ -12,6 +12,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from input_fingerprints import (
+    FingerprintError,
+    compute_input_fingerprints,
+    resolve_input_path,
+)
+
 
 ROLES = {
     "plate",
@@ -188,6 +194,160 @@ def scene_timing(scene: dict[str, Any]) -> tuple[float | None, float | None]:
     if not isinstance(start, (int, float)) or not isinstance(end, (int, float)):
         return None, None
     return float(start), float(end)
+
+
+def probe_duration(
+    path: Path,
+    prefix: str,
+    errors: list[str],
+    warnings: list[str],
+    allow_pending: bool,
+) -> float | None:
+    ffprobe = shutil.which("ffprobe")
+    if ffprobe is None:
+        target = warnings if allow_pending else errors
+        target.append(f"{prefix} duration cannot be inspected because ffprobe is unavailable")
+        return None
+    result = subprocess.run(
+        [
+            ffprobe,
+            "-v",
+            "error",
+            "-show_entries",
+            "format=duration",
+            "-of",
+            "default=noprint_wrappers=1:nokey=1",
+            str(path),
+        ],
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        errors.append(
+            f"{prefix} duration cannot be inspected: "
+            f"{result.stderr.strip() or result.stdout.strip()}"
+        )
+        return None
+    try:
+        duration = float(result.stdout.strip())
+    except ValueError:
+        errors.append(f"{prefix} duration is not numeric: {result.stdout.strip()!r}")
+        return None
+    if duration <= 0:
+        errors.append(f"{prefix} duration must be positive")
+        return None
+    return duration
+
+
+def validate_input_identity(
+    project_root: Path,
+    scene_doc: dict[str, Any],
+    scenes: list[Any],
+    errors: list[str],
+    warnings: list[str],
+    allow_pending: bool,
+) -> str | None:
+    """Bind accepted evidence to the exact master, audio bytes, and scene timing."""
+
+    project = scene_doc.get("project")
+    if not isinstance(project, dict):
+        errors.append("scene-spec.json project must be an object")
+        return None
+    master_ref = project.get("source_master")
+    if not isinstance(master_ref, str) or not master_ref.strip():
+        record_pending(
+            "scene-spec project.source_master and input fingerprints are pending",
+            allow_pending,
+            errors,
+            warnings,
+        )
+        return None
+    try:
+        current = compute_input_fingerprints(project_root, scene_doc)
+    except FingerprintError as exc:
+        errors.append(f"cannot compute input fingerprints: {exc}")
+        return None
+
+    for field in [
+        "source_master_sha256",
+        "timeline_fingerprint",
+        "evidence_input_fingerprint",
+    ]:
+        stored = project.get(field)
+        if not isinstance(stored, str) or not re.fullmatch(r"[0-9a-f]{64}", stored):
+            record_pending(
+                f"scene-spec project.{field} is pending; run lock_vox_inputs.py --write",
+                allow_pending,
+                errors,
+                warnings,
+            )
+        elif stored != current[field]:
+            errors.append(
+                f"scene-spec project.{field} is stale: "
+                f"stored={stored} current={current[field]}"
+            )
+
+    master = resolve_input_path(project_root, master_ref, "scene-spec project.source_master")
+    master_probe = probe_media(
+        master,
+        "scene-spec source master",
+        errors,
+        warnings,
+        allow_pending,
+        require_audio=True,
+    )
+    master_duration = (
+        probe_duration(
+            master,
+            "scene-spec source master",
+            errors,
+            warnings,
+            allow_pending,
+        )
+        if master_probe is not None
+        else None
+    )
+    timings = [scene_timing(scene) for scene in scenes if isinstance(scene, dict)]
+    complete_timings = [
+        (start, end)
+        for start, end in timings
+        if start is not None and end is not None
+    ]
+    timeline_duration: float | None = None
+    if complete_timings:
+        timeline_duration = max(end for _, end in complete_timings)
+    if master_duration is not None and timeline_duration is not None and timeline_duration > 0:
+        tolerance = max(1.0, timeline_duration * 0.03)
+        if abs(master_duration - timeline_duration) > tolerance:
+            errors.append(
+                "scene-spec source master duration is grossly out of sync with the scene timeline: "
+                f"master={master_duration:.3f}s timeline={timeline_duration:.3f}s"
+            )
+
+    audio_inputs = current.get("audio_inputs", [])
+    if len(audio_inputs) == 1 and timeline_duration is not None and timeline_duration > 0:
+        audio_ref = audio_inputs[0].get("path")
+        try:
+            audio_path = resolve_input_path(project_root, audio_ref, "shared playable audio")
+        except FingerprintError as exc:
+            errors.append(str(exc))
+        else:
+            audio_duration = probe_duration(
+                audio_path,
+                "shared playable audio",
+                errors,
+                warnings,
+                allow_pending,
+            )
+            if audio_duration is not None:
+                tolerance = max(1.0, timeline_duration * 0.03)
+                if abs(audio_duration - timeline_duration) > tolerance:
+                    errors.append(
+                        "shared playable audio duration is grossly out of sync with the scene "
+                        f"timeline: audio={audio_duration:.3f}s timeline={timeline_duration:.3f}s"
+                    )
+
+    return current["evidence_input_fingerprint"]
 
 
 def validate_state_sync(
@@ -385,6 +545,14 @@ def validate(project_root: Path, allow_pending: bool = False) -> tuple[list[str]
         warnings,
         allow_pending,
     )
+    current_input_fingerprint = validate_input_identity(
+        project_root,
+        scene_doc,
+        scenes,
+        errors,
+        warnings,
+        allow_pending,
+    )
 
     scene_ids: set[str] = set()
     dominant_visuals: list[str] = []
@@ -478,6 +646,24 @@ def validate(project_root: Path, allow_pending: bool = False) -> tuple[list[str]
                                     f"{prefix} hero frame must be {expected_width}x{expected_height}, "
                                     f"got {video_stream.get('width')}x{video_stream.get('height')}"
                                 )
+                hero_input_fingerprint = hero.get("input_fingerprint")
+                if not isinstance(hero_input_fingerprint, str) or not re.fullmatch(
+                    r"[0-9a-f]{64}", hero_input_fingerprint
+                ):
+                    record_pending(
+                        f"{prefix} hero_frame.input_fingerprint is pending; old visual evidence "
+                        "must not survive an input change",
+                        allow_pending,
+                        errors,
+                        warnings,
+                    )
+                elif (
+                    current_input_fingerprint is not None
+                    and hero_input_fingerprint != current_input_fingerprint
+                ):
+                    errors.append(
+                        f"{prefix} hero_frame.input_fingerprint is stale for the current inputs"
+                    )
 
         playable = scene.get("playable_clip")
         if not isinstance(playable, dict):
@@ -526,6 +712,24 @@ def validate(project_root: Path, allow_pending: bool = False) -> tuple[list[str]
                 errors.append(f"{prefix} playable audio does not exist: {audio_ref}")
             elif Path(audio_ref).is_absolute() and not Path(audio_ref).is_file():
                 errors.append(f"{prefix} playable audio does not exist: {audio_ref}")
+            playable_input_fingerprint = playable.get("input_fingerprint")
+            if not isinstance(playable_input_fingerprint, str) or not re.fullmatch(
+                r"[0-9a-f]{64}", playable_input_fingerprint
+            ):
+                record_pending(
+                    f"{prefix} playable_clip.input_fingerprint is pending; old motion evidence "
+                    "must not survive an input change",
+                    allow_pending,
+                    errors,
+                    warnings,
+                )
+            elif (
+                current_input_fingerprint is not None
+                and playable_input_fingerprint != current_input_fingerprint
+            ):
+                errors.append(
+                    f"{prefix} playable_clip.input_fingerprint is stale for the current inputs"
+                )
             if playable.get("phone_reviewed") is not True:
                 record_pending(
                     f"{prefix} playable_clip.phone_reviewed must be true",

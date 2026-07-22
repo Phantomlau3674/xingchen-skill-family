@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -12,6 +13,7 @@ SKILL = Path(__file__).resolve().parents[1]
 INIT = SKILL / "scripts" / "init_vox_branch.py"
 VALIDATE = SKILL / "scripts" / "validate_vox_branch.py"
 BUILD = SKILL / "scripts" / "build_scene_evidence.py"
+LOCK = SKILL / "scripts" / "lock_vox_inputs.py"
 
 
 def valid_scene() -> dict:
@@ -248,6 +250,13 @@ class ScriptTests(unittest.TestCase):
             spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
             write_lean_state(root)
 
+            locked = subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--write"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(locked.returncode, 0, locked.stdout + locked.stderr)
+
             planned = subprocess.run(
                 [
                     sys.executable,
@@ -262,8 +271,165 @@ class ScriptTests(unittest.TestCase):
             self.assertEqual(planned.returncode, 0, planned.stdout + planned.stderr)
             plan = json.loads(planned.stdout)
             self.assertEqual(plan["timeline_revision"], 3)
+            self.assertEqual(len(plan["source_master_sha256"]), 64)
+            self.assertEqual(len(plan["timeline_fingerprint"]), 64)
+            self.assertEqual(len(plan["evidence_input_fingerprint"]), 64)
             self.assertEqual(plan["scenes"][0]["scene_id"], "s01")
             self.assertFalse((root / "visual" / "vox" / "evidence-v1").exists())
+
+    def test_input_lock_detects_changed_audio_and_master(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            subprocess.run(
+                [sys.executable, str(INIT), str(root), "--slug", "identity"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            master = root / "renders" / "master.mp4"
+            master.parent.mkdir(parents=True, exist_ok=True)
+            master.write_bytes(b"master-v1")
+            audio = root / "audio" / "narration.wav"
+            audio.parent.mkdir(parents=True, exist_ok=True)
+            audio.write_bytes(b"audio-v1")
+
+            spec_path = root / "visual" / "vox" / "scene-spec.json"
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            spec["project"]["timeline_revision"] = 1
+            spec["project"]["source_master"] = "renders/master.mp4"
+            scene = valid_scene()
+            scene["playable_clip"] = {"audio_ref": "audio/narration.wav"}
+            spec["scenes"] = [scene]
+            spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            locked = subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--write"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(locked.returncode, 0, locked.stdout + locked.stderr)
+            checked = subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--check"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertEqual(checked.returncode, 0, checked.stdout + checked.stderr)
+
+            audio.write_bytes(b"audio-v2")
+            stale_audio = subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--check"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertNotEqual(stale_audio.returncode, 0)
+            self.assertIn("timeline_fingerprint", stale_audio.stdout)
+            self.assertIn("evidence_input_fingerprint", stale_audio.stdout)
+
+            subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--write"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            master.write_bytes(b"master-v2")
+            stale_master = subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--check"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertNotEqual(stale_master.returncode, 0)
+            self.assertIn("source_master_sha256", stale_master.stdout)
+            self.assertIn("evidence_input_fingerprint", stale_master.stdout)
+
+    @unittest.skipUnless(shutil.which("ffmpeg") and shutil.which("ffprobe"), "FFmpeg required")
+    def test_rejects_gross_shared_audio_duration_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as raw:
+            root = Path(raw)
+            subprocess.run(
+                [sys.executable, str(INIT), str(root), "--slug", "duration"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            master = root / "renders" / "master.mp4"
+            master.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-v",
+                    "error",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "color=c=black:s=1920x1080:r=30:d=4",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "sine=frequency=440:duration=4",
+                    "-c:v",
+                    "libx264",
+                    "-pix_fmt",
+                    "yuv420p",
+                    "-c:a",
+                    "aac",
+                    "-shortest",
+                    str(master),
+                ],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            audio = root / "audio" / "old-narration.wav"
+            audio.parent.mkdir(parents=True, exist_ok=True)
+            subprocess.run(
+                [
+                    "ffmpeg",
+                    "-y",
+                    "-v",
+                    "error",
+                    "-f",
+                    "lavfi",
+                    "-i",
+                    "sine=frequency=330:duration=8",
+                    str(audio),
+                ],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+
+            spec_path = root / "visual" / "vox" / "scene-spec.json"
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            spec["project"]["timeline_revision"] = 1
+            spec["project"]["source_master"] = "renders/master.mp4"
+            scene = valid_scene()
+            scene["playable_clip"] = {
+                "path": "renders/master.mp4",
+                "audio_ref": "audio/old-narration.wav",
+                "phone_reviewed": False,
+            }
+            spec["scenes"] = [scene]
+            spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
+            subprocess.run(
+                [sys.executable, str(LOCK), str(root), "--write"],
+                check=True,
+                text=True,
+                capture_output=True,
+            )
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            spec["scenes"][0]["playable_clip"]["input_fingerprint"] = spec["project"][
+                "evidence_input_fingerprint"
+            ]
+            spec_path.write_text(json.dumps(spec, ensure_ascii=False, indent=2), encoding="utf-8")
+
+            invalid = subprocess.run(
+                [sys.executable, str(VALIDATE), str(root), "--allow-pending"],
+                text=True,
+                capture_output=True,
+            )
+            self.assertNotEqual(invalid.returncode, 0)
+            self.assertIn("shared playable audio duration is grossly out of sync", invalid.stdout)
 
 
 if __name__ == "__main__":

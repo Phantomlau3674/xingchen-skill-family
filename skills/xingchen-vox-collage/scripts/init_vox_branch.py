@@ -76,7 +76,7 @@ TODO: describe how this subject becomes a specific editorial material world.
 """
 
     scene_spec = {
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "project": {
             "slug": args.slug,
             "width": args.width,
@@ -84,11 +84,14 @@ TODO: describe how this subject becomes a specific editorial material world.
             "fps": args.fps,
             "timeline_revision": None,
             "source_master": None,
+            "source_master_sha256": None,
+            "timeline_fingerprint": None,
+            "evidence_input_fingerprint": None,
         },
         "style_ref": "visual/vox/DESIGN.md",
         "scenes": [],
     }
-    assets = {"schema_version": "1.3.0", "project_slug": args.slug, "assets": []}
+    assets = {"schema_version": "1.4.0", "project_slug": args.slug, "assets": []}
 
     write_new(vox / "DESIGN.md", design)
     write_new(vox / "scene-spec.json", json.dumps(scene_spec, ensure_ascii=False, indent=2) + "\n")

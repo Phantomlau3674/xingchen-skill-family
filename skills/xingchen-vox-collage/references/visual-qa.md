@@ -54,4 +54,6 @@ Require:
 - actual asset paths, with no placeholders or remote-expired URLs;
 - final preview duration aligned to accepted audio when audio exists.
 
+These requirements only prove that review artifacts exist and decode. Artifact existence never proves that a human watched the result or approved it — the `Approve` / `Revise` / `Block` call below is a human judgment.
+
 Return `Approve`, `Revise`, or `Block`, with scene ids or timestamps and the narrowest repair.

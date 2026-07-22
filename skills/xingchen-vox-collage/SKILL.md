@@ -12,7 +12,7 @@ Own the selected editorial-collage visual branch. Preserve the approved Xingchen
 Choose one route per scene:
 
 - `editorial-explainer` (default): generate or source independent assets, keep exact text and evidence code-native, and animate deterministically in Remotion.
-- `metaphor-broll`: use one visual proposition, three to six object groups, and a five-to-eight-second assembly or transformation. Prefer deterministic layers; allow generated image-to-video only when exact layout, identity, text, counts, and proof do not matter.
+- `metaphor-broll`: use one visual proposition, a focused cast of object groups, and a concise assembly or transformation. Prefer deterministic layers; allow generated image-to-video only when exact layout, identity, text, counts, and proof do not matter.
 - `source-collage`: preserve real source geometry, crop it into editorial sheets or cutouts, and add code-owned annotation. Never present generated media as evidence.
 
 Do not call a paper texture or a Ken Burns move a Vox scene. The screen must reveal, compare, trace, build, transform, inspect, or resolve something the narration cannot show alone.
@@ -27,6 +27,17 @@ Read only the current scene truth:
 - existing source media and project-local assets.
 
 If the project runs under `xingchen-next`, keep its `Content Lock` and `Preview Lock`. A style bake-off, asset check, or hero-frame choice is a working decision, not another approval lock.
+
+## Explore Before You Commit
+
+Before locking routes or shot cards, write one short creative exploration in free-form prose — a paragraph, not a form. In your own words, answer:
+
+- Which visual routes could carry this film, and which one did you choose and why?
+- What material opportunities does the subject offer — papers, inks, objects, archives, or textures the argument can physically live in?
+- Where might the film become sparse or repetitive, and what would rescue those passages?
+- How does motion carry meaning here — what does each entrance, transformation, or settle explain — instead of decorating?
+
+This exploration is an authoring default, not validator input: no schema, no required line count, no score. Keep it with the project's working notes and let it steer the shot cards. For a copyable visual-ambition brief and a worked example, read [creative-exploration.md](references/creative-exploration.md).
 
 ## Lock The Shot Before Assets
 
@@ -55,7 +66,7 @@ Read [visual-language.md](references/visual-language.md) while writing `DESIGN.m
 
 ## Design The Hero Frame First
 
-For the hook, hardest explanation or proof, and payoff:
+Hero-frame-first is the authoring default, not a universal hard gate. For the hook, hardest explanation or proof, and payoff:
 
 1. Write one visual proposition, not a list of nouns.
 2. Sketch two genuinely different spatial mechanisms using the same accepted scene job.
@@ -65,6 +76,8 @@ For the hook, hardest explanation or proof, and payoff:
 
 Do not approve motion from a prompt or storyboard. Render the hero frame and then a playable clip.
 
+When a scene's meaning exists only in motion — a traversal, a transformation, a settle — a settled still cannot carry the argument. In that case, review a representative in-motion frame extracted from the playable clip and record a one-sentence rationale next to it stating why the still cannot stand in. This exception never relaxes source-collage readability: real source proof must stay legible and undistorted in whatever frame is reviewed.
+
 Before strict validation, each scene must point to real review artifacts:
 
 ```json
@@ -73,11 +86,13 @@ Before strict validation, each scene must point to real review artifacts:
     "description": "...",
     "focal_order": ["..."],
     "subtitle_safe_region": "...",
-    "path": "visual/vox/lookdev/s01-hero.png"
+    "path": "visual/vox/lookdev/s01-hero.png",
+    "input_fingerprint": "<evidence_input_fingerprint>"
   },
   "playable_clip": {
     "path": "visual/vox/lookdev/s01-preview.mp4",
     "audio_ref": "audio/narration.wav",
+    "input_fingerprint": "<evidence_input_fingerprint>",
     "phone_reviewed": true,
     "phone_review_ref": "visual/vox/lookdev/s01-phone-review.md",
     "checkpoint_paths": {
@@ -159,6 +174,8 @@ python .\scripts\validate_vox_branch.py <project-root> --allow-pending
 
 `--allow-pending` converts missing hero-frame and playable-clip evidence into warnings. A `PASS` with warnings means the structure is usable; it is not visual approval.
 
+The validator can only confirm that a review artifact exists, decodes, and matches its contract. It cannot confirm that anyone watched the clip at phone size, and it cannot judge readability or aesthetics — that judgment stays human. A `phone_review_ref` path or `phone_reviewed: true` flag proves the artifact is present, never that a human looked at it or approved the picture.
+
 After the intended-resolution hero frame, accepted-audio playable clip, entry/settled/exit checkpoints, phone review, and full FFmpeg decode exist, run strict validation:
 
 ```powershell
@@ -176,10 +193,11 @@ python .\scripts\make_visual_evidence.py <clip.mp4> <evidence-dir>
 After assembling a full master, extract consistent per-scene clips and entry/settled/exit frames from the Lean scene timings:
 
 ```powershell
+python .\scripts\lock_vox_inputs.py <project-root> --write
 python .\scripts\build_scene_evidence.py <project-root> <evidence-dir>
 ```
 
-The extractor refuses to overwrite a non-empty evidence directory. It reads the source master and timeline revision from `visual/vox/scene-spec.json`, checks them against `project-state.json`, and writes a machine-readable index instead of editing either source-of-truth file.
+The lock command hashes the accepted audio inputs, canonical scene timing, and assembled source master. Run it again whenever any of those inputs changes. The extractor refuses to overwrite a non-empty evidence directory, verifies the lock, and writes the same `evidence_input_fingerprint` into its machine-readable index. Record that value in each reviewed `hero_frame.input_fingerprint` and `playable_clip.input_fingerprint`; a later input change then makes the old evidence fail strict validation instead of silently passing.
 
 Inspect the contact sheet and the entry, settled, and exit frames. Then watch the playable clip at phone size. Use [visual-qa.md](references/visual-qa.md). Do not accept from process exit, code size, component count, or stills alone.
 

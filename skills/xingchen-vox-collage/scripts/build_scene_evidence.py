@@ -10,6 +10,12 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from input_fingerprints import (
+    FingerprintError,
+    compute_input_fingerprints,
+    sha256_file,
+)
+
 
 def load_object(path: Path) -> dict[str, Any]:
     try:
@@ -129,6 +135,25 @@ def main() -> int:
     if not master.is_file():
         raise SystemExit(f"source master not found: {master}")
 
+    try:
+        input_identity = compute_input_fingerprints(root, spec)
+    except FingerprintError as exc:
+        raise SystemExit(f"cannot compute input fingerprints: {exc}") from exc
+    for field in [
+        "source_master_sha256",
+        "timeline_fingerprint",
+        "evidence_input_fingerprint",
+    ]:
+        if project.get(field) != input_identity[field]:
+            raise SystemExit(
+                f"scene-spec project.{field} is missing or stale; "
+                "run lock_vox_inputs.py --write before extracting evidence"
+            )
+    if sha256_file(master) != input_identity["source_master_sha256"]:
+        raise SystemExit(
+            "--master does not match the source master locked in scene-spec.json"
+        )
+
     output = within(
         root,
         args.output_dir if args.output_dir.is_absolute() else root / args.output_dir,
@@ -138,9 +163,13 @@ def main() -> int:
         raise SystemExit(f"refusing to overwrite non-empty evidence directory: {output}")
 
     plan = {
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "source_master": master.relative_to(root).as_posix(),
+        "source_master_sha256": input_identity["source_master_sha256"],
         "timeline_revision": revision,
+        "timeline_fingerprint": input_identity["timeline_fingerprint"],
+        "evidence_input_fingerprint": input_identity["evidence_input_fingerprint"],
+        "audio_inputs": input_identity["audio_inputs"],
         "fps": fps,
         "output_dir": output.relative_to(root).as_posix(),
         "scenes": records,
@@ -253,6 +282,7 @@ def main() -> int:
         index_scenes.append(
             {
                 **record,
+                "input_fingerprint": input_identity["evidence_input_fingerprint"],
                 "playable_clip": clip.relative_to(root).as_posix(),
                 "checkpoint_paths": checkpoint_paths,
                 "contact_sheet": contact_sheet.relative_to(root).as_posix(),
